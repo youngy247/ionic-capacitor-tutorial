@@ -18,8 +18,6 @@ import {
 } from "@ionic/react";
 import {
   checkmarkDoneOutline,
-  logInOutline,
-  personCircleOutline,
 } from "ionicons/icons";
 import React from "react";
 
