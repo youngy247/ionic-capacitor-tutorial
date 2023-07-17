@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonInput, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonInput, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { checkmarkDoneOutline, logInOutline, personCircleOutline } from 'ionicons/icons';
 import React from 'react';
 
@@ -13,6 +13,9 @@ const Register: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar color={'primary'}>
+                    <IonButtons slot="start">
+                        <IonBackButton defaultHref="/" />
+                    </IonButtons>
                     <IonTitle>Create Account</IonTitle>
                 </IonToolbar>
             </IonHeader>
