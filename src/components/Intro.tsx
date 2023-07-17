@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonHeader, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonText} from '@ionic/react';
 import React from 'react';
 import { Swiper, SwiperSlide, useSwiper} from 'swiper/react';
 import 'swiper/css'
@@ -16,7 +16,7 @@ const SwiperButtonNext = ({ children }: any) => {
   return <IonButton onClick={() => swiper.slideNext()}>{children}</IonButton>;
 }
 
-const Intro: React.FC<ContainerProps> = () => {
+const Intro: React.FC<ContainerProps> = ({ onFinish }) => {
 
   return (
     <Swiper>
@@ -27,7 +27,22 @@ const Intro: React.FC<ContainerProps> = () => {
         </IonText>
         <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
-      <SwiperSlide>easst</SwiperSlide>
+
+      <SwiperSlide>
+        <img src={Intro2Svg} alt="intro2" />
+        <IonText>
+          <h3>Create powerful native apps with Capacitor.</h3>
+        </IonText>
+        <SwiperButtonNext>Next</SwiperButtonNext>
+      </SwiperSlide>
+
+      <SwiperSlide>
+        <img src={Intro3Svg} alt="intro3" />
+        <IonText>
+          <h3>Enjoy learning to code!</h3>
+        </IonText>
+        <IonButton onClick={() => onFinish()}>Finish</IonButton>
+      </SwiperSlide>
     </Swiper>
   );
 };
