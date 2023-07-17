@@ -17,7 +17,7 @@ const Login: React.FC = () => {
                     <IonTitle>Title</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent>
+            <IonContent scrollY={false}>
                 <div className="ion-text-center ion-padding">
                     <img src={fcc} alt='fCC logo' width={'50%'}/>
                 </div>
