@@ -14,7 +14,7 @@ const Login: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar color={'primary'}>
-                    <IonTitle>Title</IonTitle>
+                    <IonTitle>Free Code Camp</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent scrollY={false}>
