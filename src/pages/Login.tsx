@@ -1,6 +1,6 @@
 import { IonButton, IonCard, IonCardContent, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
-import { logInOutline } from 'ionicons/icons';
+import { logInOutline, personCircleOutline } from 'ionicons/icons';
 
 const Login: React.FC = () => {
     const doLogin = (event: any) => {
@@ -26,7 +26,10 @@ const Login: React.FC = () => {
                                 Login
                                 <IonIcon icon={logInOutline} slot="end"/>
                             </IonButton>
-                            <IonButton routerLink="/register" color={'secondary'} type="button" expand="block" className="ion-margin-top">Create account</IonButton>
+                            <IonButton routerLink="/register" color={'secondary'} type="button" expand="block" className="ion-margin-top">
+                                Create account
+                                <IonIcon icon={personCircleOutline} slot="end"/>
+                            </IonButton>
                         </form>
                     </IonCardContent>
                 </IonCard>
