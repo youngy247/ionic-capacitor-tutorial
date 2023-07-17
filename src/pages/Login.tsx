@@ -3,7 +3,6 @@ import {
   IonCard,
   IonCardContent,
   IonContent,
-  IonFooter,
   IonHeader,
   IonIcon,
   IonInput,
@@ -12,14 +11,26 @@ import {
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { logInOutline, personCircleOutline } from "ionicons/icons";
 import fcc from "../assets/fcc.svg";
 import Intro from "../components/Intro";
+import { Preferences } from "@capacitor/preferences";
+
+const INTRO_KEY = "intro-seen";
 
 const Login: React.FC = () => {
   const router = useIonRouter();
-  const [introSeen, setIntroSeen] = useState(false);
+  const [introSeen, setIntroSeen] = useState<boolean | null>(null);
+
+  useEffect(() => { 
+    const checkStorage = async () => {
+      const seen = await Preferences.get({ key: INTRO_KEY });
+      console.log("🚀 ~ file: Login.tsx:29 ~ checkStorage ~ seen:", seen)
+      setIntroSeen(seen.value === "true")
+    };
+    checkStorage();
+  }, [])
 
   const doLogin = (event: any) => {
     event.preventDefault();
@@ -29,15 +40,15 @@ const Login: React.FC = () => {
   };
 
   const finishIntro = async() => {
-    console.log("finishIntro");
     setIntroSeen(true)
+    Preferences.set({ key: INTRO_KEY, value: "true" });
   }
 
   return (
     <>
-    {!introSeen ? (
+    {introSeen === false ? (
         <Intro onFinish={finishIntro} />
-    ) : (
+    ) : introSeen === true && (
       <IonPage>
         <IonHeader>
           <IonToolbar color={"primary"}>
