@@ -22,7 +22,7 @@ const Login: React.FC = () => {
                             <IonInput fill="outline" labelPlacement="floating" label="Email" type="email" placeholder="email@gmail.com" />
                             <IonInput className="ion-margin-top" fill="outline" labelPlacement="floating" label="Password" type="password" placeholder="email@gmail.com" />
                             <IonButton type="submit" expand="block" className="ion-margin-top">Login</IonButton>
-                            <IonButton color={'secondary'} type="button" expand="block" className="ion-margin-top">Create account</IonButton>
+                            <IonButton routerLink="/register" color={'secondary'} type="button" expand="block" className="ion-margin-top">Create account</IonButton>
                         </form>
                     </IonCardContent>
                 </IonCard>
