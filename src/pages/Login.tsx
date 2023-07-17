@@ -1,6 +1,7 @@
 import { IonButton, IonCard, IonCardContent, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 import { logInOutline, personCircleOutline } from 'ionicons/icons';
+import fcc from '../assets/fcc.svg'
 
 const Login: React.FC = () => {
     const doLogin = (event: any) => {
@@ -17,6 +18,9 @@ const Login: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent>
+                <div className="ion-text-center ion-padding">
+                    <img src={fcc} alt='fCC logo' width={'50%'}/>
+                </div>
                 <IonCard>
                     <IonCardContent>
                         <form onSubmit={doLogin}>
