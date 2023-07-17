@@ -44,6 +44,11 @@ const Login: React.FC = () => {
     Preferences.set({ key: INTRO_KEY, value: "true" });
   }
 
+  const seeIntroAgain = () => {
+    setIntroSeen(false)
+    Preferences.remove({ key: INTRO_KEY });
+  }
+
   return (
     <>
     {introSeen === false ? (
@@ -93,6 +98,18 @@ const Login: React.FC = () => {
                   className="ion-margin-top"
                 >
                   Create account
+                  <IonIcon icon={personCircleOutline} slot="end" />
+                </IonButton>
+                <IonButton
+                  onClick={seeIntroAgain}
+                  fill="clear"
+                  size="small"
+                  color={"medium"}
+                  type="button"
+                  expand="block"
+                  className="ion-margin-top"
+                >
+                  Watch intro again
                   <IonIcon icon={personCircleOutline} slot="end" />
                 </IonButton>
               </form>
