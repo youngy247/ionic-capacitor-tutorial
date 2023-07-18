@@ -1,4 +1,4 @@
-import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonChip, IonContent, IonHeader, IonIcon, IonImg, IonItem, IonLabel, IonMenuButton, IonPage, IonSearchbar, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonChip, IonContent, IonHeader, IonIcon, IonImg, IonItem, IonLabel, IonMenuButton, IonPage, IonRefresher, IonRefresherContent, IonSearchbar, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import { trashBinOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 
@@ -41,6 +41,12 @@ const List: React.FC = () => {
       })
   }
 
+  const doRefresh = async (event: any) => {
+    const data = await getUsers();
+    setUsers(data)
+    event.detail.complete()
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -61,6 +67,11 @@ const List: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+
+        <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
+          <IonRefresherContent />
+        </IonRefresher>
+
         {users.map((user, index) => (
           <IonCard key={index}>
 
