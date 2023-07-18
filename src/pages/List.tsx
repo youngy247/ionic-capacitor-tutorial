@@ -1,4 +1,4 @@
-import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonChip, IonContent, IonHeader, IonIcon, IonImg, IonItem, IonLabel, IonMenuButton, IonPage, IonSearchbar, IonTitle, IonToolbar, useIonAlert, useIonViewWillEnter } from '@ionic/react';
+import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonChip, IonContent, IonHeader, IonIcon, IonImg, IonItem, IonLabel, IonMenuButton, IonPage, IonSearchbar, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import { trashBinOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 
@@ -6,6 +6,7 @@ const List: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true); 
   const [users, setUsers] = useState<any[]>([]);
   const [showAlert] = useIonAlert() 
+  const [showToast] = useIonToast()
 
   useIonViewWillEnter(async () => {
     const users = await getUsers();
@@ -26,7 +27,16 @@ const List: React.FC = () => {
         message: 'Are you sure you want to delete all users?',
         buttons: [
           { text: 'Cancel', role: 'cancel' },
-          { text: 'Delete', handler: () => setUsers([]) }
+          { text: 'Delete', 
+            handler: () => {
+              setUsers([])  
+              showToast({
+                message: 'All users deleted',
+                duration: 2000,
+                color: 'danger'
+              })
+            }
+          }
         ]
       })
   }
