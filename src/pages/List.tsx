@@ -1,7 +1,22 @@
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
+import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
+import React, { useState } from 'react';
 
 const List: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(true); 
+  const [users, setUsers] = useState<any[]>([]);
+
+  useIonViewWillEnter(async () => {
+    const users = await getUsers();
+    console.log("🚀 ~ file: List.tsx:10 ~ useIonViewWillEnter ~ users:", users)
+    setUsers(users)
+    setLoading(false);
+  });
+
+  const getUsers = async () => {
+    const data = await fetch('https://randomuser.me/api/?results=10');
+    const users = await data.json();
+    return users;
+  }
 
   return (
     <IonPage>
