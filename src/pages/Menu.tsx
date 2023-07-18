@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonItem, IonMenu, IonPage, IonRouterOutlet, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonItem, IonMenu, IonMenuToggle, IonPage, IonRouterOutlet, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 import List from './List';
 import Settings from './Settings';
@@ -20,9 +20,11 @@ const Menu: React.FC = () => {
         </IonHeader>
           <IonContent>
             {paths.map((item, index) => (
+              <IonMenuToggle key={index}>
               <IonItem routerLink={item.url} key={index}>
                 {item.name}
               </IonItem>
+              </IonMenuToggle>
             ))}
           </IonContent>
       </IonMenu>
