@@ -1,4 +1,4 @@
-import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonImg, IonItem, IonLabel, IonMenuButton, IonPage, IonSearchbar, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
+import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonChip, IonContent, IonHeader, IonIcon, IonImg, IonItem, IonLabel, IonMenuButton, IonPage, IonSearchbar, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
 import { trashBinOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 
@@ -55,6 +55,9 @@ const List: React.FC = () => {
                   {user.name.first} {user.name.last}
                   <p>{user.email}</p>
                 </IonLabel>
+                <IonChip slot="end" color={'primary'}>
+                  {user.nat}
+                </IonChip>
               </IonItem>
             </IonCardContent>
 
