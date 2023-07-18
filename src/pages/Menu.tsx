@@ -3,12 +3,14 @@ import React from 'react';
 import List from './List';
 import Settings from './Settings';
 import { Redirect, Route } from 'react-router';
-import { homeOutline, logOutOutline, newspaperOutline } from 'ionicons/icons';
+import { homeOutline, logOutOutline, newspaperOutline, settingsOutline } from 'ionicons/icons';
+import News from './News';
 
 const Menu: React.FC = () => {
   const paths = [
     { name: 'Home', url: '/app/list', icon: homeOutline },
-    { name: 'Settings', url: '/app/settings', icon: newspaperOutline },
+    { name: 'News', url: '/app/news', icon: newspaperOutline},
+    { name: 'Settings', url: '/app/settings', icon: settingsOutline },
   ]
   return (
     <IonPage>
@@ -39,6 +41,7 @@ const Menu: React.FC = () => {
 
       <IonRouterOutlet id="main">
         <Route exact path="/app/list" component={List} />
+        <Route exact path="/app/news" component={News} />
         <Route path="/app/settings" component={Settings} />
         <Route exact path="/app">
           <Redirect to="/app/list" />
