@@ -1,4 +1,5 @@
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
+import { trashBinOutline } from 'ionicons/icons';
 import React, { useState } from 'react';
 
 const List: React.FC = () => {
@@ -18,6 +19,10 @@ const List: React.FC = () => {
     return users;
   }
 
+  const clearList = () => {
+
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -26,6 +31,11 @@ const List: React.FC = () => {
             <IonMenuButton />
           </IonButtons>
           <IonTitle>List</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={clearList}>
+              <IonIcon slot="icon-only" icon={trashBinOutline} color={'danger'}/>
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
