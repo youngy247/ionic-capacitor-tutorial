@@ -3,7 +3,8 @@ import React from 'react';
 import { Redirect, Route } from 'react-router';
 import Tab1 from './Tab1';
 import Tab2 from './Tab2';
-import { ellipse, triangle } from 'ionicons/icons';
+import { ellipse, helpCircleOutline, triangle } from 'ionicons/icons';
+import Tab3 from './Tab3';
 
 const Seetings: React.FC = () => {
 
@@ -18,11 +19,16 @@ const Seetings: React.FC = () => {
           <IonIcon icon={ellipse} />
           <IonLabel>Tab 2</IonLabel>
         </IonTabButton>
+        <IonTabButton tab="tab3" href="/app/settings/tab3">
+          <IonIcon icon={helpCircleOutline} />
+          <IonLabel>Tab 3</IonLabel>
+        </IonTabButton>
       </IonTabBar>
 
      <IonRouterOutlet>
         <Route path="/app/settings/tab1" component={Tab1} />
         <Route path="/app/settings/tab2" component={Tab2} />
+        <Route path="/app/settings/tab3" component={Tab3} />
 
         <Route exact path="/app/settings">
           <Redirect to="/app/settings/tab1" />

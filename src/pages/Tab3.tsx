@@ -1,7 +1,7 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 
-const News: React.FC = () => {
+const Tab3: React.FC = () => {
 
   return (
     <IonPage>
@@ -10,7 +10,7 @@ const News: React.FC = () => {
         <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>News</IonTitle>
+          <IonTitle>Tab 3</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
@@ -20,4 +20,4 @@ const News: React.FC = () => {
   );
 };
 
-export default News;
+export default Tab3;
