@@ -132,7 +132,9 @@ const List: React.FC = () => {
                     Close
                   </IonButton>
                 </IonButtons>
-                <IonTitle>Page Title</IonTitle>
+                <IonTitle>
+                  {selectedUser?.name.first} {selectedUser?.name.last}
+                </IonTitle>
               </IonToolbar>
             </IonHeader>
             <IonContent>
