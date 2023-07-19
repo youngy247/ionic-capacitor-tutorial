@@ -1,12 +1,14 @@
-import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonChip, IonContent, IonHeader, IonIcon, IonImg, IonItem, IonLabel, IonMenuButton, IonPage, IonRefresher, IonRefresherContent, IonSearchbar, IonSkeletonText, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewWillEnter } from '@ionic/react';
+import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonChip, IonContent, IonHeader, IonIcon, IonImg, IonItem, IonLabel, IonMenuButton, IonModal, IonPage, IonRefresher, IonRefresherContent, IonSearchbar, IonSkeletonText, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewWillEnter } from '@ionic/react';
 import { trashBinOutline } from 'ionicons/icons';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 const List: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true); 
   const [users, setUsers] = useState<any[]>([]);
   const [showAlert] = useIonAlert() 
   const [showToast] = useIonToast()
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const modal = useRef<HTMLIonModalElement>(null);
 
   useIonViewWillEnter(async () => {
     const users = await getUsers();
@@ -100,7 +102,7 @@ const List: React.FC = () => {
         {users.map((user, index) => (
           <IonCard key={index}>
 
-            <IonCardContent className="ion-no-padding">
+            <IonCardContent className="ion-no-padding" onClick={() => setSelectedUser(user)}>
               <IonItem lines="none">
                 <IonAvatar slot="start">
                   <IonImg src={user.picture.large} />
@@ -117,6 +119,25 @@ const List: React.FC = () => {
 
           </IonCard>
           ))}
+
+          <IonModal ref={modal} isOpen={selectedUser !== null}
+            onIonModalDidDismiss={() => setSelectedUser(null)}
+          >
+            <IonHeader>
+              <IonToolbar color={'success'}>
+                <IonButtons slot="start">
+                  <IonButton onClick={() => modal.current?.dismiss()}>
+                    Close
+                  </IonButton>
+                </IonButtons>
+                <IonTitle>Page Title</IonTitle>
+              </IonToolbar>
+            </IonHeader>
+            <IonContent>
+              SHEET
+            </IonContent>
+          </IonModal>
+
       </IonContent>
     </IonPage>
   );
