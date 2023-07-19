@@ -7,3 +7,8 @@ ion-item:hover {
 ion-item {
   --padding-start: 20px;
 }
+
+ion-item::part(detail-icon) {
+  color: #ff00ff;
+  opacity: 1;
+}
