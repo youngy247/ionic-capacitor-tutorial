@@ -14,3 +14,8 @@
   justify-content: center;
   text-align: center;
 }
+
+.intro-text h2, .intro-text p {
+  margin: 15px;
+  padding: 10px;
+}
