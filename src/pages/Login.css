@@ -1,0 +1,19 @@
+.line-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.line-divider .line {
+  flex-grow: 1;
+  background: var(--ion-color-medium);
+  height: 1px;
+  margin: 0; 
+}
+
+.line-divider span {
+  background: #ffffff;
+  padding: 0 10px;
+}

@@ -20,6 +20,9 @@ import { logInOutline, personCircleOutline } from "ionicons/icons";
 import fcc from "../assets/fcc.svg";
 import Intro from "../components/Intro";
 import { Preferences } from "@capacitor/preferences";
+// import AuthSocialButton from "./AuthSocialButton";
+// import { BsGoogle } from "react-icons/bs";
+import "./Login.css";
 
 const INTRO_KEY = "intro-seen";
 
@@ -40,6 +43,7 @@ const Login: React.FC = () => {
   const doLogin = async (event: any) => {
     event.preventDefault();
     await present("Logging in...");
+    //Login logic here
     setTimeout(async () => {
       await dismiss();
       router.push("/app", "root");
@@ -83,7 +87,7 @@ const Login: React.FC = () => {
                       <IonCardContent>
                         <form onSubmit={doLogin}>
                           <IonInput
-                            mode='md'
+                            mode="md"
                             fill="outline"
                             labelPlacement="floating"
                             label="Email"
@@ -91,7 +95,7 @@ const Login: React.FC = () => {
                             placeholder="email@gmail.com"
                           />
                           <IonInput
-                            mode='md'
+                            mode="md"
                             className="ion-margin-top"
                             fill="outline"
                             labelPlacement="floating"
@@ -117,6 +121,12 @@ const Login: React.FC = () => {
                             Create account
                             <IonIcon icon={personCircleOutline} slot="end" />
                           </IonButton>
+                          <div className="line-divider">
+                            <div className="line"></div>
+                            <span>Or continue with</span>
+                            <div className="line"></div>
+                          </div>
+
                           <IonButton
                             onClick={seeIntroAgain}
                             fill="clear"
