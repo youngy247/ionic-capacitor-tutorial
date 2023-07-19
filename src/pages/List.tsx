@@ -6,6 +6,7 @@ import {
   IonCardContent,
   IonChip,
   IonContent,
+  IonDatetime,
   IonFab,
   IonFabButton,
   IonHeader,
@@ -184,7 +185,25 @@ const List: React.FC = () => {
               </IonSegment>
             </IonToolbar>
           </IonHeader>
-          <IonContent>SHEET</IonContent>
+          <IonContent className="ion-padding">
+            {activeSegement === "details" && (
+              <IonCard>
+
+                  <IonAvatar slot="start">
+                    <IonImg src={selectedUser?.picture.large} />
+                  </IonAvatar>
+              <IonCardContent className="ion-no-padding" >
+                <IonItem lines="none">
+                  <IonLabel class="ion-text-wrap">
+                    {selectedUser?.name.first} {selectedUser?.name.last}
+                    <p>{selectedUser?.email}</p>
+                  </IonLabel>
+                </IonItem>
+              </IonCardContent>
+            </IonCard>
+            )}
+            {activeSegement === "calender" && <IonDatetime />}
+          </IonContent>
         </IonModal>
       </IonContent>
 
