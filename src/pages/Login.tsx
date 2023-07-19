@@ -12,6 +12,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  isPlatform,
   useIonLoading,
   useIonRouter,
 } from "@ionic/react";
@@ -23,6 +24,8 @@ import { Preferences } from "@capacitor/preferences";
 import AuthSocialButton from "./AuthSocialButton";
 import { BsGoogle } from "react-icons/bs";
 import "./Login.css";
+import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
+
 
 const INTRO_KEY = "intro-seen";
 
@@ -30,6 +33,10 @@ const Login: React.FC = () => {
   const router = useIonRouter();
   const [introSeen, setIntroSeen] = useState<boolean | null>(null);
   const [present, dismiss] = useIonLoading();
+
+  if(!isPlatform('capacitor')){
+     GoogleAuth.initialize()
+}
 
   useEffect(() => {
     const checkStorage = async () => {
@@ -44,6 +51,8 @@ const Login: React.FC = () => {
     event.preventDefault();
     await present("Logging in...");
     //Login logic here
+     // If login is successful...
+    Preferences.set({ key: 'login-method', value: 'form' });
     setTimeout(async () => {
       await dismiss();
       router.push("/app", "root");
@@ -58,6 +67,22 @@ const Login: React.FC = () => {
   const seeIntroAgain = () => {
     setIntroSeen(false);
     Preferences.remove({ key: INTRO_KEY });
+  };
+
+  const socialAction = async (action: string) => {
+    await present("Logging in...");
+  
+    if (action === "google") {
+      const user  = await GoogleAuth.signIn();
+      console.log('user: ', user)
+      // Use the googleUser object to access user data (e.g., googleUser.email, googleUser.displayName)
+      // Perform the necessary authentication and user handling logic
+      // If login is successful...
+      Preferences.set({ key: 'login-method', value: 'google' });
+    }
+  
+    await dismiss();
+    router.push("/app", "root");
   };
 
   return (

@@ -1,53 +1,96 @@
-import { IonButton, IonContent, IonHeader, IonIcon, IonItem, IonMenu, IonMenuToggle, IonPage, IonRouterOutlet, IonSplitPane, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
-import List from './List';
-import Settings from './Settings';
-import { Redirect, Route } from 'react-router';
-import { homeOutline, logOutOutline, newspaperOutline, settingsOutline } from 'ionicons/icons';
-import News from './News';
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonMenu,
+  IonMenuToggle,
+  IonPage,
+  IonRouterOutlet,
+  IonSplitPane,
+  IonTitle,
+  IonToolbar,
+  useIonRouter,
+} from "@ionic/react";
+import React from "react";
+import List from "./List";
+import Settings from "./Settings";
+import { Redirect, Route, Router } from "react-router";
+import {
+  homeOutline,
+  logOutOutline,
+  newspaperOutline,
+  settingsOutline,
+} from "ionicons/icons";
+import News from "./News";
+import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
+import { Preferences } from "@capacitor/preferences";
 
 const Menu: React.FC = () => {
   const paths = [
-    { name: 'Home', url: '/app/list', icon: homeOutline },
-    { name: 'News', url: '/app/news', icon: newspaperOutline},
-    { name: 'Settings', url: '/app/settings', icon: settingsOutline },
-  ]
+    { name: "Home", url: "/app/list", icon: homeOutline },
+    { name: "News", url: "/app/news", icon: newspaperOutline },
+    { name: "Settings", url: "/app/settings", icon: settingsOutline },
+  ];
+
+  const router = useIonRouter();
+
+  const signOut = async () => {
+    const loginMethod = await Preferences.get({ key: "login-method" });
+
+    if (loginMethod.value === "google") {
+      try {
+        await GoogleAuth.signOut();
+      } catch (error) {
+        console.error("Error during GoogleAuth.signOut: ", error);
+      }
+    }
+    // Handle other logout methods here
+    Preferences.remove({ key: "login-method" });
+    router.push("/"); // navigate to login page after successful logout
+  };
+
   return (
     <IonPage>
       <IonSplitPane contentId="main">
-      <IonMenu contentId="main">
-        <IonHeader>
-          <IonToolbar color={'secondary'}>
-            <IonTitle>Page Title</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+        <IonMenu contentId="main">
+          <IonHeader>
+            <IonToolbar color={"secondary"}>
+              <IonTitle>Page Title</IonTitle>
+            </IonToolbar>
+          </IonHeader>
           <IonContent>
             {paths.map((item, index) => (
               <IonMenuToggle key={index} autoHide={false}>
-              <IonItem detail={true} routerLink={item.url} routerDirection="none">
-                <IonIcon slot="start" icon={item.icon} />
-                {item.name}
-              </IonItem>
+                <IonItem
+                  detail={true}
+                  routerLink={item.url}
+                  routerDirection="none"
+                >
+                  <IonIcon slot="start" icon={item.icon} />
+                  {item.name}
+                </IonItem>
               </IonMenuToggle>
             ))}
             <IonMenuToggle autoHide={false}>
-              <IonButton expand="full" routerLink='/' routerDirection="root">
+              <IonButton expand="full" onClick={signOut}>
                 <IonIcon slot="start" icon={logOutOutline} />
                 Logout
               </IonButton>
-              </IonMenuToggle>
+            </IonMenuToggle>
           </IonContent>
-      </IonMenu>
+        </IonMenu>
 
-      <IonRouterOutlet id="main">
-        <Route exact path="/app/list" component={List} />
-        <Route exact path="/app/news" component={News} />
-        <Route path="/app/settings" component={Settings} />
-        <Route exact path="/app">
-          <Redirect to="/app/list" />
-        </Route>
-      </IonRouterOutlet>
-    </IonSplitPane>
+        <IonRouterOutlet id="main">
+          <Route exact path="/app/list" component={List} />
+          <Route exact path="/app/news" component={News} />
+          <Route path="/app/settings" component={Settings} />
+          <Route exact path="/app">
+            <Redirect to="/app/list" />
+          </Route>
+        </IonRouterOutlet>
+      </IonSplitPane>
     </IonPage>
   );
 };
