@@ -20,8 +20,8 @@ import { logInOutline, personCircleOutline } from "ionicons/icons";
 import fcc from "../assets/fcc.svg";
 import Intro from "../components/Intro";
 import { Preferences } from "@capacitor/preferences";
-// import AuthSocialButton from "./AuthSocialButton";
-// import { BsGoogle } from "react-icons/bs";
+import AuthSocialButton from "./AuthSocialButton";
+import { BsGoogle } from "react-icons/bs";
 import "./Login.css";
 
 const INTRO_KEY = "intro-seen";
@@ -126,6 +126,14 @@ const Login: React.FC = () => {
                             <span>Or continue with</span>
                             <div className="line"></div>
                           </div>
+                          <IonRow className="ion-margin-top">
+                            <IonCol size="12" className="ion-text-center">
+                              <AuthSocialButton
+                                icon={BsGoogle}
+                                onClick={() => socialAction("google")}
+                              />
+                            </IonCol>
+                          </IonRow>
 
                           <IonButton
                             onClick={seeIntroAgain}
