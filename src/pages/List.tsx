@@ -120,7 +120,9 @@ const List: React.FC = () => {
           </IonCard>
           ))}
 
-          <IonModal ref={modal} isOpen={selectedUser !== null}
+          <IonModal 
+            breakpoints={[0, 0.5, 0.8]} initialBreakpoint={0.5}
+            ref={modal} isOpen={selectedUser !== null}
             onIonModalDidDismiss={() => setSelectedUser(null)}
           >
             <IonHeader>
