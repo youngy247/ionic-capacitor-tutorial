@@ -65,19 +65,19 @@ const Login: React.FC = () => {
           <IonPage>
             <IonHeader>
               <IonToolbar color={"primary"}>
-                <IonTitle>Free Code Camp</IonTitle>
+                <IonTitle>InsectInsight</IonTitle>
               </IonToolbar>
             </IonHeader>
             <IonContent scrollY={false} className="ion-padding">
               <IonGrid fixed>
-                <IonRow class="ion-justify-content-center">
+                <IonRow className="ion-justify-content-center">
                   <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                     <div className="ion-text-center ion-padding">
                       <img src={fcc} alt="fCC logo" width={"50%"} />
                     </div>
                   </IonCol>
                 </IonRow>
-                <IonRow class="ion-justify-content-center">
+                <IonRow className="ion-justify-content-center">
                   <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                     <IonCard>
                       <IonCardContent>
