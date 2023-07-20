@@ -17,7 +17,7 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { checkmarkDoneOutline } from "ionicons/icons";
-import React from "react";
+import React, { useState } from "react";
 import AuthSocialButton from "./AuthSocialButton";
 import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
@@ -25,8 +25,19 @@ import { BsGoogle } from "react-icons/bs";
 
 const Register: React.FC = () => {
   const router = useIonRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const doRegister = (event: any) => {
     event.preventDefault();
+
+    if (password !== confirmPassword) {
+      console.error("Passwords do not match");
+      return;
+    }
+
     console.log("doRegister");
     router.goBack();
   };
@@ -35,18 +46,15 @@ const Register: React.FC = () => {
     try {
       if (action === "google") {
         const user = await GoogleAuth.signIn();
-        console.log('user: ', user);
-        
-        // Here you handle registration logic with user data
-        // e.g., user.email, user.displayName
-        // If registration is successful, redirect user to desired route
+        console.log("user: ", user);
 
-        router.push("/app", "root"); // or wherever you want to redirect the user after successful registration
+        router.push("/app", "root");
       }
     } catch (error) {
-      console.error('Registration failed:', error);
+      console.error("Registration failed:", error);
     }
   };
+
 
   return (
     <IonPage>
@@ -66,21 +74,36 @@ const Register: React.FC = () => {
                 <IonCardContent>
                   <form onSubmit={doRegister}>
                     <IonInput
+                      required
                       mode="md"
                       fill="outline"
                       labelPlacement="floating"
                       label="Email"
                       type="email"
                       placeholder="email@gmail.com"
+                      onIonChange={(e) => setEmail(e.detail.value!)}
                     />
                     <IonInput
+                      required
                       mode="md"
                       className="ion-margin-top"
                       fill="outline"
                       labelPlacement="floating"
                       label="Password"
                       type="password"
-                      placeholder="email@gmail.com"
+                      placeholder="password"
+                      onIonChange={(e) => setPassword(e.detail.value!)}
+                    />
+                    <IonInput
+                      required
+                      mode="md"
+                      className="ion-margin-top"
+                      fill="outline"
+                      labelPlacement="floating"
+                      label="Confirm Password"
+                      type="password"
+                      placeholder="confirm password"
+                      onIonChange={(e) => setConfirmPassword(e.detail.value!)}
                     />
                     <IonButton
                       type="submit"
@@ -96,13 +119,13 @@ const Register: React.FC = () => {
                       <div className="line"></div>
                     </div>
                     <IonRow className="ion-margin-top">
-                            <IonCol size="12" className="ion-text-center">
-                              <AuthSocialButton
-                                icon={BsGoogle}
-                                onClick={() => socialAction("google")}
-                              />
-                            </IonCol>
-                          </IonRow>
+                      <IonCol size="12" className="ion-text-center">
+                        <AuthSocialButton
+                          icon={BsGoogle}
+                          onClick={() => socialAction("google")}
+                        />
+                      </IonCol>
+                    </IonRow>
                   </form>
                 </IonCardContent>
               </IonCard>
