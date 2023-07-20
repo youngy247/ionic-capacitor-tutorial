@@ -35,41 +35,53 @@ const Insects: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchBugs();
-  }, [searchQuery]);
+    fetchBugs(searchQuery);
+  }, []); // Only run once, when component mounts
+  
+  useEffect(() => {
 
-  const fetchBugs = async () => {
-    if (searchQuery) {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `https://api.inaturalist.org/v1/observations?q=${encodeURIComponent(
-            searchQuery
+      fetchBugs(searchQuery);
+    
+  }, [searchQuery]); // Only run when searchQuery changes, but not when it's initially an empty string
+  
+  
+  const fetchBugs = async (query: string) => {
+    setLoading(true);
+    try {
+      const endpoint = query
+        ? `https://api.inaturalist.org/v1/observations?q=${encodeURIComponent(
+            query
           )}&per_page=15`
-        );
-        const data = await response.json();
-        const results = data.results.map((result: any) => ({
-          image: result.taxon.default_photo?.medium_url,
-          commonName: result.taxon.preferred_common_name,
-          scientificName: result.taxon.name, // Added
-          observedAt: result.observed_on, // Added
-          place: result.place_guess, // Added
-        }));
-        setBugs(results);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching bugs:", error);
-        setBugs([]);
-        setLoading(false);
-      }
-    } else {
-      setBugs([]);
-    }
-  };
+        : `https://api.inaturalist.org/v1/observations?order_by=created_at&order=desc&per_page=15`;
+  
+        console.log(`Fetching data from ${endpoint}`); 
 
-  const handleSearchChange = (event: CustomEvent) => {
-    setSearchQuery(event.detail.value);
-  };
+      const response = await fetch(endpoint);
+      const data = await response.json();
+
+      console.log('Received data', data); 
+
+      const results = data.results.map((result: any) => ({
+        image: result.taxon && result.taxon.default_photo ? result.taxon.default_photo.medium_url : null,
+      commonName: result.taxon ? result.taxon.preferred_common_name : null,
+      scientificName: result.taxon ? result.taxon.name : null,
+        observedAt: result.observed_on,
+        place: result.place_guess,
+      }));
+      setBugs(results);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching bugs:", error);
+      setBugs([]);
+      setLoading(false);
+    }
+};
+
+const handleSearchChange = (event: CustomEvent) => {
+  const query = event.detail.value;
+  setSearchQuery(query);
+};
+
 
   const handleBugClick = (bug: any) => {
     setSelectedBug(bug);
@@ -96,12 +108,13 @@ const Insects: React.FC = () => {
           value={searchQuery}
           onIonChange={handleSearchChange}
         ></IonSearchbar>
+        {!searchQuery && <h2>Most Recent Observations</h2>}
         {isMobileDevice && <p className="centered-text">Click on an insect for more information.</p>}
-        {loading ? (
+        {loading && searchQuery ? (
           <p>Loading insects...</p>
         ) : (
           <>
-            {bugs.length === 0 ? (
+            {bugs.length === 0 && searchQuery ? (
               <p>No insects found.</p>
             ) : (
               bugs.map((bug, index) => (
@@ -171,5 +184,7 @@ const Insects: React.FC = () => {
     </IonPage>
   );
 };
+
+
 
 export default Insects;
