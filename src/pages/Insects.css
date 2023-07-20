@@ -7,3 +7,46 @@
 .image-container ion-img {
   width: 100%;
 }
+
+/* Insects.css */
+
+.card-content-desktop {
+  display: flex;
+  justify-content: space-between;
+}
+
+.image-name-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.additional-info {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+/* Insects.css */
+
+.modal-content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.centered-text {
+  text-align: center;
+}
+
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .card-content-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
