@@ -17,6 +17,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import "./Insects.css";
 import { useMediaQuery } from "react-responsive";
+import StockInsectImage from "../assets/StockInsectImage.jpg";
 
 const Insects: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -37,14 +38,11 @@ const Insects: React.FC = () => {
   useEffect(() => {
     fetchBugs(searchQuery);
   }, []); // Only run once, when component mounts
-  
-  useEffect(() => {
 
-      fetchBugs(searchQuery);
-    
+  useEffect(() => {
+    fetchBugs(searchQuery);
   }, [searchQuery]); // Only run when searchQuery changes, but not when it's initially an empty string
-  
-  
+
   const fetchBugs = async (query: string) => {
     setLoading(true);
     try {
@@ -53,18 +51,21 @@ const Insects: React.FC = () => {
             query
           )}&per_page=15`
         : `https://api.inaturalist.org/v1/observations?order_by=created_at&order=desc&per_page=15`;
-  
-        console.log(`Fetching data from ${endpoint}`); 
+
+      console.log(`Fetching data from ${endpoint}`);
 
       const response = await fetch(endpoint);
       const data = await response.json();
 
-      console.log('Received data', data); 
+      console.log("Received data", data);
 
       const results = data.results.map((result: any) => ({
-        image: result.taxon && result.taxon.default_photo ? result.taxon.default_photo.medium_url : null,
-      commonName: result.taxon ? result.taxon.preferred_common_name : null,
-      scientificName: result.taxon ? result.taxon.name : null,
+        image:
+          result.taxon && result.taxon.default_photo
+            ? result.taxon.default_photo.medium_url
+            : null,
+        commonName: result.taxon ? result.taxon.preferred_common_name : null,
+        scientificName: result.taxon ? result.taxon.name : null,
         observedAt: result.observed_on,
         place: result.place_guess,
       }));
@@ -75,13 +76,12 @@ const Insects: React.FC = () => {
       setBugs([]);
       setLoading(false);
     }
-};
+  };
 
-const handleSearchChange = (event: CustomEvent) => {
-  const query = event.detail.value;
-  setSearchQuery(query);
-};
-
+  const handleSearchChange = (event: CustomEvent) => {
+    const query = event.detail.value;
+    setSearchQuery(query);
+  };
 
   const handleBugClick = (bug: any) => {
     setSelectedBug(bug);
@@ -97,7 +97,7 @@ const handleSearchChange = (event: CustomEvent) => {
     <IonPage ref={page}>
       <IonHeader>
         <IonToolbar>
-        <IonButtons slot="start">
+          <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
           <IonTitle>Search Insects</IonTitle>
@@ -109,7 +109,11 @@ const handleSearchChange = (event: CustomEvent) => {
           onIonChange={handleSearchChange}
         ></IonSearchbar>
         {!searchQuery && <h2>Most Recent Observations</h2>}
-        {isMobileDevice && <p className="centered-text">Click on an insect for more information.</p>}
+        {isMobileDevice && (
+          <p className="centered-text">
+            Click on an insect for more information.
+          </p>
+        )}
         {loading && searchQuery ? (
           <p>Loading insects...</p>
         ) : (
@@ -130,8 +134,17 @@ const handleSearchChange = (event: CustomEvent) => {
                     }
                   >
                     <div className="image-container">
-                      {bug.image && <IonImg src={bug.image} />}
+                      <IonImg src={bug.image ? bug.image : StockInsectImage} />
+                      {bug.image ? null : (
+                        <p className="image-credit">
+                          <a href="https://www.freepik.com/free-photo/mosquito-3d-illustration_13880913.htm#query=bug%20with%20question%20mark&position=0&from_view=search&track=ais">
+                            Image by julos
+                          </a>{" "}
+                          on Freepik
+                        </p>
+                      )}
                     </div>
+
                     <IonLabel>
                       <strong>{bug.commonName}</strong>
                     </IonLabel>
@@ -152,6 +165,7 @@ const handleSearchChange = (event: CustomEvent) => {
         )}
 
         <IonModal
+          initialBreakpoint={0.5}
           isOpen={showModal}
           presentingElement={presentingElement!}
           onDidDismiss={handleCloseModal}
@@ -167,8 +181,19 @@ const handleSearchChange = (event: CustomEvent) => {
           <IonContent className="ion-padding">
             <div className="modal-content-container">
               <div className="image-container">
-                {selectedBug?.image && <IonImg src={selectedBug.image} />}
+                <IonImg
+                  src={selectedBug?.image ? selectedBug.image : StockInsectImage}
+                />
+                {selectedBug?.image ? null : (
+                  <p className="image-credit">
+                    <a href="https://www.freepik.com/free-photo/mosquito-3d-illustration_13880913.htm#query=bug%20with%20question%20mark&position=0&from_view=search&track=ais">
+                      Image by julos
+                    </a>{" "}
+                    on Freepik
+                  </p>
+                )}
               </div>
+
               <IonLabel className="centered-text">
                 <strong>{selectedBug?.commonName}</strong>
               </IonLabel>
@@ -184,7 +209,5 @@ const handleSearchChange = (event: CustomEvent) => {
     </IonPage>
   );
 };
-
-
 
 export default Insects;
