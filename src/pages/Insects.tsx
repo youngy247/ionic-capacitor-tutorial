@@ -1,11 +1,22 @@
-import { IonCard, IonCardContent, IonContent, IonHeader, IonImg, IonLabel, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
-import React, { useEffect, useState } from 'react';
-import './Insects.css'
+import { IonButton, IonCard, IonCardContent, IonContent, IonHeader, IonImg, IonLabel, IonModal, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import React, { useEffect, useRef, useState } from 'react';
+import './Insects.css';
+import { useMediaQuery } from 'react-responsive';
 
 const Insects: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [bugs, setBugs] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedBug, setSelectedBug] = useState<any | null>(null);
+  const [presentingElement, setPresentingElement] = useState<HTMLElement | null>(null);
+  const page = useRef(null);
+
+  const isMobileDevice = useMediaQuery({ maxWidth: 768 });
+
+  useEffect(() => {
+    setPresentingElement(page.current);
+  }, [])
 
   useEffect(() => {
     fetchBugs();
@@ -24,6 +35,9 @@ const Insects: React.FC = () => {
         const results = data.results.map((result: any) => ({
           image: result.taxon.default_photo?.medium_url,
           commonName: result.taxon.preferred_common_name,
+          scientificName: result.taxon.name,   // Added
+          observedAt: result.observed_on,      // Added
+          place: result.place_guess,           // Added
         }));
         setBugs(results);
         setLoading(false);
@@ -41,8 +55,18 @@ const Insects: React.FC = () => {
     setSearchQuery(event.detail.value);
   };
 
+  const handleBugClick = (bug: any) => {
+    setSelectedBug(bug);
+    setShowModal(true);
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedBug(null);
+  }
+
   return (
-    <IonPage>
+    <IonPage ref={page}>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Search Insects</IonTitle>
@@ -59,18 +83,41 @@ const Insects: React.FC = () => {
               <p>No insects found.</p>
             ) : (
               bugs.map((bug, index) => (
-                <IonCard key={index}>
+                <IonCard key={index} onClick={() => isMobileDevice && handleBugClick(bug)}>
                   <IonCardContent>
-                  <div className="image-container">    
+                    <div className="image-container">   
                       {bug.image && <IonImg src={bug.image} />}
                     </div>
-                    <IonLabel>{bug.commonName}</IonLabel>
+                    <IonLabel><strong>{bug.commonName}</strong></IonLabel>
+                    {!isMobileDevice && <>
+                      <IonLabel><i>{bug.scientificName}</i></IonLabel>
+                      <IonLabel>Observed at: {bug.observedAt}</IonLabel>
+                      <IonLabel>Place: {bug.place}</IonLabel>
+                    </>}
                   </IonCardContent>
                 </IonCard>
               ))
             )}
           </>
         )}
+
+        <IonModal isOpen={showModal} presentingElement={presentingElement!} onDidDismiss={handleCloseModal}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>{selectedBug?.commonName}</IonTitle>
+              <IonButton slot="end" onClick={handleCloseModal}>Close</IonButton>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            <div className="image-container">
+              {selectedBug?.image && <IonImg src={selectedBug.image} />}
+            </div>
+            <IonLabel><strong>{selectedBug?.commonName}</strong></IonLabel>
+            <IonLabel><i>{selectedBug?.scientificName}</i></IonLabel>
+            <IonLabel>Observed at: {selectedBug?.observedAt}</IonLabel>
+            <IonLabel>Place: {selectedBug?.place}</IonLabel>
+          </IonContent>
+        </IonModal>
       </IonContent>
     </IonPage>
   );
