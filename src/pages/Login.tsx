@@ -18,13 +18,12 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { logInOutline, personCircleOutline } from "ionicons/icons";
-import fcc from "../assets/fcc.svg";
 import InsectInspectLogo from "../assets/InsectInspectLogo.png";
 import Intro from "../components/Intro";
 import { Preferences } from "@capacitor/preferences";
 import AuthSocialButton from "./AuthSocialButton";
 import { BsGoogle } from "react-icons/bs";
-import "./Login.css";
+import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 
 
@@ -114,7 +113,7 @@ const Login: React.FC = () => {
                     </div>
                   </IonCol>
                 </IonRow>
-                <IonRow className="ion-justify-content-center">
+                <IonRow className="ion-justify-content-center" >
                   <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                     <IonCard>
                       <IonCardContent>
