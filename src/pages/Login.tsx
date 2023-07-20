@@ -72,18 +72,25 @@ const Login: React.FC = () => {
   const socialAction = async (action: string) => {
     await present("Logging in...");
   
-    if (action === "google") {
-      const user  = await GoogleAuth.signIn();
-      console.log('user: ', user)
-      // Use the googleUser object to access user data (e.g., googleUser.email, googleUser.displayName)
-      // Perform the necessary authentication and user handling logic
-      // If login is successful...
-      Preferences.set({ key: 'login-method', value: 'google' });
-    }
+    try {
+      if (action === "google") {
+        const user = await GoogleAuth.signIn();
+        console.log('user: ', user)
+        // Use the googleUser object to access user data (e.g., googleUser.email, googleUser.displayName)
+        // Perform the necessary authentication and user handling logic
+        // If login is successful...
+        Preferences.set({ key: 'login-method', value: 'google' });
+      }
   
-    await dismiss();
-    router.push("/app", "root");
+      await dismiss();
+      router.push("/app", "root");
+    } catch (error) {
+      console.error('Login failed:', error);
+      // dismiss the loader when login fails or is cancelled
+      await dismiss();
+    }
   };
+  
 
   return (
     <>
