@@ -66,6 +66,7 @@ const Register: React.FC = () => {
                 <IonCardContent>
                   <form onSubmit={doRegister}>
                     <IonInput
+                      mode="md"
                       fill="outline"
                       labelPlacement="floating"
                       label="Email"
@@ -73,6 +74,7 @@ const Register: React.FC = () => {
                       placeholder="email@gmail.com"
                     />
                     <IonInput
+                      mode="md"
                       className="ion-margin-top"
                       fill="outline"
                       labelPlacement="floating"
