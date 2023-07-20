@@ -8,9 +8,14 @@
   width: 100%;
 }
 
+ul {
+  list-style: none;
+}
+
 .card-container {
   max-width: 50rem;  /* You can adjust this value */
   margin: 0 auto;
+  margin-bottom: 1.25rem;
 }
 
 .card-content-desktop {
@@ -43,6 +48,14 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+}
+
+.modal-content-container .common-name {
+  margin: 1rem 0 0.25rem 0; 
+}
+
+.more-details {
+  margin-top: 1rem; /* Add gap above the more details section */
 }
 
 .centered-text {

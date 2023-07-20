@@ -69,7 +69,7 @@ const Insects: React.FC = () => {
         observedAt: result.observed_on,
         place: result.place_guess,
         qualityGrade: result.quality_grade,
-        timeObservedAt: result.time_observed_at,
+        timeObservedAt: result.time_observed_at ? result.time_observed_at.split("T")[1].split("+")[0] : null,
         positionalAccuracy: result.positional_accuracy,
         // Add more details as needed
       }));
@@ -112,18 +112,18 @@ const Insects: React.FC = () => {
           value={searchQuery}
           onIonChange={handleSearchChange}
         ></IonSearchbar>
-        {!searchQuery && <h2>Most Recent Observations</h2>}
+        {!searchQuery && <h2>Most Recent Observation Posts</h2>}
         {isMobileDevice && (
           <p className="centered-text">
             Click on an insect for more information.
           </p>
         )}
         {loading && searchQuery ? (
-          <p>Loading results...</p>
+          <p>Loading Observations...</p>
         ) : (
           <>
             {bugs.length === 0 && searchQuery ? (
-              <p>No results found.</p>
+              <p>No Observations found.</p>
             ) : (
               bugs.map((bug, index) => (
                 <IonCard
@@ -160,7 +160,7 @@ const Insects: React.FC = () => {
                           </div>
                           <div>Observed on: {bug.observedAt}</div>
                           <div>Place: {bug.place}</div>
-                          <div>
+                          <div className="more-details">
                             More Details:
                             <ul>
                               <li>Quality Grade: {bug.qualityGrade}</li>
@@ -220,7 +220,7 @@ const Insects: React.FC = () => {
                 </div>
                 <div>Observed on: {selectedBug?.observedAt}</div>
                 <div>Place: {selectedBug?.place}</div>
-                <div>
+                <div className="more-details">
                   More Details:
                   <ul>
                     <li>Quality Grade: {selectedBug?.qualityGrade}</li>
