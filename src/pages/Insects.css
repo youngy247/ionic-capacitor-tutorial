@@ -1,0 +1,9 @@
+.image-container {
+  width: 100%;
+  max-width: 15rem;  /* You can adjust this value */
+  overflow: hidden;
+}
+
+.image-container ion-img {
+  width: 100%;
+}

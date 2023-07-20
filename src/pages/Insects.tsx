@@ -1,5 +1,6 @@
 import { IonCard, IonCardContent, IonContent, IonHeader, IonImg, IonLabel, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
+import './Insects.css'
 
 const Insects: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -60,7 +61,9 @@ const Insects: React.FC = () => {
               bugs.map((bug, index) => (
                 <IonCard key={index}>
                   <IonCardContent>
-                    {bug.image && <IonImg src={bug.image} />}
+                  <div className="image-container">    
+                      {bug.image && <IonImg src={bug.image} />}
+                    </div>
                     <IonLabel>{bug.commonName}</IonLabel>
                   </IonCardContent>
                 </IonCard>
