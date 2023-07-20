@@ -26,12 +26,13 @@ import {
 import News from "./News";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { Preferences } from "@capacitor/preferences";
+import Home from "./Home";
 
 const Menu: React.FC = () => {
   const paths = [
-    { name: "Home", url: "/app/list", icon: homeOutline },
+    { name: "Home", url: "/app/home", icon: homeOutline },
     { name: "News", url: "/app/news", icon: newspaperOutline },
-    { name: "Settings", url: "/app/settings", icon: settingsOutline },
+    { name: "My profile", url: "/app/settings", icon: settingsOutline },
   ];
 
   const router = useIonRouter();
@@ -83,11 +84,11 @@ const Menu: React.FC = () => {
         </IonMenu>
 
         <IonRouterOutlet id="main">
-          <Route exact path="/app/list" component={List} />
+          <Route path="/app/home" component={Home} />
           <Route exact path="/app/news" component={News} />
           <Route path="/app/settings" component={Settings} />
           <Route exact path="/app">
-            <Redirect to="/app/list" />
+            <Redirect to="/app/home" />
           </Route>
         </IonRouterOutlet>
       </IonSplitPane>

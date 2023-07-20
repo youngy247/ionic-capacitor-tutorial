@@ -1,4 +1,4 @@
-import { IonButtons, IonContent, IonHeader, IonIcon, IonLabel, IonMenuButton, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonTitle, IonToolbar } from '@ionic/react';
+import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, } from '@ionic/react';
 import React from 'react';
 import { Redirect, Route } from 'react-router';
 import Tab1 from './Tab1';
@@ -6,7 +6,7 @@ import Tab2 from './Tab2';
 import { ellipse, helpCircleOutline, triangle } from 'ionicons/icons';
 import Tab3 from './Tab3';
 
-const Seetings: React.FC = () => {
+const Settings: React.FC = () => {
 
   return (
     <IonTabs>
@@ -39,4 +39,4 @@ const Seetings: React.FC = () => {
   );
 };
 
-export default Seetings;
+export default Settings;

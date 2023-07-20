@@ -56,7 +56,7 @@ const Login: React.FC = () => {
     setTimeout(async () => {
       await dismiss();
       router.push("/app", "root");
-    }, 2000);
+    }, 0);
   };
 
   const finishIntro = async () => {
