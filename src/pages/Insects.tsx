@@ -23,11 +23,11 @@ const Insects: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [bugs, setBugs] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedBug, setSelectedBug] = useState<any | null>(null);
   const [presentingElement, setPresentingElement] =
     useState<HTMLElement | null>(null);
   const page = useRef(null);
+  const modal = useRef<HTMLIonModalElement>(null);
 
   const isMobileDevice = useMediaQuery({ maxWidth: 768 });
 
@@ -85,11 +85,11 @@ const Insects: React.FC = () => {
 
   const handleBugClick = (bug: any) => {
     setSelectedBug(bug);
-    setShowModal(true);
+    modal.current?.present();
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    modal.current?.dismiss();
     setSelectedBug(null);
   };
 
@@ -165,10 +165,9 @@ const Insects: React.FC = () => {
         )}
 
         <IonModal
-          initialBreakpoint={0.5}
-          isOpen={showModal}
+          ref={modal}
           presentingElement={presentingElement!}
-          onDidDismiss={handleCloseModal}
+          onIonModalDidDismiss={handleCloseModal}
         >
           <IonHeader>
             <IonToolbar>

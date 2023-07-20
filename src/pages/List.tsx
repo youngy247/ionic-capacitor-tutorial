@@ -163,7 +163,7 @@ const List: React.FC = () => {
 
         <IonModal
           breakpoints={[0, 0.5, 0.8]}
-          initialBreakpoint={0.5}
+          initialBreakpoint={0.8}
           ref={modal}
           isOpen={selectedUser !== null}
           onIonModalDidDismiss={() => setSelectedUser(null)}
