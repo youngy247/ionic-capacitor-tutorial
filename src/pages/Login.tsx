@@ -19,6 +19,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { logInOutline, personCircleOutline } from "ionicons/icons";
 import fcc from "../assets/fcc.svg";
+import InsectInspectLogo from "../assets/InsectInspectLogo.png";
 import Intro from "../components/Intro";
 import { Preferences } from "@capacitor/preferences";
 import AuthSocialButton from "./AuthSocialButton";
@@ -109,7 +110,7 @@ const Login: React.FC = () => {
                 <IonRow className="ion-justify-content-center">
                   <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                     <div className="ion-text-center ion-padding">
-                      <img src={fcc} alt="fCC logo" width={"50%"} />
+                      <img src={InsectInspectLogo} alt="InsectInspect Logo" width={"50%"} />
                     </div>
                   </IonCol>
                 </IonRow>
