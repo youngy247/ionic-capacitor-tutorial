@@ -1,11 +1,13 @@
 import {
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonContent,
   IonHeader,
   IonImg,
   IonLabel,
+  IonMenuButton,
   IonModal,
   IonPage,
   IonSearchbar,
@@ -83,6 +85,9 @@ const Insects: React.FC = () => {
     <IonPage ref={page}>
       <IonHeader>
         <IonToolbar>
+        <IonButtons slot="start">
+            <IonMenuButton />
+          </IonButtons>
           <IonTitle>Search Insects</IonTitle>
         </IonToolbar>
       </IonHeader>
