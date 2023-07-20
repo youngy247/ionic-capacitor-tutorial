@@ -68,6 +68,10 @@ const Insects: React.FC = () => {
         scientificName: result.taxon ? result.taxon.name : null,
         observedAt: result.observed_on,
         place: result.place_guess,
+        qualityGrade: result.quality_grade,
+        timeObservedAt: result.time_observed_at,
+        positionalAccuracy: result.positional_accuracy,
+        // Add more details as needed
       }));
       setBugs(results);
       setLoading(false);
@@ -125,6 +129,7 @@ const Insects: React.FC = () => {
                 <IonCard
                   key={index}
                   onClick={() => isMobileDevice && handleBugClick(bug)}
+                  className="card-container"
                 >
                   <IonCardContent
                     className={
@@ -144,19 +149,31 @@ const Insects: React.FC = () => {
                         </p>
                       )}
                     </div>
-
-                    <IonLabel>
-                      <strong>{bug.commonName}</strong>
-                    </IonLabel>
-                    {!isMobileDevice && (
-                      <>
-                        <IonLabel>
-                          <i>{bug.scientificName}</i>
-                        </IonLabel>
-                        <IonLabel>Observed at: {bug.observedAt}</IonLabel>
-                        <IonLabel>Place: {bug.place}</IonLabel>
-                      </>
-                    )}
+                    <div className="insect-details">
+                      <div className="common-name">
+                        <strong>{bug.commonName}</strong>
+                      </div>
+                      {!isMobileDevice && (
+                        <div className="additional-info">
+                          <div>
+                            <i>{bug.scientificName}</i>
+                          </div>
+                          <div>Observed on: {bug.observedAt}</div>
+                          <div>Place: {bug.place}</div>
+                          <div>
+                            More Details:
+                            <ul>
+                              <li>Quality Grade: {bug.qualityGrade}</li>
+                              <li>Time Observed: {bug.timeObservedAt}</li>
+                              <li>
+                                Positional Accuracy: {bug.positionalAccuracy}
+                              </li>
+                              {/* Add more details as needed */}
+                            </ul>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </IonCardContent>
                 </IonCard>
               ))
@@ -181,7 +198,9 @@ const Insects: React.FC = () => {
             <div className="modal-content-container">
               <div className="image-container">
                 <IonImg
-                  src={selectedBug?.image ? selectedBug.image : StockInsectImage}
+                  src={
+                    selectedBug?.image ? selectedBug.image : StockInsectImage
+                  }
                 />
                 {selectedBug?.image ? null : (
                   <p className="image-credit">
@@ -192,15 +211,25 @@ const Insects: React.FC = () => {
                   </p>
                 )}
               </div>
-
-              <IonLabel className="centered-text">
-                <strong>{selectedBug?.commonName}</strong>
-              </IonLabel>
-              <IonLabel>
-                <i>{selectedBug?.scientificName}</i>
-              </IonLabel>
-              <IonLabel>Observed at: {selectedBug?.observedAt}</IonLabel>
-              <IonLabel>Place: {selectedBug?.place}</IonLabel>
+              <div className="insect-details">
+                <div className="common-name">
+                  <strong>{selectedBug?.commonName}</strong>
+                </div>
+                <div>
+                  <i>{selectedBug?.scientificName}</i>
+                </div>
+                <div>Observed on: {selectedBug?.observedAt}</div>
+                <div>Place: {selectedBug?.place}</div>
+                <div>
+                  More Details:
+                  <ul>
+                    <li>Quality Grade: {selectedBug?.qualityGrade}</li>
+                    <li>Time Observed: {selectedBug?.timeObservedAt}</li>
+                    <li>Positional Accuracy: {selectedBug?.positionalAccuracy}</li>
+                    {/* Add more details as needed */}
+                  </ul>
+                </div>
+              </div>
             </div>
           </IonContent>
         </IonModal>

@@ -8,17 +8,28 @@
   width: 100%;
 }
 
-/* Insects.css */
+.card-container {
+  max-width: 50rem;  /* You can adjust this value */
+  margin: 0 auto;
+}
 
 .card-content-desktop {
   display: flex;
   justify-content: space-between;
 }
 
-.image-name-container {
+.insect-details {
   display: flex;
   flex-direction: column;
+  flex-grow: 2;
   align-items: center;
+  text-align: center;
+}
+
+.common-name {
+  font-size: 1.5rem;  /* You can adjust this value */
+  font-weight: bold;
+  text-align: center;
 }
 
 .additional-info {
@@ -26,8 +37,6 @@
   flex-direction: column;
   align-items: left;
 }
-
-/* Insects.css */
 
 .modal-content-container {
   display: flex;
@@ -40,7 +49,6 @@
   text-align: center;
 }
 
-
 /* Mobile styles */
 @media (max-width: 768px) {
   .card-content-mobile {
@@ -49,4 +57,3 @@
     align-items: center;
   }
 }
-
