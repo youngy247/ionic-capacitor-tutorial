@@ -4,4 +4,5 @@
     <string name="title_activity_main">ionic-capacitor-tutorial</string>
     <string name="package_name">io.ionic.starter</string>
     <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="server_client_id">651481800238-q8csl3u52lsmf87k3s2bj0nuu7c2dipr.apps.googleusercontent.com</string>
 </resources>
