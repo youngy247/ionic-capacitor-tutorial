@@ -104,7 +104,7 @@ const Insects: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>Search Insects</IonTitle>
+          <IonTitle>Search Plants and Animals</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
@@ -119,11 +119,11 @@ const Insects: React.FC = () => {
           </p>
         )}
         {loading && searchQuery ? (
-          <p>Loading insects...</p>
+          <p>Loading results...</p>
         ) : (
           <>
             {bugs.length === 0 && searchQuery ? (
-              <p>No insects found.</p>
+              <p>No results found.</p>
             ) : (
               bugs.map((bug, index) => (
                 <IonCard
