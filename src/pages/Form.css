@@ -45,3 +45,7 @@ img {
 .input-icon:hover{
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+.password-requirements {
+  margin-top: 0.7rem;
+}

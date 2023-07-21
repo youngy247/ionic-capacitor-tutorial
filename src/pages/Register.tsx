@@ -225,7 +225,7 @@ const Register: React.FC = () => {
                       </a>
                     </div>
 
-                    <div>
+                    <div className="password-requirements">
                       <p style={{ color: hasMinLength ? "green" : "red" }}>
                         Password must be at least 8 characters
                       </p>
