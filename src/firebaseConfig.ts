@@ -1,6 +1,12 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+
+import {  
+  getAuth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithCredential 
+} from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -13,7 +19,6 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -21,8 +26,6 @@ const auth = getAuth(app);
 export async function loginUser(username: string, password: string) {
   try {
     const res = await signInWithEmailAndPassword(auth, username, password); 
-    // User signed in successfully.
-    // You can access user info via res.user
     console.log(res)
     return res.user;
   } catch (error) {
@@ -32,7 +35,6 @@ export async function loginUser(username: string, password: string) {
 }
 
 export async function registerUser(username: string, password: string) {
-  
   try {
       const res = await createUserWithEmailAndPassword(auth, username, password);
       console.log(res)
@@ -43,3 +45,19 @@ export async function registerUser(username: string, password: string) {
     throw error;
   }
 }
+
+export async function loginWithGoogle(idToken: string) {
+  try {
+    const credential = GoogleAuthProvider.credential(idToken);
+    const res = await signInWithCredential(auth, credential);
+    console.log(res);
+    return res.user;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+// For Google, registration and login is the same process
+// If the Google account is not linked with Firebase yet, it'll automatically create a new account
+export const registerWithGoogle = loginWithGoogle;
