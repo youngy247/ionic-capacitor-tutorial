@@ -15,6 +15,7 @@ import {
   isPlatform,
   useIonLoading,
   useIonRouter,
+  useIonToast,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { logInOutline, personCircleOutline } from "ionicons/icons";
@@ -25,6 +26,7 @@ import AuthSocialButton from "./AuthSocialButton";
 import { BsGoogle } from "react-icons/bs";
 import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
+import { loginUser } from "../firebaseConfig";
 
 
 const INTRO_KEY = "intro-seen";
@@ -33,10 +35,13 @@ const Login: React.FC = () => {
   const router = useIonRouter();
   const [introSeen, setIntroSeen] = useState<boolean | null>(null);
   const [present, dismiss] = useIonLoading();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showToast] = useIonToast();
 
-  if(!isPlatform('capacitor')){
-     GoogleAuth.initialize()
-}
+  if (!isPlatform("capacitor")) {
+    GoogleAuth.initialize();
+  }
 
   useEffect(() => {
     const checkStorage = async () => {
@@ -50,14 +55,29 @@ const Login: React.FC = () => {
   const doLogin = async (event: any) => {
     event.preventDefault();
     await present("Logging in...");
-    //Login logic here
-     // If login is successful...
-    Preferences.set({ key: 'login-method', value: 'form' });
-    setTimeout(async () => {
+    try {
+      const res = await loginUser(email, password);
+      console.log(`${res ? "Login successful" : "Login failed"}`);
+      Preferences.set({ key: 'login-method', value: 'form' });
       await dismiss();
       router.push("/app", "root");
-    }, 0);
-  };
+      showToast({
+        message: "Login successful",
+        duration: 2000,
+        color: "success",
+      });
+      // Other successful login code...
+    } catch (error) {
+      console.error("Login failed:", error);
+      await dismiss();
+      showToast({
+        message: "Invalid credentials or user does not exist",
+        duration: 3000,
+        color: "danger",
+      });
+    }
+};
+
 
   const finishIntro = async () => {
     setIntroSeen(true);
@@ -71,26 +91,25 @@ const Login: React.FC = () => {
 
   const socialAction = async (action: string) => {
     await present("Logging in...");
-  
+
     try {
       if (action === "google") {
         const user = await GoogleAuth.signIn();
-        console.log('user: ', user)
+        console.log("user: ", user);
         // Use the googleUser object to access user data (e.g., googleUser.email, googleUser.displayName)
         // Perform the necessary authentication and user handling logic
         // If login is successful...
-        Preferences.set({ key: 'login-method', value: 'google' });
+        Preferences.set({ key: "login-method", value: "google" });
       }
-  
+
       await dismiss();
       router.push("/app", "root");
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
       // dismiss the loader when login fails or is cancelled
       await dismiss();
     }
   };
-  
 
   return (
     <>
@@ -109,15 +128,19 @@ const Login: React.FC = () => {
                 <IonRow className="ion-justify-content-center">
                   <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                     <div className="ion-text-center ion-padding">
-                      <img src={InsectInspectLogo} alt="InsectInspect Logo" width={"50%"} />
+                      <img
+                        src={InsectInspectLogo}
+                        alt="InsectInspect Logo"
+                        width={"50%"}
+                      />
                     </div>
                   </IonCol>
                 </IonRow>
-                <IonRow className="ion-justify-content-center" >
+                <IonRow className="ion-justify-content-center">
                   <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                     <IonCard>
                       <IonCardContent>
-                        <form onSubmit={doLogin}>
+                        <form onSubmit={doLogin} id="open-toast">
                           <IonInput
                             required
                             mode="md"
@@ -126,6 +149,7 @@ const Login: React.FC = () => {
                             label="Email"
                             type="email"
                             placeholder="email@gmail.com"
+                            onIonChange={(e) => setEmail(e.detail.value!)}
                           />
                           <IonInput
                             required
@@ -136,6 +160,7 @@ const Login: React.FC = () => {
                             label="Password"
                             type="password"
                             placeholder="password"
+                            onIonChange={(e) => setPassword(e.detail.value!)}
                           />
                           <IonButton
                             type="submit"
