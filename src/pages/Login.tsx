@@ -51,6 +51,46 @@ const Login: React.FC = () => {
     checkStorage();
   }, []);
 
+  const getFriendlyErrorMessage = (errorCode) => {
+    switch (errorCode) {
+      case 'auth/invalid-email':
+        return 'The email address is not valid. Please try again.';
+      case 'auth/user-disabled':
+        return 'The account corresponding to this email has been disabled. Please contact support.';
+      case 'auth/user-not-found':
+        return 'There is no account corresponding to this email. Please register first.';
+      case 'auth/wrong-password':
+        return 'The password you entered is incorrect. Please try again.';
+      default:
+        return 'An unknown error occurred. Please try again.';
+    }
+  }
+  
+  const getFriendlyErrorMessageForGoogle = (errorCode) => {
+    switch (errorCode) {
+      case 'invalid_request':
+        return "Oops! Something went wrong with your sign-in request. Please try again.";
+      case 'unauthorized_client':
+        return "Sorry, but this app isn't authorized to sign you in. Please contact support.";
+      case 'access_denied':
+        return "Access was denied. Please make sure you have given the necessary permissions.";
+      case 'unsupported_response_type':
+        return "There seems to be a technical glitch while trying to sign you in. Please try again later.";
+      case 'invalid_scope':
+        return "There was a problem accessing your account. Please make sure you have given the necessary permissions.";
+      case 'server_error':
+        return "We're experiencing server issues. Please try again later.";
+      case 'temporarily_unavailable':
+        return "Our sign-in service is temporarily unavailable. We appreciate your patience!";
+      case 'popup_closed_by_user':
+        return "It looks like you closed the sign-in window. Please try signing in again.";
+      default:
+        return "Oops! An unknown error occurred. Please try signing in again.";
+    }
+  }
+  
+  
+
   const doLogin = async (event: any) => {
     event.preventDefault();
     await present("Logging in...");
@@ -69,8 +109,10 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error("Login failed:", error);
       await dismiss();
+      const friendlyErrorMessage = getFriendlyErrorMessage(error.code);
+
       showToast({
-        message: "Invalid credentials or user does not exist",
+        message: friendlyErrorMessage,
         duration: 3000,
         color: "danger",
       });
@@ -114,8 +156,14 @@ const Login: React.FC = () => {
       await dismiss();
       router.push("/app", "root");
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error('Login with Google failed:', error);
       await dismiss();
+      const friendlyErrorMessageForGoogle = getFriendlyErrorMessageForGoogle(error.error);
+      showToast({
+        message: friendlyErrorMessageForGoogle,
+        duration: 3000,
+        color: "danger",
+      });
     }
   };
 
