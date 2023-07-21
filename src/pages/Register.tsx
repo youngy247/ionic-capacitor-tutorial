@@ -14,6 +14,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
+  useIonToast,
   useIonRouter,
 } from "@ionic/react";
 import { checkmarkDoneOutline } from "ionicons/icons";
@@ -22,6 +23,7 @@ import AuthSocialButton from "./AuthSocialButton";
 import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { BsGoogle } from "react-icons/bs";
+import { registerUser } from "../firebaseConfig";
 
 const Register: React.FC = () => {
   const router = useIonRouter();
@@ -29,18 +31,51 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showToast] = useIonToast();
 
-  const doRegister = (event: any) => {
+  const doRegister = async (event: any) => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
-      console.error("Passwords do not match");
-      return;
+      return showToast({
+        message: "Passwords do not match",
+        duration: 3000,
+        color: "danger",
+      });
     }
-
-    console.log("doRegister");
+    if (password.length < 6 ) {
+      return showToast({
+        message: "Password must be at least 6 characters",
+        duration: 3000,
+        color: "danger",
+      });
+    }
+    if (email.trim() === "" || password.trim() === "") {
+      return showToast({
+        message: "Email and password are required",
+        duration: 3000,
+        color: "danger",
+      });
+    }
+    try {
+    const res = await registerUser(email, password);
+    console.log(`${res ? "Registration successful" : "Registration failed"}`);
     router.goBack();
-  };
+    showToast({
+      message: "Registration successful",
+      duration: 2000,
+      color: "success",
+    })
+  } catch (error) {
+      console.log("Registration failed: ", error);
+      showToast({
+        message: "Registration failed",
+        duration: 3000,
+        color: "danger",
+      });
+    }
+  }
+
 
   const socialAction = async (action: string) => {
     try {
