@@ -23,7 +23,7 @@ import AuthSocialButton from "./AuthSocialButton";
 import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { BsGoogle } from "react-icons/bs";
-import { registerUser } from "../firebaseConfig";
+import { registerUser, registerWithGoogle } from "../firebaseConfig";
 
 const Register: React.FC = () => {
   const router = useIonRouter();
@@ -80,15 +80,34 @@ const Register: React.FC = () => {
   const socialAction = async (action: string) => {
     try {
       if (action === "google") {
-        const user = await GoogleAuth.signIn();
-        console.log("user: ", user);
-
+        const result = await GoogleAuth.signIn();
+        console.log("Google Auth result: ", result);
+        const idToken = result.authentication.idToken;
+        console.log("Google Auth idToken: ", idToken);
+        if (!idToken) {
+          console.error("Google Auth failed");
+          return;
+        }
+        const user = await registerWithGoogle(idToken);
+        console.log("Firebase user: ", user);
+        if (user) {
+          showToast({
+            message: `Welcome, ${result.name}`,
+            duration: 2000,
+            color: "success",
+          });
+        }
         router.push("/app", "root");
       }
     } catch (error) {
-      console.error("Registration failed:", error);
+      showToast({
+        message: `Regisration failed`,
+        duration: 3000,
+        color: "danger",
+      });
     }
   };
+  
 
 
   return (

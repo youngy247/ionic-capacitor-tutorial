@@ -26,8 +26,7 @@ import AuthSocialButton from "./AuthSocialButton";
 import { BsGoogle } from "react-icons/bs";
 import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
-import { loginUser } from "../firebaseConfig";
-
+import { loginUser, loginWithGoogle } from "../firebaseConfig";
 
 const INTRO_KEY = "intro-seen";
 
@@ -58,7 +57,7 @@ const Login: React.FC = () => {
     try {
       const res = await loginUser(email, password);
       console.log(`${res ? "Login successful" : "Login failed"}`);
-      Preferences.set({ key: 'login-method', value: 'form' });
+      Preferences.set({ key: "login-method", value: "form" });
       await dismiss();
       router.push("/app", "root");
       showToast({
@@ -76,8 +75,7 @@ const Login: React.FC = () => {
         color: "danger",
       });
     }
-};
-
+  };
 
   const finishIntro = async () => {
     setIntroSeen(true);
@@ -94,19 +92,29 @@ const Login: React.FC = () => {
 
     try {
       if (action === "google") {
-        const user = await GoogleAuth.signIn();
-        console.log("user: ", user);
-        // Use the googleUser object to access user data (e.g., googleUser.email, googleUser.displayName)
-        // Perform the necessary authentication and user handling logic
-        // If login is successful...
-        Preferences.set({ key: "login-method", value: "google" });
+        const result = await GoogleAuth.signIn();
+        const idToken = result.authentication.idToken;
+        console.log("Google user: ", result);
+        if (result && idToken) {
+          const user = await loginWithGoogle(idToken);
+          console.log("Firebase user: ", user);
+          Preferences.set({ key: "login-method", value: "google" });
+
+          // Check if user exists, if yes then show "welcome back" toast
+          if (user) {
+            showToast({
+              message: `Welcome back, ${result.name}`,
+              duration: 2000,
+              color: "success",
+            });
+          }
+        }
       }
 
       await dismiss();
       router.push("/app", "root");
     } catch (error) {
       console.error("Login failed:", error);
-      // dismiss the loader when login fails or is cancelled
       await dismiss();
     }
   };
