@@ -25,6 +25,7 @@ import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { BsGoogle } from "react-icons/bs";
 import { registerUser, registerWithGoogle } from "../firebaseConfig";
+import { validate as validateEmail } from 'email-validator';
 
 const Register: React.FC = () => {
   const router = useIonRouter();
@@ -48,6 +49,14 @@ const Register: React.FC = () => {
 
   const doRegister = async (event: any) => {
     event.preventDefault();
+
+    if (!validateEmail(email)) {
+      return showToast({
+        message: "Please enter a valid email",
+        duration: 3000,
+        color: "danger",
+      });
+    }
 
     if (password !== confirmPassword) {
       return showToast({
