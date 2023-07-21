@@ -18,7 +18,7 @@ import {
   useIonRouter,
   useIonLoading,
 } from "@ionic/react";
-import { checkmarkDoneOutline } from "ionicons/icons";
+import { checkmarkDoneOutline, eye, eyeOff } from "ionicons/icons";
 import React, { useState } from "react";
 import AuthSocialButton from "./AuthSocialButton";
 import "./Form.css";
@@ -197,25 +197,34 @@ const Register: React.FC = () => {
                       placeholder="email@gmail.com"
                       onIonChange={(e) => setEmail(e.detail.value!)}
                     />
-                    <IonInput
-                      clearOnEdit={false}
-                      required
-                      mode="md"
-                      className="ion-margin-top"
-                      fill="outline"
-                      labelPlacement="floating"
-                      label="Password"
-                      type={showPassword ? "text" : "password"} // if showPassword is true, type is "text", else it's "password"
-                      placeholder="password"
-                      onKeyUp={(e) => {
-                        const val = (e.target as HTMLInputElement).value;
-                        setPassword(prev => prev === val ? prev : val);
-                        setHasMinLength(val.length >= 8);
-                        setHasUppercase(/[A-Z]/.test(val));
-                        setHasLowercase(/[a-z]/.test(val));
-                        setHasNumber(/[0-9]/.test(val));
-                      }}
-                    />
+                    <div className="password-container">
+                      <IonInput
+                        clearOnEdit={false}
+                        required
+                        mode="md"
+                        className="ion-margin-top"
+                        labelPlacement="floating"
+                        label="Password"
+                        fill="outline"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="password"
+                        onKeyUp={(e) => {
+                          const val = (e.target as HTMLInputElement).value;
+                          setPassword((prev) => (prev === val ? prev : val));
+                          setHasMinLength(val.length >= 8);
+                          setHasUppercase(/[A-Z]/.test(val));
+                          setHasLowercase(/[a-z]/.test(val));
+                          setHasNumber(/[0-9]/.test(val));
+                        }}
+                      />
+                      <a
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="input-icon"
+                      >
+                        <IonIcon icon={showPassword ? eyeOff : eye} />
+                      </a>
+                    </div>
+
                     <div>
                       <p style={{ color: hasMinLength ? "green" : "red" }}>
                         Password must be at least 8 characters
@@ -230,6 +239,7 @@ const Register: React.FC = () => {
                         Password must contain at least one number
                       </p>
                     </div>
+                    <div className="password-container">
                     <IonInput
                       clearOnEdit={false}
                       required
@@ -242,13 +252,14 @@ const Register: React.FC = () => {
                       placeholder="confirm password"
                       onIonChange={(e) => setConfirmPassword(e.detail.value!)}
                     />
-                    <IonButton
-                      type="button"
-                      fill="clear"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? "Hide password" : "Show password"}
-                    </IonButton>
+                    <a
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="input-icon"
+                      >
+                        <IonIcon icon={showPassword ? eyeOff : eye} />
+                      </a>
+                    </div>
+                  
 
                     <IonButton
                       type="submit"
