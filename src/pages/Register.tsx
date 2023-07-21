@@ -39,6 +39,7 @@ const Register: React.FC = () => {
   const [hasUppercase, setHasUppercase] = useState(false);
   const [hasLowercase, setHasLowercase] = useState(false);
   const [hasNumber, setHasNumber] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const getFriendlyErrorMessage = (errorCode) => {
     switch (errorCode) {
@@ -52,20 +53,19 @@ const Register: React.FC = () => {
 
   const getFriendlyErrorMessageForGoogle = (errorCode) => {
     switch (errorCode) {
-      case 'popup_closed_by_user':
-        case '-5':
+      case "popup_closed_by_user":
+      case "-5":
         return "It seems like you've closed the sign-in window. Please try again.";
-      case 'access_denied':
+      case "access_denied":
         return "Access was denied. Please make sure you've granted the necessary permissions.";
-      case 'operation_not_supported_in_this_environment':
+      case "operation_not_supported_in_this_environment":
         return "This operation isn't supported in your current environment.";
-      case 'invalid_credential':
+      case "invalid_credential":
         return "The provided credentials are invalid. Please try again.";
       default:
         return "Oops! An unknown error occurred. Please try registering again.";
     }
-  }
-  
+  };
 
   const doRegister = async (event: any) => {
     event.preventDefault();
@@ -160,7 +160,8 @@ const Register: React.FC = () => {
       await dismiss();
       // Checking for errorCode in both error.error and error.code
       const errorCode = error.error || error.code;
-      const friendlyErrorMessageForGoogle = getFriendlyErrorMessageForGoogle(errorCode);
+      const friendlyErrorMessageForGoogle =
+        getFriendlyErrorMessageForGoogle(errorCode);
       showToast({
         message: friendlyErrorMessageForGoogle,
         duration: 3000,
@@ -203,7 +204,7 @@ const Register: React.FC = () => {
                       fill="outline"
                       labelPlacement="floating"
                       label="Password"
-                      type="password"
+                      type={showPassword ? "text" : "password"} // if showPassword is true, type is "text", else it's "password"
                       placeholder="password"
                       onKeyUp={(e) => {
                         const val = (e.target as HTMLInputElement).value;
@@ -235,10 +236,18 @@ const Register: React.FC = () => {
                       fill="outline"
                       labelPlacement="floating"
                       label="Confirm Password"
-                      type="password"
+                      type={showPassword ? "text" : "password"} // if showPassword is true, type is "text", else it's "password"
                       placeholder="confirm password"
                       onIonChange={(e) => setConfirmPassword(e.detail.value!)}
                     />
+                    <IonButton
+                      type="button"
+                      fill="clear"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? "Hide password" : "Show password"}
+                    </IonButton>
+
                     <IonButton
                       type="submit"
                       expand="block"
