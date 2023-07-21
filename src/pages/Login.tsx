@@ -211,6 +211,7 @@ const Login: React.FC = () => {
                             onIonChange={(e) => setEmail(e.detail.value!)}
                           />
                           <IonInput
+                            clearOnEdit={false}
                             required
                             mode="md"
                             className="ion-margin-top"

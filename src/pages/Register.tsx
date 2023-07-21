@@ -198,6 +198,7 @@ const Register: React.FC = () => {
                       onIonChange={(e) => setEmail(e.detail.value!)}
                     />
                     <IonInput
+                      clearOnEdit={false}
                       required
                       mode="md"
                       className="ion-margin-top"
@@ -208,7 +209,7 @@ const Register: React.FC = () => {
                       placeholder="password"
                       onKeyUp={(e) => {
                         const val = (e.target as HTMLInputElement).value;
-                        setPassword(val);
+                        setPassword(prev => prev === val ? prev : val);
                         setHasMinLength(val.length >= 8);
                         setHasUppercase(/[A-Z]/.test(val));
                         setHasLowercase(/[a-z]/.test(val));
@@ -230,6 +231,7 @@ const Register: React.FC = () => {
                       </p>
                     </div>
                     <IonInput
+                      clearOnEdit={false}
                       required
                       mode="md"
                       className="ion-margin-top"
