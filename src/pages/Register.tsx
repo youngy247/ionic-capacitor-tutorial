@@ -50,6 +50,23 @@ const Register: React.FC = () => {
     }
   };
 
+  const getFriendlyErrorMessageForGoogle = (errorCode) => {
+    switch (errorCode) {
+      case 'popup_closed_by_user':
+        case '-5':
+        return "It seems like you've closed the sign-in window. Please try again.";
+      case 'access_denied':
+        return "Access was denied. Please make sure you've granted the necessary permissions.";
+      case 'operation_not_supported_in_this_environment':
+        return "This operation isn't supported in your current environment.";
+      case 'invalid_credential':
+        return "The provided credentials are invalid. Please try again.";
+      default:
+        return "Oops! An unknown error occurred. Please try registering again.";
+    }
+  }
+  
+
   const doRegister = async (event: any) => {
     event.preventDefault();
 
@@ -141,8 +158,11 @@ const Register: React.FC = () => {
       }
     } catch (error) {
       await dismiss();
+      // Checking for errorCode in both error.error and error.code
+      const errorCode = error.error || error.code;
+      const friendlyErrorMessageForGoogle = getFriendlyErrorMessageForGoogle(errorCode);
       showToast({
-        message: `Regisration failed`,
+        message: friendlyErrorMessageForGoogle,
         duration: 3000,
         color: "danger",
       });

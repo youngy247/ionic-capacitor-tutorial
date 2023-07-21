@@ -83,6 +83,7 @@ const Login: React.FC = () => {
       case 'temporarily_unavailable':
         return "Our sign-in service is temporarily unavailable. We appreciate your patience!";
       case 'popup_closed_by_user':
+        case '-5':
         return "It looks like you closed the sign-in window. Please try signing in again.";
       default:
         return "Oops! An unknown error occurred. Please try signing in again.";
@@ -158,7 +159,9 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error('Login with Google failed:', error);
       await dismiss();
-      const friendlyErrorMessageForGoogle = getFriendlyErrorMessageForGoogle(error.error);
+      // Checking for errorCode in both error.error and error.code
+      const errorCode = error.error || error.code;
+      const friendlyErrorMessageForGoogle = getFriendlyErrorMessageForGoogle(errorCode);
       showToast({
         message: friendlyErrorMessageForGoogle,
         duration: 3000,
