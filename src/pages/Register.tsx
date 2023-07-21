@@ -16,6 +16,7 @@ import {
   IonToolbar,
   useIonToast,
   useIonRouter,
+  useIonLoading,
 } from "@ionic/react";
 import { checkmarkDoneOutline } from "ionicons/icons";
 import React, { useState } from "react";
@@ -32,6 +33,18 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showToast] = useIonToast();
+  const [present, dismiss] = useIonLoading();
+
+  const getFriendlyErrorMessage = (errorCode) => {
+    switch (errorCode) {
+      case 'auth/email-already-in-use':
+        return 'This email is already registered. Please use another email or sign in.';
+      // add more cases as needed
+      default:
+        return 'An unknown error occurred. Please try again.';
+    }
+  }
+  
 
   const doRegister = async (event: any) => {
     event.preventDefault();
@@ -44,6 +57,7 @@ const Register: React.FC = () => {
       });
     }
     if (password.length < 6 ) {
+
       return showToast({
         message: "Password must be at least 6 characters",
         duration: 3000,
@@ -51,15 +65,20 @@ const Register: React.FC = () => {
       });
     }
     if (email.trim() === "" || password.trim() === "") {
+
       return showToast({
         message: "Email and password are required",
         duration: 3000,
         color: "danger",
       });
     }
+
+    await present("Registering...");
+
     try {
     const res = await registerUser(email, password);
     console.log(`${res ? "Registration successful" : "Registration failed"}`);
+    await dismiss();
     router.goBack();
     showToast({
       message: "Registration successful",
@@ -68,8 +87,10 @@ const Register: React.FC = () => {
     })
   } catch (error) {
       console.log("Registration failed: ", error);
+      await dismiss();
+      const friendlyErrorMessage = getFriendlyErrorMessage(error.code);
       showToast({
-        message: "Registration failed",
+        message: friendlyErrorMessage,
         duration: 3000,
         color: "danger",
       });
@@ -78,6 +99,7 @@ const Register: React.FC = () => {
 
 
   const socialAction = async (action: string) => {
+    await present("Registering...");
     try {
       if (action === "google") {
         const result = await GoogleAuth.signIn();
@@ -97,9 +119,11 @@ const Register: React.FC = () => {
             color: "success",
           });
         }
+        await dismiss();
         router.push("/app", "root");
       }
     } catch (error) {
+      await dismiss();
       showToast({
         message: `Regisration failed`,
         duration: 3000,
