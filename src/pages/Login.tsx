@@ -238,6 +238,19 @@ const Login: React.FC = () => {
                             Login
                             <IonIcon icon={logInOutline} slot="end" />
                           </IonButton>
+
+                          <IonButton
+                            routerLink="/forgotpassword"
+                            fill="clear"
+                            size="small"
+                            color={"medium"}
+                            type="button"
+                            expand="block"
+                            className="ion-margin-top"
+                          >
+                            Forgot Password?
+                          </IonButton>
+
                           <IonButton
                             routerLink="/register"
                             color={"secondary"}

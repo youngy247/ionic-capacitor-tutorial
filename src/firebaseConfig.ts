@@ -5,7 +5,8 @@ import {
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   GoogleAuthProvider, 
-  signInWithCredential 
+  signInWithCredential,
+  sendPasswordResetEmail
 } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -61,3 +62,13 @@ export async function loginWithGoogle(idToken: string) {
 // For Google, registration and login is the same process
 // If the Google account is not linked with Firebase yet, it'll automatically create a new account
 export const registerWithGoogle = loginWithGoogle;
+
+
+export async function sendPasswordReset(email: string) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
