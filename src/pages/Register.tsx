@@ -25,7 +25,7 @@ import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { BsGoogle } from "react-icons/bs";
 import { registerUser, registerWithGoogle } from "../firebaseConfig";
-import { validate as validateEmail } from 'email-validator';
+import { validate as validateEmail } from "email-validator";
 
 const Register: React.FC = () => {
   const router = useIonRouter();
@@ -35,17 +35,20 @@ const Register: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showToast] = useIonToast();
   const [present, dismiss] = useIonLoading();
+  const [hasMinLength, setHasMinLength] = useState(false);
+  const [hasUppercase, setHasUppercase] = useState(false);
+  const [hasLowercase, setHasLowercase] = useState(false);
+  const [hasNumber, setHasNumber] = useState(false);
 
   const getFriendlyErrorMessage = (errorCode) => {
     switch (errorCode) {
-      case 'auth/email-already-in-use':
-        return 'This email is already registered. Please use another email or sign in.';
+      case "auth/email-already-in-use":
+        return "This email is already registered. Please use another email or sign in.";
       // add more cases as needed
       default:
-        return 'An unknown error occurred. Please try again.';
+        return "An unknown error occurred. Please try again.";
     }
-  }
-  
+  };
 
   const doRegister = async (event: any) => {
     event.preventDefault();
@@ -65,16 +68,22 @@ const Register: React.FC = () => {
         color: "danger",
       });
     }
-    if (password.length < 6 ) {
 
+    if (
+      password.length < 8 ||
+      !/[A-Z]/.test(password) ||
+      !/[a-z]/.test(password) ||
+      !/[0-9]/.test(password)
+    ) {
       return showToast({
-        message: "Password must be at least 6 characters",
-        duration: 3000,
+        message:
+          "Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, and one number.",
+        duration: 5000,
         color: "danger",
       });
     }
-    if (email.trim() === "" || password.trim() === "") {
 
+    if (email.trim() === "" || password.trim() === "") {
       return showToast({
         message: "Email and password are required",
         duration: 3000,
@@ -85,16 +94,16 @@ const Register: React.FC = () => {
     await present("Registering...");
 
     try {
-    const res = await registerUser(email, password);
-    console.log(`${res ? "Registration successful" : "Registration failed"}`);
-    await dismiss();
-    router.goBack();
-    showToast({
-      message: "Registration successful",
-      duration: 2000,
-      color: "success",
-    })
-  } catch (error) {
+      const res = await registerUser(email, password);
+      console.log(`${res ? "Registration successful" : "Registration failed"}`);
+      await dismiss();
+      router.goBack();
+      showToast({
+        message: "Registration successful",
+        duration: 2000,
+        color: "success",
+      });
+    } catch (error) {
       console.log("Registration failed: ", error);
       await dismiss();
       const friendlyErrorMessage = getFriendlyErrorMessage(error.code);
@@ -104,8 +113,7 @@ const Register: React.FC = () => {
         color: "danger",
       });
     }
-  }
-
+  };
 
   const socialAction = async (action: string) => {
     await present("Registering...");
@@ -140,8 +148,6 @@ const Register: React.FC = () => {
       });
     }
   };
-  
-
 
   return (
     <IonPage>
@@ -179,8 +185,29 @@ const Register: React.FC = () => {
                       label="Password"
                       type="password"
                       placeholder="password"
-                      onIonChange={(e) => setPassword(e.detail.value!)}
+                      onKeyUp={(e) => {
+                        const val = (e.target as HTMLInputElement).value;
+                        setPassword(val);
+                        setHasMinLength(val.length >= 8);
+                        setHasUppercase(/[A-Z]/.test(val));
+                        setHasLowercase(/[a-z]/.test(val));
+                        setHasNumber(/[0-9]/.test(val));
+                      }}
                     />
+                    <div>
+                      <p style={{ color: hasMinLength ? "green" : "red" }}>
+                        Password must be at least 8 characters
+                      </p>
+                      <p style={{ color: hasUppercase ? "green" : "red" }}>
+                        Password must contain at least one uppercase letter
+                      </p>
+                      <p style={{ color: hasLowercase ? "green" : "red" }}>
+                        Password must contain at least one lowercase letter
+                      </p>
+                      <p style={{ color: hasNumber ? "green" : "red" }}>
+                        Password must contain at least one number
+                      </p>
+                    </div>
                     <IonInput
                       required
                       mode="md"
