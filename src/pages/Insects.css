@@ -12,6 +12,11 @@ ul {
   list-style: none;
 }
 
+#map {
+  width: 200px
+}
+
+
 .card-container {
   max-width: 50rem;  /* You can adjust this value */
   margin: 0 auto;
