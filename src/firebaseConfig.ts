@@ -1,12 +1,13 @@
 import { initializeApp } from "firebase/app";
 
-import {  
-  getAuth, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  GoogleAuthProvider, 
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithCredential,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  sendEmailVerification,
 } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -26,8 +27,8 @@ const auth = getAuth(app);
 
 export async function loginUser(username: string, password: string) {
   try {
-    const res = await signInWithEmailAndPassword(auth, username, password); 
-    console.log(res)
+    const res = await signInWithEmailAndPassword(auth, username, password);
+    console.log(res);
     return res.user;
   } catch (error) {
     console.log(error);
@@ -35,13 +36,28 @@ export async function loginUser(username: string, password: string) {
   }
 }
 
+export async function isUserEmailVerified(user: any) {
+  try {
+    await user.reload();
+    return user.emailVerified;
+  } catch (error) {
+    console.error("Failed to reload user data: ", error);
+    throw error;
+  }
+}
+
 export async function registerUser(username: string, password: string) {
   try {
-      const res = await createUserWithEmailAndPassword(auth, username, password);
-      console.log(res)
-      return res.user;
-  }
-  catch (error) {
+    const res = await createUserWithEmailAndPassword(auth, username, password);
+    console.log(res);
+
+    // Send verification email
+    if (res.user) {
+      await sendVerificationEmail(res.user);
+    }
+
+    return res.user;
+  } catch (error) {
     console.log(error);
     throw error;
   }
@@ -63,10 +79,18 @@ export async function loginWithGoogle(idToken: string) {
 // If the Google account is not linked with Firebase yet, it'll automatically create a new account
 export const registerWithGoogle = loginWithGoogle;
 
-
 export async function sendPasswordReset(email: string) {
   try {
     await sendPasswordResetEmail(auth, email);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function sendVerificationEmail(user) {
+  try {
+    await sendEmailVerification(user);
   } catch (error) {
     console.log(error);
     throw error;
