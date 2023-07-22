@@ -198,7 +198,7 @@ const Insects: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <div className="component-wrapper"></div>
+        <div className="component-wrapper">
         <IonSearchbar
           value={searchQuery}
           onIonChange={handleSearchChange}
@@ -278,6 +278,7 @@ const Insects: React.FC = () => {
             )}
           </>
         )}
+        <div className="page-buttons">
          <IonButton
           fill="clear"
           onClick={() => setCurrentPage(currentPage - 1)}
@@ -307,6 +308,7 @@ const Insects: React.FC = () => {
         >
           Next
         </IonButton> 
+        </div>
 
         <IonModal
           ref={modal}
@@ -375,6 +377,7 @@ const Insects: React.FC = () => {
             </div>
           </IonContent>
         </IonModal>
+        </div>
       </IonContent>
     </IonPage>
   );
