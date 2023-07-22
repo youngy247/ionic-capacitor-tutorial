@@ -18,6 +18,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Insects.css";
 import { useMediaQuery } from "react-responsive";
 import StockInsectImage from "../assets/StockInsectImage.jpg";
+import { GoogleMap } from "@capacitor/google-maps";
 
 const Insects: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -28,8 +29,40 @@ const Insects: React.FC = () => {
     useState<HTMLElement | null>(null);
   const page = useRef(null);
   const modal = useRef<HTMLIonModalElement>(null);
-
   const isMobileDevice = useMediaQuery({ maxWidth: 768 });
+  const apiKey = import.meta.env.VITE_APP_GOOGLE_MAPS_KEY;
+
+  const mapRefs = useRef(new Map());
+
+  useEffect(() => {
+    // Initialize the maps after the bugs are fetched
+    if (bugs.length > 0) {
+      bugs.forEach(async (bug, index) => {
+        const mapElement = mapRefs.current.get(index);
+        if (mapElement && bug.lat && bug.lng) {
+          const bugMap = await GoogleMap.create({
+            id: `map-${index}`,
+            element: mapElement,
+            apiKey: apiKey,
+            config: {
+              center: {
+                lat: bug.lat,
+                lng: bug.lng,
+              },
+              zoom: 8,
+            },
+          });
+          // Add marker at the bug's location
+          bugMap.addMarker({
+            coordinate: {
+              lat: bug.lat,
+              lng: bug.lng,
+            },
+          });
+        }
+      });
+    }
+  }, [bugs]);
 
   useEffect(() => {
     setPresentingElement(page.current);
@@ -75,6 +108,8 @@ const Insects: React.FC = () => {
           ? result.time_observed_at.split("T")[1].split("+")[0]
           : null,
         positionalAccuracy: result.positional_accuracy,
+        lat: result.geojson ? result.geojson.coordinates[1] : null, // Get the latitude
+        lng: result.geojson ? result.geojson.coordinates[0] : null, // Get the longitude
         // Add more details as needed
       }));
       setBugs(results);
@@ -112,6 +147,7 @@ const Insects: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
+        <div className="component-wrapper"></div>
         <IonSearchbar
           value={searchQuery}
           onIonChange={handleSearchChange}
@@ -176,6 +212,13 @@ const Insects: React.FC = () => {
                             </ul>
                           </div>
                         </div>
+                      )}
+                      {bug.lat && bug.lng && (
+                        <div
+                          id={`map-${index}`}
+                          style={{ width: "100%", height: "200px" }}
+                          ref={(el) => mapRefs.current.set(index, el)}
+                        ></div>
                       )}
                     </div>
                   </IonCardContent>
