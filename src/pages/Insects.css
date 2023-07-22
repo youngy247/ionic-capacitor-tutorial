@@ -11,6 +11,20 @@
   object-fit: cover;
 }
 
+.component-wrapper{
+  min-height: calc(100vh - 56px); 
+}
+
+.page-buttons {
+  position: sticky;
+  bottom: -1rem;
+  background-color: #fff; 
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem; 
+}
+
 ul {
   list-style: none;
 }
@@ -88,5 +102,11 @@ ul {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+  .page-buttons {
+    gap: 0;
+  }
+  .page-buttons ion-button {
+    font-size: 0.965rem;
   }
 }
