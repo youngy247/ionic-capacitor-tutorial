@@ -26,7 +26,13 @@ import AuthSocialButton from "./AuthSocialButton";
 import { BsGoogle } from "react-icons/bs";
 import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
-import { loginUser, loginWithGoogle } from "../firebaseConfig";
+import {
+  isUserEmailVerified,
+  loginUser,
+  loginWithGoogle,
+  sendVerificationEmail,
+} from "../firebaseConfig";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const INTRO_KEY = "intro-seen";
 
@@ -38,6 +44,8 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [showToast] = useIonToast();
   const [showPassword, setShowPassword] = useState(false);
+  const [showCaptcha, setShowCaptcha] = useState(false);
+  const siteKey = import.meta.env.VITE_APP_RECAPTCHA_SITE_KEY;
 
   if (!isPlatform("capacitor")) {
     GoogleAuth.initialize();
@@ -97,15 +105,28 @@ const Login: React.FC = () => {
     try {
       const res = await loginUser(email, password);
       console.log(`${res ? "Login successful" : "Login failed"}`);
-      Preferences.set({ key: "login-method", value: "form" });
-      await dismiss();
-      router.push("/app", "root");
-      showToast({
-        message: "Login successful",
-        duration: 2000,
-        color: "success",
-      });
-      // Other successful login code...
+
+      // Check if email is verified
+      if (await isUserEmailVerified(res)) {
+        Preferences.set({ key: "login-method", value: "form" });
+        await dismiss();
+        router.push("/app", "root");
+        showToast({
+          message: "Login successful",
+          duration: 2000,
+          color: "success",
+        });
+        // Other successful login code...
+      } else {
+        setShowCaptcha(true);
+        await dismiss();
+
+        showToast({
+          message: "Please complete the CAPTCHA to resend the verification email.",
+          duration: 6000,
+          color: "danger",
+        });
+      }
     } catch (error) {
       console.error("Login failed:", error);
       await dismiss();
@@ -118,6 +139,53 @@ const Login: React.FC = () => {
       });
     }
   };
+
+  const verifyCaptcha = async (token: string) => {
+    console.log("Captcha Token: ", token);
+    try {
+      const response = await fetch("http://localhost:3000/captcha/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: token }),
+      });
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        setShowCaptcha(false);
+        
+        // I'm assuming you need to pass a Firebase user object to sendVerificationEmail.
+        // You should retrieve this user object after logging in.
+        const user = await loginUser(email, password);
+        if (user) {
+          await sendVerificationEmail(user);
+          showToast({
+            message: "Verification email resent",
+            duration: 3000,
+            color: "success",
+          });
+        } else {
+          showToast({
+            message: "Failed to fetch user details. Please try again.",
+            duration: 3000,
+            color: "danger",
+          });
+        }
+      } else {
+        setShowCaptcha(true);
+        showToast({
+          message: "Failed to verify CAPTCHA. Please try again.",
+          duration: 3000,
+          color: "danger",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to verify CAPTCHA:", error);
+    }
+  };
+  
 
   const finishIntro = async () => {
     setIntroSeen(true);
@@ -183,6 +251,9 @@ const Login: React.FC = () => {
               </IonToolbar>
             </IonHeader>
             <IonContent scrollY={false} className="ion-padding">
+              {showCaptcha ? (
+                <ReCAPTCHA className="captcha-overlay" sitekey={siteKey} onChange={verifyCaptcha} />
+              ) : null}
               <IonGrid fixed>
                 <IonRow className="ion-justify-content-center">
                   <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
