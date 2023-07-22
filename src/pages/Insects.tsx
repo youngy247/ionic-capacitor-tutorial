@@ -61,15 +61,19 @@ const Insects: React.FC = () => {
 
       const results = data.results.map((result: any) => ({
         image:
-          result.taxon && result.taxon.default_photo
-            ? result.taxon.default_photo.medium_url
+          result.photos && result.photos.length > 0
+            ? result.photos[0].url // First try to use observer's photo
+            : result.taxon && result.taxon.default_photo
+            ? result.taxon.default_photo.medium_url // If not available, try to use iNaturalist's default photo
             : null,
         commonName: result.taxon ? result.taxon.preferred_common_name : null,
         scientificName: result.taxon ? result.taxon.name : null,
         observedAt: result.observed_on,
         place: result.place_guess,
         qualityGrade: result.quality_grade,
-        timeObservedAt: result.time_observed_at ? result.time_observed_at.split("T")[1].split("+")[0] : null,
+        timeObservedAt: result.time_observed_at
+          ? result.time_observed_at.split("T")[1].split("+")[0]
+          : null,
         positionalAccuracy: result.positional_accuracy,
         // Add more details as needed
       }));
@@ -225,7 +229,9 @@ const Insects: React.FC = () => {
                   <ul>
                     <li>Quality Grade: {selectedBug?.qualityGrade}</li>
                     <li>Time Observed: {selectedBug?.timeObservedAt}</li>
-                    <li>Positional Accuracy: {selectedBug?.positionalAccuracy}</li>
+                    <li>
+                      Positional Accuracy: {selectedBug?.positionalAccuracy}
+                    </li>
                     {/* Add more details as needed */}
                   </ul>
                 </div>
