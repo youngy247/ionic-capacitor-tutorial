@@ -31,6 +31,7 @@ const Insects: React.FC = () => {
   const modal = useRef<HTMLIonModalElement>(null);
   const isMobileDevice = useMediaQuery({ maxWidth: 768 });
   const apiKey = import.meta.env.VITE_APP_GOOGLE_MAPS_KEY;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const mapRefs = useRef(new Map());
 
@@ -64,26 +65,59 @@ const Insects: React.FC = () => {
     }
   }, [bugs]);
 
+  const loadSelectedBugMap = async () => {
+    const mapElement = mapRefs.current.get("selected");
+    if (mapElement) {
+      // Use setTimeout to defer execution to the next tick of the event loop
+
+      const bugMap = await GoogleMap.create({
+        id: `map-selected`,
+        element: mapElement,
+        forceCreate: true,
+        apiKey: apiKey,
+        config: {
+          center: {
+            lat: selectedBug.lat,
+            lng: selectedBug.lng,
+          },
+          zoom: 8,
+        },
+      });
+      bugMap.addMarker({
+        coordinate: {
+          lat: selectedBug.lat,
+          lng: selectedBug.lng,
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (selectedBug?.lat && selectedBug?.lng) {
+      loadSelectedBugMap();
+    }
+  }, [selectedBug]);
+
   useEffect(() => {
     setPresentingElement(page.current);
   }, []);
 
   useEffect(() => {
-    fetchBugs(searchQuery);
+    fetchBugs(searchQuery, currentPage);
   }, []); // Only run once, when component mounts
 
   useEffect(() => {
-    fetchBugs(searchQuery);
+    fetchBugs(searchQuery, currentPage);
   }, [searchQuery]); // Only run when searchQuery changes, but not when it's initially an empty string
 
-  const fetchBugs = async (query: string) => {
+  const fetchBugs = async (query: string, page: number) => {
     setLoading(true);
     try {
       const endpoint = query
         ? `https://api.inaturalist.org/v1/observations?q=${encodeURIComponent(
             query
-          )}&per_page=15`
-        : `https://api.inaturalist.org/v1/observations?order_by=created_at&order=desc&per_page=15`;
+          )}&page=${page}&per_page=10`
+        : `https://api.inaturalist.org/v1/observations?order_by=created_at&order=desc&page=${page}&per_page=10`;
 
       console.log(`Fetching data from ${endpoint}`);
 
@@ -121,17 +155,34 @@ const Insects: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    fetchBugs(searchQuery, currentPage);
+  }, [searchQuery, currentPage]);
+
+  const changePage = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
   const handleSearchChange = (event: CustomEvent) => {
     const query = event.detail.value;
     setSearchQuery(query);
   };
 
-  const handleBugClick = (bug: any) => {
+  const handleBugClick = async (bug: any) => {
     setSelectedBug(bug);
+
     modal.current?.present();
   };
 
   const handleCloseModal = () => {
+    const selectedMapElement = mapRefs.current.get("selected");
+    if (selectedMapElement) {
+      // Remove all child nodes from map element
+      while (selectedMapElement.firstChild) {
+        selectedMapElement.removeChild(selectedMapElement.firstChild);
+      }
+    }
+
     modal.current?.dismiss();
     setSelectedBug(null);
   };
@@ -213,7 +264,7 @@ const Insects: React.FC = () => {
                           </div>
                         </div>
                       )}
-                      {bug.lat && bug.lng && (
+                      {!isMobileDevice && bug.lat && bug.lng && (
                         <div
                           id={`map-${index}`}
                           style={{ width: "100%", height: "200px" }}
@@ -227,11 +278,41 @@ const Insects: React.FC = () => {
             )}
           </>
         )}
+         <IonButton
+          fill="clear"
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </IonButton>
+
+        {Array.from({ length: 5 }, (_, index) => index + 1).map(
+          (pageNumber) => (
+            <IonButton
+              key={pageNumber}
+              fill={pageNumber === currentPage ? "solid" : "clear"}
+              onClick={() => setCurrentPage(pageNumber)}
+            >
+              {pageNumber}
+            </IonButton>
+          )
+        )}
+
+        <IonButton
+          fill="clear"
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={
+            currentPage === 5 /* Replace 5 with your last page number */
+          }
+        >
+          Next
+        </IonButton> 
 
         <IonModal
           ref={modal}
           presentingElement={presentingElement!}
           onIonModalDidDismiss={handleCloseModal}
+          onIonModalDidPresent={loadSelectedBugMap}
         >
           <IonHeader>
             <IonToolbar>
@@ -279,6 +360,18 @@ const Insects: React.FC = () => {
                   </ul>
                 </div>
               </div>
+              {selectedBug?.lat && selectedBug?.lng && (
+                <div
+                  id="map-selected"
+                  style={{ width: "100%", height: "200px" }}
+                  ref={(el) => {
+                    if (el) {
+                      console.log("Setting map element for selected bug", el);
+                      mapRefs.current.set("selected", el);
+                    }
+                  }}
+                ></div>
+              )}
             </div>
           </IonContent>
         </IonModal>

@@ -27,24 +27,24 @@ PODS:
   - CodetrixStudioCapacitorGoogleAuth (0.0.1):
     - Capacitor
     - GoogleSignIn (~> 6.2.4)
-  - Google-Maps-iOS-Utils (4.2.2):
-    - Google-Maps-iOS-Utils/Clustering (= 4.2.2)
-    - Google-Maps-iOS-Utils/Geometry (= 4.2.2)
-    - Google-Maps-iOS-Utils/GeometryUtils (= 4.2.2)
-    - Google-Maps-iOS-Utils/Heatmap (= 4.2.2)
-    - Google-Maps-iOS-Utils/QuadTree (= 4.2.2)
+  - Google-Maps-iOS-Utils (4.1.0):
+    - Google-Maps-iOS-Utils/Clustering (= 4.1.0)
+    - Google-Maps-iOS-Utils/Geometry (= 4.1.0)
+    - Google-Maps-iOS-Utils/GeometryUtils (= 4.1.0)
+    - Google-Maps-iOS-Utils/Heatmap (= 4.1.0)
+    - Google-Maps-iOS-Utils/QuadTree (= 4.1.0)
     - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/Clustering (4.2.2):
+  - Google-Maps-iOS-Utils/Clustering (4.1.0):
     - Google-Maps-iOS-Utils/QuadTree
     - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/Geometry (4.2.2):
+  - Google-Maps-iOS-Utils/Geometry (4.1.0):
     - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/GeometryUtils (4.2.2):
+  - Google-Maps-iOS-Utils/GeometryUtils (4.1.0):
     - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/Heatmap (4.2.2):
+  - Google-Maps-iOS-Utils/Heatmap (4.1.0):
     - Google-Maps-iOS-Utils/QuadTree
     - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/QuadTree (4.2.2):
+  - Google-Maps-iOS-Utils/QuadTree (4.1.0):
     - GoogleMaps (~> 7.3)
   - GoogleMaps (7.4.0):
     - GoogleMaps/Maps (= 7.4.0)
@@ -71,11 +71,11 @@ DEPENDENCIES:
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - "CodetrixStudioCapacitorGoogleAuth (from `../../node_modules/@codetrix-studio/capacitor-google-auth`)"
+  - Google-Maps-iOS-Utils (from `https://github.com/googlemaps/google-maps-ios-utils.git`, commit `637954e5bcb2a879c11a6f2cead153a6bad5339f`)
 
 SPEC REPOS:
   trunk:
     - AppAuth
-    - Google-Maps-iOS-Utils
     - GoogleMaps
     - GoogleSignIn
     - GTMAppAuth
@@ -102,6 +102,14 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/status-bar"
   CodetrixStudioCapacitorGoogleAuth:
     :path: "../../node_modules/@codetrix-studio/capacitor-google-auth"
+  Google-Maps-iOS-Utils:
+    :commit: 637954e5bcb2a879c11a6f2cead153a6bad5339f
+    :git: https://github.com/googlemaps/google-maps-ios-utils.git
+
+CHECKOUT OPTIONS:
+  Google-Maps-iOS-Utils:
+    :commit: 637954e5bcb2a879c11a6f2cead153a6bad5339f
+    :git: https://github.com/googlemaps/google-maps-ios-utils.git
 
 SPEC CHECKSUMS:
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
@@ -115,12 +123,12 @@ SPEC CHECKSUMS:
   CapacitorPreferences: f03954bcb0ff09c792909e46bff88e3183c16b10
   CapacitorStatusBar: 565c0a1ebd79bb40d797606a8992b4a105885309
   CodetrixStudioCapacitorGoogleAuth: fcce058390347c1ce5d8ac4764bdf1f5c1ee233b
-  Google-Maps-iOS-Utils: f77eab4c4326d7e6a277f8e23a0232402731913a
+  Google-Maps-iOS-Utils: 9aace2c8b9a6141bc7174115954ff89b3d17102b
   GoogleMaps: 032f676450ba0779bd8ce16840690915f84e57ac
   GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
 
-PODFILE CHECKSUM: d007ca5c2876815d07bcf348a3d7b4dca169f78f
+PODFILE CHECKSUM: bc65c168b16be6b4767351fd62e34c8ba08a2aef
 
 COCOAPODS: 1.12.1
