@@ -42,7 +42,7 @@ const Login: React.FC = () => {
   const [present, dismiss] = useIonLoading();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showToast] = useIonToast();
+  const [showToast, dismissToast] = useIonToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showCaptcha, setShowCaptcha] = useState(false);
   const siteKey = import.meta.env.VITE_APP_RECAPTCHA_SITE_KEY;
@@ -111,6 +111,7 @@ const Login: React.FC = () => {
         Preferences.set({ key: "login-method", value: "form" });
         await dismiss();
         router.push("/app", "root");
+        await dismissToast();
         showToast({
           message: "Login successful",
           duration: 2000,
@@ -120,7 +121,7 @@ const Login: React.FC = () => {
       } else {
         setShowCaptcha(true);
         await dismiss();
-
+        await dismissToast();
         showToast({
           message: "Please complete the CAPTCHA to resend the verification email.",
           duration: 6000,
@@ -131,7 +132,7 @@ const Login: React.FC = () => {
       console.error("Login failed:", error);
       await dismiss();
       const friendlyErrorMessage = getFriendlyErrorMessage(error.code);
-
+      await dismissToast();
       showToast({
         message: friendlyErrorMessage,
         duration: 3000,
@@ -161,12 +162,14 @@ const Login: React.FC = () => {
         const user = await loginUser(email, password);
         if (user) {
           await sendVerificationEmail(user);
+          await dismissToast();
           showToast({
             message: "Verification email resent",
             duration: 3000,
             color: "success",
           });
         } else {
+          await dismissToast();
           showToast({
             message: "Failed to fetch user details. Please try again.",
             duration: 3000,
@@ -175,6 +178,7 @@ const Login: React.FC = () => {
         }
       } else {
         setShowCaptcha(true);
+        await dismissToast();
         showToast({
           message: "Failed to verify CAPTCHA. Please try again.",
           duration: 3000,
@@ -211,9 +215,10 @@ const Login: React.FC = () => {
           Preferences.set({ key: "login-method", value: "google" });
 
           // Check if user exists, if yes then show "welcome back" toast
-          if (user) {
+          if (user) {   
+            await dismissToast();
             showToast({
-              message: `Welcome back, ${result.name}`,
+              message: `Welcome ${result.name}!`,
               duration: 2000,
               color: "success",
             });
@@ -230,6 +235,7 @@ const Login: React.FC = () => {
       const errorCode = error.error || error.code;
       const friendlyErrorMessageForGoogle =
         getFriendlyErrorMessageForGoogle(errorCode);
+      await dismissToast();
       showToast({
         message: friendlyErrorMessageForGoogle,
         duration: 3000,
