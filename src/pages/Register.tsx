@@ -116,8 +116,8 @@ const Register: React.FC = () => {
       await dismiss();
       router.goBack();
       showToast({
-        message: "Registration successful",
-        duration: 2000,
+        message: `A verification email has been sent to ${email}. Please check your inbox and follow the instructions to complete your registration.`,
+        duration: 8000,
         color: "success",
       });
     } catch (error) {
