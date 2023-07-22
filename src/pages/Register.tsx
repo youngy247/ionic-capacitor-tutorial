@@ -33,7 +33,7 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showToast] = useIonToast();
+  const [showToast, dismissToast] = useIonToast();
   const [present, dismiss] = useIonLoading();
   const [hasMinLength, setHasMinLength] = useState(false);
   const [hasUppercase, setHasUppercase] = useState(false);
@@ -71,6 +71,7 @@ const Register: React.FC = () => {
     event.preventDefault();
 
     if (!validateEmail(email)) {
+      await dismissToast();
       return showToast({
         message: "Please enter a valid email",
         duration: 3000,
@@ -79,6 +80,7 @@ const Register: React.FC = () => {
     }
 
     if (password !== confirmPassword) {
+      await dismissToast();
       return showToast({
         message: "Passwords do not match",
         duration: 3000,
@@ -92,6 +94,7 @@ const Register: React.FC = () => {
       !/[a-z]/.test(password) ||
       !/[0-9]/.test(password)
     ) {
+      await dismissToast();
       return showToast({
         message:
           "Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, and one number.",
@@ -101,6 +104,7 @@ const Register: React.FC = () => {
     }
 
     if (email.trim() === "" || password.trim() === "") {
+      await dismissToast();
       return showToast({
         message: "Email and password are required",
         duration: 3000,
@@ -115,6 +119,7 @@ const Register: React.FC = () => {
       console.log(`${res ? "Registration successful" : "Registration failed"}`);
       await dismiss();
       router.goBack();
+      await dismissToast();
       showToast({
         message: `A verification email has been sent to ${email}. Please check your inbox and follow the instructions to complete your registration.`,
         duration: 8000,
@@ -124,6 +129,7 @@ const Register: React.FC = () => {
       console.log("Registration failed: ", error);
       await dismiss();
       const friendlyErrorMessage = getFriendlyErrorMessage(error.code);
+      await dismissToast();
       showToast({
         message: friendlyErrorMessage,
         duration: 3000,
@@ -147,6 +153,7 @@ const Register: React.FC = () => {
         const user = await registerWithGoogle(idToken);
         console.log("Firebase user: ", user);
         if (user) {
+          await dismissToast();
           showToast({
             message: `Welcome, ${result.name}`,
             duration: 2000,
@@ -162,6 +169,7 @@ const Register: React.FC = () => {
       const errorCode = error.error || error.code;
       const friendlyErrorMessageForGoogle =
         getFriendlyErrorMessageForGoogle(errorCode);
+      await dismissToast();
       showToast({
         message: friendlyErrorMessageForGoogle,
         duration: 3000,
