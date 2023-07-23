@@ -28,7 +28,7 @@ const ForgotPassword: React.FC = () => {
   };
   
 
-  const sendResetEmail = async (e: any) => {
+  const sendResetEmail = async (e) => {
     e.preventDefault();
     try {
       await sendPasswordReset(email);

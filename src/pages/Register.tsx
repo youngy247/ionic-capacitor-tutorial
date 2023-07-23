@@ -67,7 +67,7 @@ const Register: React.FC = () => {
     }
   };
 
-  const doRegister = async (event: any) => {
+  const doRegister = async (event) => {
     event.preventDefault();
 
     if (!validateEmail(email)) {

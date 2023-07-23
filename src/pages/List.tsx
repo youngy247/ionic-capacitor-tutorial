@@ -35,16 +35,16 @@ import "./List.css";
 
 const List: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<[]>([]);
   const [showAlert] = useIonAlert();
   const [showToast] = useIonToast();
-  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const modal = useRef<HTMLIonModalElement>(null);
   const cardModal = useRef<HTMLIonModalElement>(null);
   const [presentingElement, setPresentingElement] = useState<HTMLElement | null>(null);
   const page = useRef(null);
 
-  const [activeSegement, setActiveSegment] = useState<any>("details");
+  const [activeSegement, setActiveSegment] = useState("details");
 
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const List: React.FC = () => {
     });
   };
 
-  const doRefresh = async (event: any) => {
+  const doRefresh = async (event) => {
     const data = await getUsers();
     setUsers(data);
     event.detail.complete();

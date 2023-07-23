@@ -24,7 +24,7 @@ const Insects: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [bugs, setBugs] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedBug, setSelectedBug] = useState<any | null>(null);
+  const [selectedBug, setSelectedBug] = useState(null);
   const [presentingElement, setPresentingElement] =
     useState<HTMLElement | null>(null);
   const page = useRef(null);
@@ -127,7 +127,7 @@ const Insects: React.FC = () => {
 
       console.log("Received data", data);
 
-      const results = data.results.map((result: any) => ({
+      const results = data.results.map((result) => ({
         image:
           result.photos && result.photos.length > 0
             ? result.photos[0].url // First try to use observer's photo
@@ -165,7 +165,7 @@ const Insects: React.FC = () => {
     setSearchQuery(query);
   };
 
-  const handleBugClick = async (bug: any) => {
+  const handleBugClick = async (bug) => {
     setSelectedBug(bug);
 
     modal.current?.present();

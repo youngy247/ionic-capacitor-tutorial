@@ -36,7 +36,7 @@ export async function loginUser(username: string, password: string) {
   }
 }
 
-export async function isUserEmailVerified(user: any) {
+export async function isUserEmailVerified(user) {
   try {
     await user.reload();
     return user.emailVerified;

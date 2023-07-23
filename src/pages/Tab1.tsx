@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 const Tab1: React.FC = () => {
 
-  const [image, setImage] = useState<any>(null);
+  const [image, setImage] = useState(null);
   
 
   const takePicture = async () => {

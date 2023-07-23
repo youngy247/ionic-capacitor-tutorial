@@ -99,7 +99,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const doLogin = async (event: any) => {
+  const doLogin = async (event) => {
     event.preventDefault();
     await present("Logging in...");
     try {
