@@ -39,18 +39,21 @@ const Tab3: React.FC = () => {
 
   useEffect(() => {
     const fetchObservations = async () => {
-      if (searchTerm) {
-        const userUID = await getCurrentUserUID();
-        if (userUID) {
-          const userObservations = await fetchUserObservationsBySpecies(
+      const userUID = await getCurrentUserUID();
+      if (userUID) {
+        let userObservations;
+        if (searchTerm) {
+          userObservations = await fetchUserObservationsBySpecies(
             userUID,
             searchTerm
           );
-          setObservations(userObservations);
+        } else {
+          userObservations = await fetchUserObservations(userUID);
         }
+        setObservations(userObservations);
       }
     };
-    if (searchTerm) fetchObservations();
+    fetchObservations();
   }, [searchTerm]);
 
   console.log(observations);
@@ -62,12 +65,17 @@ const Tab3: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>Tab 3</IonTitle>
+          <IonTitle>
+            {searchTerm
+              ? `Your Observations of ${searchTerm}`
+              : "Your Most Recent Observations"}
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
         <IonSearchbar
           value={searchTerm}
+          placeholder="Search By Species"
           onIonChange={(e) => setSearchTerm(e.detail.value)}
           debounce={500}
         />
