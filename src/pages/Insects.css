@@ -16,13 +16,14 @@
 }
 
 .page-buttons {
-  position: sticky;
-  bottom: -1rem;
+  position: fixed;
+  bottom: 0rem;
+  width: 100%;
   background-color: #fff; 
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: center;
-  gap: 1rem; 
+  gap: 0.8rem; 
 }
 
 ul {
@@ -102,8 +103,9 @@ ul {
   }
   .page-buttons {
     gap: 0;
+    width: 92%;
   }
   .page-buttons ion-button {
-    font-size: 0.965rem;
+    font-size: 0.94rem;
   }
 }

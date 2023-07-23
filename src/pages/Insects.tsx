@@ -12,6 +12,7 @@ import {
   IonSearchbar,
   IonTitle,
   IonToolbar,
+  IonFooter,
 } from "@ionic/react";
 import React, { useEffect, useRef, useState } from "react";
 import "./Insects.css";
@@ -113,6 +114,7 @@ const Insects: React.FC = () => {
 
   const fetchBugs = async (query: string, page: number) => {
     setLoading(true);
+    
     try {
       const endpoint = query
         ? `https://api.inaturalist.org/v1/observations?q=${encodeURIComponent(
@@ -148,10 +150,10 @@ const Insects: React.FC = () => {
         // Add more details as needed
       }));
       setBugs(results);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching bugs:", error);
       setBugs([]);
+    } finally {
       setLoading(false);
     }
   };
@@ -196,184 +198,189 @@ const Insects: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         <div className="component-wrapper">
-        <IonSearchbar
-          value={searchQuery}
-          onIonChange={handleSearchChange}
-        ></IonSearchbar>
-        {!searchQuery && <h2 className="centered-text">Most Recent Observation Posts</h2>}
-        {isMobileDevice && (
-          <p className="centered-text">
-            Click on an insect for more information.
-          </p>
-        )}
-        {loading && searchQuery ? (
-          <p>Loading Observations...</p>
-        ) : (
-          <>
-            {bugs.length === 0 && searchQuery ? (
-              <p>No Observations found.</p>
-            ) : (
-              bugs.map((bug, index) => (
-                <IonCard
-                  key={index}
-                  onClick={() => isMobileDevice && handleBugClick(bug)}
-                  className="card-container"
-                >
-                  <IonCardContent
-                    className={
-                      isMobileDevice
-                        ? "card-content-mobile"
-                        : "card-content-desktop"
-                    }
+          <IonSearchbar
+            value={searchQuery}
+            onIonChange={handleSearchChange}
+          ></IonSearchbar>
+          {!searchQuery && (
+            <h2 className="centered-text">Most Recent Observation Posts</h2>
+          )}
+          {isMobileDevice && (
+            <p className="centered-text">
+              Click on an insect for more information.
+            </p>
+          )}
+          {loading && searchQuery ? (
+            <p>Loading Observations...</p>
+          ) : (
+            <>
+              {bugs.length === 0 && searchQuery ? (
+                <p>No Observations found.</p>
+              ) : (
+                bugs.map((bug, index) => (
+                  <IonCard
+                    key={index}
+                    onClick={() => isMobileDevice && handleBugClick(bug)}
+                    className="card-container"
                   >
-                    <div className="image-container">
-                      <IonImg src={bug.image ? bug.image : StockInsectImage} />
-                      {bug.image ? null : (
-                        <p className="image-credit">
-                          <a href="https://www.freepik.com/free-photo/mosquito-3d-illustration_13880913.htm#query=bug%20with%20question%20mark&position=0&from_view=search&track=ais">
-                            Image by julos
-                          </a>{" "}
-                          on Freepik
-                        </p>
-                      )}
-                    </div>
-                    <div className="insect-details">
-                      <div className="common-name">
-                        <strong>{bug.commonName}</strong>
+                    <IonCardContent
+                      className={
+                        isMobileDevice
+                          ? "card-content-mobile"
+                          : "card-content-desktop"
+                      }
+                    >
+                      <div className="image-container">
+                        <IonImg
+                          src={bug.image ? bug.image : StockInsectImage}
+                        />
+                        {bug.image ? null : (
+                          <p className="image-credit">
+                            <a href="https://www.freepik.com/free-photo/mosquito-3d-illustration_13880913.htm#query=bug%20with%20question%20mark&position=0&from_view=search&track=ais">
+                              Image by julos
+                            </a>{" "}
+                            on Freepik
+                          </p>
+                        )}
                       </div>
-                      {!isMobileDevice && (
-                        <div className="additional-info">
-                          <div>
-                            <i>{bug.scientificName}</i>
-                          </div>
-                          <div>Observed on: {bug.observedAt}</div>
-                          <div>Place: {bug.place}</div>
-                          <div className="more-details">
-                            More Details:
-                            <ul>
-                              <li>Quality Grade: {bug.qualityGrade}</li>
-                              <li>Time Observed: {bug.timeObservedAt}</li>
-                              <li>
-                                Positional Accuracy: {bug.positionalAccuracy}
-                              </li>
-                              {/* Add more details as needed */}
-                            </ul>
-                          </div>
+                      <div className="insect-details">
+                        <div className="common-name">
+                          <strong>{bug.commonName}</strong>
                         </div>
-                      )}
-                      {!isMobileDevice && bug.lat && bug.lng && (
-                        <div
-                          id={`map-${index}`}
-                          style={{ width: "100%", height: "200px" }}
-                          ref={(el) => mapRefs.current.set(index, el)}
-                        ></div>
-                      )}
-                    </div>
-                  </IonCardContent>
-                </IonCard>
-              ))
-            )}
-          </>
-        )}
-        <div className="page-buttons">
-         <IonButton
-          fill="clear"
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </IonButton>
-
-        {Array.from({ length: 5 }, (_, index) => index + 1).map(
-          (pageNumber) => (
+                        {!isMobileDevice && (
+                          <div className="additional-info">
+                            <div>
+                              <i>{bug.scientificName}</i>
+                            </div>
+                            <div>Observed on: {bug.observedAt}</div>
+                            <div>Place: {bug.place}</div>
+                            <div className="more-details">
+                              More Details:
+                              <ul>
+                                <li>Quality Grade: {bug.qualityGrade}</li>
+                                <li>Time Observed: {bug.timeObservedAt}</li>
+                                <li>
+                                  Positional Accuracy: {bug.positionalAccuracy}
+                                </li>
+                                {/* Add more details as needed */}
+                              </ul>
+                            </div>
+                          </div>
+                        )}
+                        {!isMobileDevice && bug.lat && bug.lng && (
+                          <div
+                            id={`map-${index}`}
+                            style={{ width: "100%", height: "200px" }}
+                            ref={(el) => mapRefs.current.set(index, el)}
+                          ></div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+                ))
+              )}
+            </>
+          )}
+          <IonFooter>
+          <div className="page-buttons">
             <IonButton
-              key={pageNumber}
-              fill={pageNumber === currentPage ? "solid" : "clear"}
-              onClick={() => setCurrentPage(pageNumber)}
+              fill="clear"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
             >
-              {pageNumber}
+              Previous
             </IonButton>
-          )
-        )}
 
-        <IonButton
-          fill="clear"
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={
-            currentPage === 5 /* Replace 5 with your last page number */
-          }
-        >
-          Next
-        </IonButton> 
-        </div>
+            {Array.from({ length: 5 }, (_, index) => index + 1).map(
+              (pageNumber) => (
+                <IonButton
+                  key={pageNumber}
+                  fill={pageNumber === currentPage ? "solid" : "clear"}
+                  onClick={() => setCurrentPage(pageNumber)}
+                >
+                  {pageNumber}
+                </IonButton>
+              )
+            )}
 
-        <IonModal
-          ref={modal}
-          presentingElement={presentingElement!}
-          onIonModalDidDismiss={handleCloseModal}
-          onIonModalDidPresent={loadSelectedBugMap}
-        >
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>{selectedBug?.commonName}</IonTitle>
-              <IonButton slot="end" onClick={handleCloseModal}>
-                Close
-              </IonButton>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent className="ion-padding">
-            <div className="modal-content-container">
-              <div className="image-container">
-                <IonImg
-                  src={
-                    selectedBug?.image ? selectedBug.image : StockInsectImage
-                  }
-                />
-                {selectedBug?.image ? null : (
-                  <p className="image-credit">
-                    <a href="https://www.freepik.com/free-photo/mosquito-3d-illustration_13880913.htm#query=bug%20with%20question%20mark&position=0&from_view=search&track=ais">
-                      Image by julos
-                    </a>{" "}
-                    on Freepik
-                  </p>
+            <IonButton
+              fill="clear"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={
+                currentPage === 5 /* Replace 5 with your last page number */
+              }
+            >
+              Next
+            </IonButton>
+          </div>
+          </IonFooter>
+          <IonModal
+            ref={modal}
+            presentingElement={presentingElement!}
+            onIonModalDidDismiss={handleCloseModal}
+            onIonModalDidPresent={loadSelectedBugMap}
+          >
+            <IonHeader>
+              <IonToolbar>
+                <IonTitle>{selectedBug?.commonName}</IonTitle>
+                <IonButton slot="end" onClick={handleCloseModal}>
+                  Close
+                </IonButton>
+              </IonToolbar>
+            </IonHeader>
+            <IonContent className="ion-padding">
+              <div className="modal-content-container">
+                <div className="image-container">
+                  <IonImg
+                    src={
+                      selectedBug?.image ? selectedBug.image : StockInsectImage
+                    }
+                  />
+                  {selectedBug?.image ? null : (
+                    <p className="image-credit">
+                      <a href="https://www.freepik.com/free-photo/mosquito-3d-illustration_13880913.htm#query=bug%20with%20question%20mark&position=0&from_view=search&track=ais">
+                        Image by julos
+                      </a>{" "}
+                      on Freepik
+                    </p>
+                  )}
+                </div>
+                <div className="insect-details">
+                  <div className="common-name">
+                    <strong>{selectedBug?.commonName}</strong>
+                  </div>
+                  <div>
+                    <i>{selectedBug?.scientificName}</i>
+                  </div>
+                  <div>Observed on: {selectedBug?.observedAt}</div>
+                  <div>Place: {selectedBug?.place}</div>
+                  <div className="more-details">
+                    More Details:
+                    <ul>
+                      <li>Quality Grade: {selectedBug?.qualityGrade}</li>
+                      <li>Time Observed: {selectedBug?.timeObservedAt}</li>
+                      <li>
+                        Positional Accuracy: {selectedBug?.positionalAccuracy}
+                      </li>
+                      {/* Add more details as needed */}
+                    </ul>
+                  </div>
+                </div>
+                {selectedBug?.lat && selectedBug?.lng && (
+                  <div
+                    id="map-selected"
+                    style={{ width: "100%", height: "200px" }}
+                    ref={(el) => {
+                      if (el) {
+                        console.log("Setting map element for selected bug", el);
+                        mapRefs.current.set("selected", el);
+                      }
+                    }}
+                  ></div>
                 )}
               </div>
-              <div className="insect-details">
-                <div className="common-name">
-                  <strong>{selectedBug?.commonName}</strong>
-                </div>
-                <div>
-                  <i>{selectedBug?.scientificName}</i>
-                </div>
-                <div>Observed on: {selectedBug?.observedAt}</div>
-                <div>Place: {selectedBug?.place}</div>
-                <div className="more-details">
-                  More Details:
-                  <ul>
-                    <li>Quality Grade: {selectedBug?.qualityGrade}</li>
-                    <li>Time Observed: {selectedBug?.timeObservedAt}</li>
-                    <li>
-                      Positional Accuracy: {selectedBug?.positionalAccuracy}
-                    </li>
-                    {/* Add more details as needed */}
-                  </ul>
-                </div>
-              </div>
-              {selectedBug?.lat && selectedBug?.lng && (
-                <div
-                  id="map-selected"
-                  style={{ width: "100%", height: "200px" }}
-                  ref={(el) => {
-                    if (el) {
-                      console.log("Setting map element for selected bug", el);
-                      mapRefs.current.set("selected", el);
-                    }
-                  }}
-                ></div>
-              )}
-            </div>
-          </IonContent>
-        </IonModal>
+            </IonContent>
+          </IonModal>
         </div>
       </IonContent>
     </IonPage>
