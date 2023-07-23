@@ -28,8 +28,6 @@ import {
   doc,
   writeBatch,
   updateDoc,
-  setDoc,
-  DocumentReference,
   Timestamp,
 } from "firebase/firestore";
 
@@ -50,7 +48,7 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 const db = getFirestore(app);
 
-interface IObservationUpdate {
+export interface IObservationUpdate {
   species?: string;
   latitude?: number;
   longitude?: number;
