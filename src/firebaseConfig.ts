@@ -10,6 +10,15 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_APP_FIREBASE_API_KEY,
@@ -24,6 +33,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const storage = getStorage(app);
+const db = getFirestore(app);
 
 export async function loginUser(username: string, password: string) {
   try {
@@ -94,5 +105,56 @@ export async function sendVerificationEmail(user) {
   } catch (error) {
     console.log(error);
     throw error;
+  }
+}
+
+export async function savePictureToStorage(base64Image) {
+  try {
+    // Create a storage reference
+    const imageRef = ref(storage, "observations/" + Date.now() + ".jpg");
+
+    // Convert the base64 image to a Blob
+    const response = await fetch(base64Image);
+    const blob = await response.blob();
+
+    // Upload the image
+    const uploadTask = uploadBytesResumable(imageRef, blob);
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Progress function
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+        },
+        (error) => {
+          // Error function
+          console.log("Failed to upload image: ", error);
+          reject(error);
+        },
+        async () => {
+          // Complete function
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          console.log("File available at", downloadURL);
+          resolve(downloadURL);
+        }
+      );
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function saveObservation(observation) {
+  try {
+    // Add a new document with a generated ID
+    const docRef = await addDoc(collection(db, "observations"), observation);
+
+    console.log("Document written with ID: ", docRef.id);
+  } catch (error) {
+    console.error("Error adding document: ", error);
   }
 }
