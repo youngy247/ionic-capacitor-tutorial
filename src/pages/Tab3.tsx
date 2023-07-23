@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import {
   IonButtons,
@@ -13,18 +14,27 @@ import {
   IonTitle,
   IonToolbar,
   IonImg,
+  IonCheckbox,
   IonSearchbar,
+  IonButton,
+  IonIcon,
+  useIonAlert,
+  useIonToast,
 } from "@ionic/react";
 import {
   fetchUserObservations,
   fetchUserObservationsBySpecies,
   getCurrentUserUID,
+  deleteObservations,
 } from "../firebaseConfig";
+import { trashBinOutline } from "ionicons/icons";
 
 const Tab3: React.FC = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [observations, setObservations] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedObservations, setSelectedObservations] = useState<any[]>([]);
+  const [presentAlert] = useIonAlert();
+  const [presentToast] = useIonToast();
 
   useEffect(() => {
     const fetchObservations = async () => {
@@ -56,6 +66,49 @@ const Tab3: React.FC = () => {
     fetchObservations();
   }, [searchTerm]);
 
+  const handleCheckboxChange = (observation) => {
+    // New function to handle checkbox changes
+    if (selectedObservations.includes(observation.id)) {
+      setSelectedObservations(
+        selectedObservations.filter((id) => id !== observation.id)
+      );
+    } else {
+      setSelectedObservations([...selectedObservations, observation.id]);
+    }
+  };
+
+
+  const handleDeleteClick = () => {
+    if (selectedObservations.length > 0) {
+      presentAlert({
+        header: "Confirm!",
+        message: "Are you sure you want to delete selected observations?",
+        buttons: [
+          { text: "Cancel", role: "cancel" },
+          {
+            text: "Delete",
+            handler: async () => {
+              await deleteObservations(selectedObservations);
+              setSelectedObservations([]);
+
+              const userUID = await getCurrentUserUID();
+              if (userUID) {
+                const userObservations = await fetchUserObservations(userUID);
+                setObservations(userObservations);
+              }
+
+              presentToast({
+                message: "Selected observations deleted",
+                duration: 2000,
+                color: "danger",
+              });
+            },
+          },
+        ],
+      });
+    }
+  };
+
   console.log(observations);
 
   return (
@@ -70,6 +123,15 @@ const Tab3: React.FC = () => {
               ? `Your Observations of ${searchTerm}`
               : "Your Most Recent Observations"}
           </IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={handleDeleteClick}>
+              <IonIcon
+                slot="icon-only"
+                icon={trashBinOutline}
+                color={"danger"}
+              />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
@@ -94,6 +156,12 @@ const Tab3: React.FC = () => {
             </IonCardHeader>
 
             <IonCardContent>
+              <IonCheckbox
+                slot="end"
+                value={observation.id}
+                onIonChange={() => handleCheckboxChange(observation)}
+              />
+
               <IonImg src={observation.img || "Image URL not available"} />
               <p>
                 Lat: {observation.latitude || "Latitude not available"}, Long:{" "}
