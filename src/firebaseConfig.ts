@@ -17,7 +17,15 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  where,
+  orderBy,
+  getDocs,
+} from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -162,4 +170,59 @@ export async function saveObservation(observation) {
 export function getCurrentUserUID() {
   const user = auth.currentUser;
   return user ? user.uid : null;
+}
+
+export async function fetchUserObservations(userUID: string) {
+  try {
+    const q = query(
+      collection(db, "observations"),
+      where("userUID", "==", userUID),
+      orderBy("timestamp", "desc")
+    );
+    const querySnapshot = await getDocs(q);
+    const observations = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log(observations); // Log the fetched observations here for debugging
+    return observations;
+  } catch (error) {
+    console.error("Failed to fetch user observations: ", error);
+    throw error;
+  }
+}
+
+export async function fetchUserObservationsBySpecies(
+  userUID: string,
+  species: string
+) {
+  try {
+    const q = query(
+      collection(db, "observations"),
+      where("userUID", "==", userUID),
+      where("species", "==", species),
+      orderBy("timestamp", "desc")
+    );
+    const querySnapshot = await getDocs(q);
+    const observations = querySnapshot.docs.map((doc) => doc.data());
+    return observations;
+  } catch (error) {
+    console.error("Failed to fetch user observations by species: ", error);
+    throw error;
+  }
+}
+
+export async function fetchAllObservations() {
+  try {
+    const querySnapshot = await getDocs(collection(db, "observations"));
+    const observations = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    console.log(observations); // Log the fetched observations here for debugging
+    return observations;
+  } catch (error) {
+    console.error("Failed to fetch all observations: ", error);
+    throw error;
+  }
 }

@@ -56,7 +56,7 @@ const Tab1: React.FC = () => {
         duration: 3000,
         color: "danger",
       });
-      router.push("/", "root"); 
+      router.push("/", "root");
       return;
     }
 
@@ -93,7 +93,13 @@ const Tab1: React.FC = () => {
           <IonItem>
             <IonLabel>Date/Time</IonLabel>
             <IonDatetime
-              onIonChange={(e) => setValue("dateTime", e.detail.value)}
+              onIonChange={(e) => {
+                // Convert the ISO 8601 string into a Date object
+                if (typeof e.detail.value === "string") {
+                  const date = new Date(e.detail.value);
+                  setValue("timestamp", date);
+                }
+              }}
             ></IonDatetime>
           </IonItem>
 
