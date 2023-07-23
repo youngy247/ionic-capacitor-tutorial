@@ -25,6 +25,8 @@ import {
   where,
   orderBy,
   getDocs,
+  doc,
+  writeBatch
 } from "firebase/firestore";
 
 // Your web app's Firebase configuration
@@ -223,6 +225,24 @@ export async function fetchAllObservations() {
     return observations;
   } catch (error) {
     console.error("Failed to fetch all observations: ", error);
+    throw error;
+  }
+}
+
+export async function deleteObservations(observationIDs: string[]) {
+  try {
+    const batch = writeBatch(db);
+
+    observationIDs.forEach((id) => {
+      const ref = doc(db, "observations", id);
+      batch.delete(ref);
+    });
+
+    await batch.commit();
+
+    console.log("Deleted observations: ", observationIDs);
+  } catch (error) {
+    console.error("Failed to delete observations: ", error);
     throw error;
   }
 }
