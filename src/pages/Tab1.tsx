@@ -13,8 +13,13 @@ import {
   IonTitle,
   IonToolbar,
   useIonToast,
+  useIonRouter,
 } from "@ionic/react";
-import { savePictureToStorage, saveObservation } from "../firebaseConfig";
+import {
+  getCurrentUserUID,
+  savePictureToStorage,
+  saveObservation,
+} from "../firebaseConfig";
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { useState } from "react";
 
@@ -22,6 +27,7 @@ const Tab1: React.FC = () => {
   const { register, handleSubmit, setValue, reset } = useForm();
   const [image, setImage] = useState(null);
   const [showToast] = useIonToast();
+  const router = useIonRouter();
 
   const takePicture = async () => {
     const image = await Camera.getPhoto({
@@ -39,6 +45,19 @@ const Tab1: React.FC = () => {
     if (data.img) {
       const imageURL = await savePictureToStorage(data.img);
       data.img = imageURL;
+    }
+
+    const userUID = getCurrentUserUID();
+    if (userUID) {
+      data.userUID = userUID;
+    } else {
+      showToast({
+        message: "You're not logged in. Please log in to continue.",
+        duration: 3000,
+        color: "danger",
+      });
+      router.push("/", "root"); 
+      return;
     }
 
     saveObservation(data);

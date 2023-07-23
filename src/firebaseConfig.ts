@@ -158,3 +158,8 @@ export async function saveObservation(observation) {
     console.error("Error adding document: ", error);
   }
 }
+
+export function getCurrentUserUID() {
+  const user = auth.currentUser;
+  return user ? user.uid : null;
+}
