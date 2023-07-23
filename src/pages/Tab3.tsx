@@ -168,7 +168,7 @@ const Tab3: React.FC = () => {
             <IonCardContent>
               
 
-              <IonImg src={observation.img || "Image URL not available"} />
+              <IonImg className="observationImage" src={observation.img || "Image URL not available"} />
               <p>
                 Lat: {observation.latitude || "Latitude not available"}, Long:{" "}
                 {observation.longitude || "Longitude not available"}

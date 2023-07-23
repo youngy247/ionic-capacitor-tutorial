@@ -3,3 +3,10 @@
   right: 15px;
   top: 15px;
 }
+
+.observationImage {
+  max-width: 30rem;
+  height: auto;    
+  display: block;  
+  margin: 0 auto;  
+}
