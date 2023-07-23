@@ -44,6 +44,7 @@ const Insects: React.FC = () => {
           const bugMap = await GoogleMap.create({
             id: `map-${index}`,
             element: mapElement,
+            forceCreate: true,
             apiKey: apiKey,
             config: {
               center: {
@@ -158,10 +159,6 @@ const Insects: React.FC = () => {
   useEffect(() => {
     fetchBugs(searchQuery, currentPage);
   }, [searchQuery, currentPage]);
-
-  const changePage = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
 
   const handleSearchChange = (event: CustomEvent) => {
     const query = event.detail.value;
