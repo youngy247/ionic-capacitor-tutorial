@@ -26,9 +26,12 @@ import {
   fetchUserObservationsBySpecies,
   getCurrentUserUID,
   deleteObservations,
+  updateObservation,
+  IObservationUpdate,
 } from "../firebaseConfig";
+import { Timestamp } from "firebase/firestore";
 import { trashBinOutline } from "ionicons/icons";
-import './Tab3.css'
+import "./Tab3.css";
 
 const Tab3: React.FC = () => {
   const [observations, setObservations] = useState<any[]>([]);
@@ -36,6 +39,11 @@ const Tab3: React.FC = () => {
   const [selectedObservations, setSelectedObservations] = useState<any[]>([]);
   const [presentAlert] = useIonAlert();
   const [presentToast] = useIonToast();
+
+  const [editing, setEditing] = useState<string | null>(null);
+  const [editingValues, setEditingValues] = useState<IObservationUpdate | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchObservations = async () => {
@@ -82,6 +90,20 @@ const Tab3: React.FC = () => {
     }
   };
 
+  const handleSaveClick = async (id: string) => {
+    if (editingValues) {
+      await updateObservation(id, editingValues);
+      const userUID = await getCurrentUserUID();
+      if (userUID) {
+        const userObservations = await fetchUserObservations(userUID);
+        setObservations(userObservations);
+      }
+      // stop editing
+      setEditing(null);
+      setEditingValues(null);
+    }
+  };
+
   const handleDeleteClick = () => {
     if (selectedObservations.length > 0) {
       presentAlert({
@@ -117,7 +139,6 @@ const Tab3: React.FC = () => {
 
   return (
     <IonPage>
-      
       <IonHeader>
         <IonToolbar color={"success"}>
           <IonButtons slot="start">
@@ -147,36 +168,86 @@ const Tab3: React.FC = () => {
           debounce={500}
         />
         <div className="cardContainer">
-        {observations.map((observation, index) => (
-          <IonCard key={index}>
-            <IonCardHeader>
-              <IonCardSubtitle>
-                {observation.timestamp
-                  ? observation.timestamp.toDate().toLocaleString()
-                  : "DateTime not available"}
-              </IonCardSubtitle>
+          {observations.map((observation, index) => (
+            <IonCard key={index}>
+              <IonCardHeader>
+                <IonCardSubtitle>
+                  {editing === observation.id ? (
+                    <input
+                      type="datetime-local"
+                      value={editingValues?.timestamp
+                        ?.toDate()
+                        .toISOString()
+                        .slice(0, -1)}
+                      onChange={(e) => {
+                        const date = new Date(e.target.value);
+                        date.setMinutes(
+                          date.getMinutes() - date.getTimezoneOffset()
+                        );
+                        setEditingValues({
+                          ...editingValues,
+                          timestamp: Timestamp.fromDate(date),
+                        });
+                      }}
+                    />
+                  ) : observation.timestamp ? (
+                    observation.timestamp.toDate().toLocaleString()
+                  ) : (
+                    "DateTime not available"
+                  )}
+                </IonCardSubtitle>
 
-              <IonCardTitle>
-                {observation.species || "Species not available"}
-              </IonCardTitle>
-              <IonCheckbox
-                className="checkbox"
-                value={observation.id}
-                onIonChange={() => handleCheckboxChange(observation)}
-              />
-            </IonCardHeader>
-
-            <IonCardContent>
-              
-
-              <IonImg className="observationImage" src={observation.img || "Image URL not available"} />
-              <p>
-                Lat: {observation.latitude || "Latitude not available"}, Long:{" "}
-                {observation.longitude || "Longitude not available"}
-              </p>
-            </IonCardContent>
-          </IonCard>
-        ))}
+                <IonCardTitle>
+                  {editing === observation.id ? (
+                    <input
+                      type="text"
+                      value={editingValues?.species}
+                      onChange={(e) =>
+                        setEditingValues({
+                          ...editingValues,
+                          species: e.target.value,
+                        })
+                      }
+                    />
+                  ) : (
+                    observation.species || "Species not available"
+                  )}
+                </IonCardTitle>
+                <IonCheckbox
+                  className="checkbox"
+                  value={observation.id}
+                  onIonChange={() => handleCheckboxChange(observation)}
+                />
+                {editing === observation.id ? (
+                  <IonButton onClick={() => handleSaveClick(observation.id)}>
+                    Save
+                  </IonButton>
+                ) : (
+                  <IonButton
+                    onClick={() => {
+                      setEditing(observation.id);
+                      setEditingValues({
+                        species: observation.species,
+                        timestamp: observation.timestamp,
+                      });
+                    }}
+                  >
+                    Edit
+                  </IonButton>
+                )}
+              </IonCardHeader>
+              <IonCardContent>
+                <IonImg
+                  className="observationImage"
+                  src={observation.img || "Image URL not available"}
+                />
+                <p>
+                  Lat: {observation.latitude || "Latitude not available"}, Long:{" "}
+                  {observation.longitude || "Longitude not available"}
+                </p>
+              </IonCardContent>
+            </IonCard>
+          ))}
         </div>
       </IonContent>
     </IonPage>
