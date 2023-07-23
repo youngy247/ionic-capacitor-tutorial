@@ -26,7 +26,11 @@ import {
   orderBy,
   getDocs,
   doc,
-  writeBatch
+  writeBatch,
+  updateDoc,
+  setDoc,
+  DocumentReference,
+  Timestamp,
 } from "firebase/firestore";
 
 // Your web app's Firebase configuration
@@ -45,6 +49,14 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const storage = getStorage(app);
 const db = getFirestore(app);
+
+interface IObservationUpdate {
+  species?: string;
+  latitude?: number;
+  longitude?: number;
+  img?: string;
+  timestamp?: Timestamp 
+}
 
 export async function loginUser(username: string, password: string) {
   try {
@@ -244,5 +256,15 @@ export async function deleteObservations(observationIDs: string[]) {
   } catch (error) {
     console.error("Failed to delete observations: ", error);
     throw error;
+  }
+}
+
+export async function updateObservation(id: string, newData: IObservationUpdate) {
+  try {
+    const docRef = doc(db, "observations", id);
+    await updateDoc(docRef, { ...newData });
+    console.log(`Observation with ID: ${id} has been updated.`);
+  } catch (error) {
+    console.error("Error updating document: ", error);
   }
 }
