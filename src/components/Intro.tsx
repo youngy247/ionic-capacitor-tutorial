@@ -11,6 +11,7 @@ interface ContainerProps {
   onFinish: () => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const SwiperButtonNext = ({ children }: any) => {
   const swiper = useSwiper();
   return <IonButton onClick={() => swiper.slideNext()}>{children}</IonButton>;

@@ -6,7 +6,6 @@ import {
   IonContent,
   IonHeader,
   IonImg,
-  IonLabel,
   IonMenuButton,
   IonModal,
   IonPage,
@@ -22,6 +21,7 @@ import { GoogleMap } from "@capacitor/google-maps";
 
 const Insects: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [bugs, setBugs] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedBug, setSelectedBug] = useState(null);

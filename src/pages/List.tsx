@@ -35,7 +35,8 @@ import "./List.css";
 
 const List: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [users, setUsers] = useState<[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [users, setUsers] = useState<any[]>([]);
   const [showAlert] = useIonAlert();
   const [showToast] = useIonToast();
   const [selectedUser, setSelectedUser] = useState(null);
@@ -180,7 +181,7 @@ const List: React.FC = () => {
               </IonTitle>
             </IonToolbar>
             <IonToolbar color={"light"}>
-              <IonSegment value={activeSegement} onIonChange={(e) => setActiveSegment(e.detail.value!)}>
+              <IonSegment value={activeSegement} onIonChange={(e) => setActiveSegment(e.detail.value as string)}>
                 <IonSegmentButton value="details">Details</IonSegmentButton>
                 <IonSegmentButton value="calender">Calender</IonSegmentButton>
               </IonSegment>

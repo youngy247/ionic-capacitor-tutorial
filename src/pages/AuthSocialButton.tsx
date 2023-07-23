@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { IconType } from 'react-icons';
 import './AuthSocialButtons.css';
 
