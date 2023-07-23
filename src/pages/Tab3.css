@@ -6,7 +6,29 @@
 
 .observationImage {
   max-width: 30rem;
-  height: auto;    
-  display: block;  
-  margin: 0 auto;  
+  height: auto;
+  display: block;
+  margin: 0 auto;
 }
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  margin: 1rem 0;
+  row-gap: 1rem;
+}
+
+.cardContainer > * {
+  flex: 0 0 calc(50% - 20px);  
+
+}
+
+@media (max-width: 768px) {
+  .cardContainer > * {
+    flex: 1 0 100%;
+    margin: 0 auto;
+  }
+}
+

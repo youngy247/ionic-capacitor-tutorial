@@ -146,6 +146,7 @@ const Tab3: React.FC = () => {
           onIonChange={(e) => setSearchTerm(e.detail.value)}
           debounce={500}
         />
+        <div className="cardContainer">
         {observations.map((observation, index) => (
           <IonCard key={index}>
             <IonCardHeader>
@@ -176,6 +177,7 @@ const Tab3: React.FC = () => {
             </IonCardContent>
           </IonCard>
         ))}
+        </div>
       </IonContent>
     </IonPage>
   );
