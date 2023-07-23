@@ -61,7 +61,7 @@ const Tab1: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>Image Example</IonTitle>
+          <IonTitle>Upload Observation</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
@@ -97,7 +97,7 @@ const Tab1: React.FC = () => {
           </IonItem>
 
           <IonButton expand="full" onClick={takePicture}>
-            Take Picture
+            Upload Picture
           </IonButton>
           {image && <img src={image} alt="image" />}
 
