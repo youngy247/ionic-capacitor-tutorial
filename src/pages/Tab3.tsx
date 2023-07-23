@@ -28,21 +28,29 @@ const Tab3: React.FC = () => {
 
   useEffect(() => {
     const fetchObservations = async () => {
-      const userUID = getCurrentUserUID();
+      const userUID = await getCurrentUserUID();
       if (userUID) {
-        if (searchTerm) {
+        const userObservations = await fetchUserObservations(userUID);
+        setObservations(userObservations);
+      }
+    };
+    fetchObservations();
+  }, []);
+
+  useEffect(() => {
+    const fetchObservations = async () => {
+      if (searchTerm) {
+        const userUID = await getCurrentUserUID();
+        if (userUID) {
           const userObservations = await fetchUserObservationsBySpecies(
             userUID,
             searchTerm
           );
           setObservations(userObservations);
-        } else {
-          const userObservations = await fetchUserObservations(userUID);
-          setObservations(userObservations);
         }
       }
     };
-    fetchObservations();
+    if (searchTerm) fetchObservations();
   }, [searchTerm]);
 
   console.log(observations);
