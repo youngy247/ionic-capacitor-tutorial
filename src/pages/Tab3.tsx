@@ -28,6 +28,7 @@ import {
   deleteObservations,
 } from "../firebaseConfig";
 import { trashBinOutline } from "ionicons/icons";
+import './Tab3.css'
 
 const Tab3: React.FC = () => {
   const [observations, setObservations] = useState<any[]>([]);
@@ -56,9 +57,13 @@ const Tab3: React.FC = () => {
           userObservations = await fetchUserObservationsBySpecies(
             userUID,
             searchTerm
+          ).catch((error) =>
+            console.error("Error fetching by species:", error)
           );
         } else {
-          userObservations = await fetchUserObservations(userUID);
+          userObservations = await fetchUserObservations(userUID).catch(
+            (error) => console.error("Error fetching user observations:", error)
+          );
         }
         setObservations(userObservations);
       }
@@ -76,7 +81,6 @@ const Tab3: React.FC = () => {
       setSelectedObservations([...selectedObservations, observation.id]);
     }
   };
-
 
   const handleDeleteClick = () => {
     if (selectedObservations.length > 0) {
@@ -113,6 +117,7 @@ const Tab3: React.FC = () => {
 
   return (
     <IonPage>
+      
       <IonHeader>
         <IonToolbar color={"success"}>
           <IonButtons slot="start">
@@ -153,14 +158,15 @@ const Tab3: React.FC = () => {
               <IonCardTitle>
                 {observation.species || "Species not available"}
               </IonCardTitle>
-            </IonCardHeader>
-
-            <IonCardContent>
               <IonCheckbox
-                slot="end"
+                className="checkbox"
                 value={observation.id}
                 onIonChange={() => handleCheckboxChange(observation)}
               />
+            </IonCardHeader>
+
+            <IonCardContent>
+              
 
               <IonImg src={observation.img || "Image URL not available"} />
               <p>
