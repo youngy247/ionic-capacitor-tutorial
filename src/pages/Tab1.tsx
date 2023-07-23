@@ -12,14 +12,16 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from "@ionic/react";
 import { savePictureToStorage, saveObservation } from "../firebaseConfig";
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { useState } from "react";
 
 const Tab1: React.FC = () => {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, reset } = useForm();
   const [image, setImage] = useState(null);
+  const [showToast] = useIonToast();
 
   const takePicture = async () => {
     const image = await Camera.getPhoto({
@@ -40,6 +42,16 @@ const Tab1: React.FC = () => {
     }
 
     saveObservation(data);
+
+    // Reset form and image
+    reset();
+    setImage(null);
+
+    showToast({
+      message: "Successfully saved observation",
+      duration: 3000,
+      color: "success",
+    });
   };
 
   return (
