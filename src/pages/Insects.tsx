@@ -200,7 +200,7 @@ const Insects: React.FC = () => {
           value={searchQuery}
           onIonChange={handleSearchChange}
         ></IonSearchbar>
-        {!searchQuery && <h2>Most Recent Observation Posts</h2>}
+        {!searchQuery && <h2 className="centered-text">Most Recent Observation Posts</h2>}
         {isMobileDevice && (
           <p className="centered-text">
             Click on an insect for more information.
