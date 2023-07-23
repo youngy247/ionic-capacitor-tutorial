@@ -13,27 +13,37 @@ import {
   IonTitle,
   IonToolbar,
   IonImg,
+  IonSearchbar,
 } from "@ionic/react";
 import {
   fetchUserObservations,
+  fetchUserObservationsBySpecies,
   getCurrentUserUID,
 } from "../firebaseConfig";
 
 const Tab3: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [observations, setObservations] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchObservations = async () => {
       const userUID = getCurrentUserUID();
       if (userUID) {
-        const userObservations = await fetchUserObservations(userUID);
-        console.log(userObservations);
-        setObservations(userObservations);
+        if (searchTerm) {
+          const userObservations = await fetchUserObservationsBySpecies(
+            userUID,
+            searchTerm
+          );
+          setObservations(userObservations);
+        } else {
+          const userObservations = await fetchUserObservations(userUID);
+          setObservations(userObservations);
+        }
       }
     };
     fetchObservations();
-  }, []);
+  }, [searchTerm]);
 
   console.log(observations);
 
@@ -48,6 +58,11 @@ const Tab3: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
+        <IonSearchbar
+          value={searchTerm}
+          onIonChange={(e) => setSearchTerm(e.detail.value)}
+          debounce={500}
+        />
         {observations.map((observation, index) => (
           <IonCard key={index}>
             <IonCardHeader>
