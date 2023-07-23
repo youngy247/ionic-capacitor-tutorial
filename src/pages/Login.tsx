@@ -144,7 +144,7 @@ const Login: React.FC = () => {
   const verifyCaptcha = async (token: string) => {
     console.log("Captcha Token: ", token);
     try {
-      const response = await fetch("http://localhost:3000/captcha/verify", {
+      const response = await fetch("https://portfolio-backend-3jb1.onrender.com/captcha/verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
