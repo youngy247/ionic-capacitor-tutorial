@@ -20,6 +20,7 @@ import {
   IonIcon,
   useIonAlert,
   useIonToast,
+  IonActionSheet,
 } from "@ionic/react";
 import {
   fetchUserObservations,
@@ -30,7 +31,12 @@ import {
   IObservationUpdate,
 } from "../firebaseConfig";
 import { Timestamp } from "firebase/firestore";
-import { trashBinOutline } from "ionicons/icons";
+import {
+  trashBinOutline,
+  ellipsisVertical,
+  createOutline,
+  checkmarkOutline,
+} from "ionicons/icons";
 import "./Tab3.css";
 
 const Tab3: React.FC = () => {
@@ -44,6 +50,9 @@ const Tab3: React.FC = () => {
   const [editingValues, setEditingValues] = useState<IObservationUpdate | null>(
     null
   );
+  const [showActionSheet, setShowActionSheet] = useState(false);
+  const [actionSheetObservationId, setActionSheetObservationId] =
+    useState(null);
 
   useEffect(() => {
     const fetchObservations = async () => {
@@ -135,7 +144,6 @@ const Tab3: React.FC = () => {
     }
   };
 
-
   console.log(observations);
 
   return (
@@ -192,7 +200,10 @@ const Tab3: React.FC = () => {
                       }}
                     />
                   ) : observation.timestamp ? (
-                    `${observation.timestamp.toDate().toLocaleString().slice(0, -3)} (UTC+1)`
+                    `${observation.timestamp
+                      .toDate()
+                      .toLocaleString()
+                      .slice(0, -3)} (UTC+1)`
                   ) : (
                     "DateTime not available"
                   )}
@@ -219,23 +230,6 @@ const Tab3: React.FC = () => {
                   value={observation.id}
                   onIonChange={() => handleCheckboxChange(observation)}
                 />
-                {editing === observation.id ? (
-                  <IonButton onClick={() => handleSaveClick(observation.id)}>
-                    Save
-                  </IonButton>
-                ) : (
-                  <IonButton
-                    onClick={() => {
-                      setEditing(observation.id);
-                      setEditingValues({
-                        species: observation.species,
-                        timestamp: observation.timestamp,
-                      });
-                    }}
-                  >
-                    Edit
-                  </IonButton>
-                )}
               </IonCardHeader>
               <IonCardContent>
                 <IonImg
@@ -247,6 +241,50 @@ const Tab3: React.FC = () => {
                   {observation.longitude || "Longitude not available"}
                 </p>
               </IonCardContent>
+              {editing === observation.id ? (
+                <IonButton
+                  className="square-button"
+                  onClick={() => handleSaveClick(observation.id)}
+                >
+                  <IonIcon slot="icon-only" icon={checkmarkOutline} />
+                </IonButton>
+              ) : (
+                <IonButton
+                  className="square-button"
+                  onClick={() => {
+                    setShowActionSheet(true);
+                    setActionSheetObservationId(observation.id);
+                  }}
+                >
+                  <IonIcon slot="icon-only" icon={ellipsisVertical} />
+                </IonButton>
+              )}
+              <IonActionSheet
+                isOpen={showActionSheet}
+                onDidDismiss={() => setShowActionSheet(false)}
+                buttons={[
+                  {
+                    text: "Edit",
+                    icon: createOutline,
+                    handler: () => {
+                      setEditing(actionSheetObservationId);
+                      const observation = observations.find(
+                        (obs) => obs.id === actionSheetObservationId
+                      );
+                      if (observation) {
+                        setEditingValues({
+                          species: observation.species,
+                          timestamp: observation.timestamp,
+                        });
+                      }
+                    },
+                  },
+                  {
+                    text: "Cancel",
+                    role: "cancel",
+                  },
+                ]}
+              />
             </IonCard>
           ))}
         </div>
