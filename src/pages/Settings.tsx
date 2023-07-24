@@ -3,7 +3,7 @@ import React from 'react';
 import { Redirect, Route } from 'react-router';
 import Tab1 from './Tab1';
 import Tab2 from './Tab2';
-import { ellipse, helpCircleOutline, triangle } from 'ionicons/icons';
+import { cloudUploadOutline, ellipse, eyeOutline, helpCircleOutline, listOutline, triangle } from 'ionicons/icons';
 import Tab3 from './Tab3';
 
 const Settings: React.FC = () => {
@@ -12,16 +12,16 @@ const Settings: React.FC = () => {
     <IonTabs>
       <IonTabBar slot="bottom">
         <IonTabButton tab="tab1" href="/app/settings/tab1">
-          <IonIcon icon={triangle} />
-          <IonLabel>Tab 1</IonLabel>
+          <IonIcon icon={cloudUploadOutline} />
+          <IonLabel>Upload</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="tab2" href="/app/settings/tab2">
+        {/* <IonTabButton tab="tab2" href="/app/settings/tab2">
           <IonIcon icon={ellipse} />
           <IonLabel>Tab 2</IonLabel>
-        </IonTabButton>
+        </IonTabButton> */}
         <IonTabButton tab="tab3" href="/app/settings/tab3">
-          <IonIcon icon={helpCircleOutline} />
-          <IonLabel>Tab 3</IonLabel>
+          <IonIcon icon={eyeOutline} />
+          <IonLabel>My Observations</IonLabel>
         </IonTabButton>
       </IonTabBar>
 
