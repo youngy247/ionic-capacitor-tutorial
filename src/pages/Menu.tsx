@@ -18,7 +18,6 @@ import React from "react";
 import Settings from "./Settings";
 import { Redirect, Route, } from "react-router";
 import {
-  home,
   homeOutline,
   logOutOutline,
   personOutline,
