@@ -114,7 +114,7 @@ const Insects: React.FC = () => {
 
   const fetchBugs = async (query: string, page: number) => {
     setLoading(true);
-    
+
     try {
       const endpoint = query
         ? `https://api.inaturalist.org/v1/observations?q=${encodeURIComponent(
@@ -142,7 +142,11 @@ const Insects: React.FC = () => {
         place: result.place_guess,
         qualityGrade: result.quality_grade,
         timeObservedAt: result.time_observed_at
-          ? result.time_observed_at.split("T")[1].split("+")[0]
+          ? result.time_observed_at
+              .split("T")[1]
+              .split(":")
+              .slice(0, 2)
+              .join(":")
           : null,
         positionalAccuracy: result.positional_accuracy,
         lat: result.geojson ? result.geojson.coordinates[1] : null, // Get the latitude
@@ -282,37 +286,37 @@ const Insects: React.FC = () => {
             </>
           )}
           <IonFooter>
-          <div className="page-buttons">
-            <IonButton
-              fill="clear"
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </IonButton>
+            <div className="page-buttons">
+              <IonButton
+                fill="clear"
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </IonButton>
 
-            {Array.from({ length: 5 }, (_, index) => index + 1).map(
-              (pageNumber) => (
-                <IonButton
-                  key={pageNumber}
-                  fill={pageNumber === currentPage ? "solid" : "clear"}
-                  onClick={() => setCurrentPage(pageNumber)}
-                >
-                  {pageNumber}
-                </IonButton>
-              )
-            )}
+              {Array.from({ length: 5 }, (_, index) => index + 1).map(
+                (pageNumber) => (
+                  <IonButton
+                    key={pageNumber}
+                    fill={pageNumber === currentPage ? "solid" : "clear"}
+                    onClick={() => setCurrentPage(pageNumber)}
+                  >
+                    {pageNumber}
+                  </IonButton>
+                )
+              )}
 
-            <IonButton
-              fill="clear"
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={
-                currentPage === 5 /* Replace 5 with your last page number */
-              }
-            >
-              Next
-            </IonButton>
-          </div>
+              <IonButton
+                fill="clear"
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === 5 /* Replace 5 with your last page number */
+                }
+              >
+                Next
+              </IonButton>
+            </div>
           </IonFooter>
           <IonModal
             ref={modal}
