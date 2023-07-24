@@ -24,8 +24,8 @@ const Intro: React.FC<ContainerProps> = ({ onFinish }) => {
   return (
     <Swiper>
       <SwiperSlide>
-        <img src={Slide1Jpg} alt="intro1" />
-        <IonText className="Travelling with a camera">
+        <img src={Slide1Jpg} alt="Travelling with a camera" />
+        <IonText className="intro-text">
           <h2>Insect Identifier and Tracker</h2>
           <p>Welcome to the Insect Identifier and Tracker! Embrace your inner explorer and contribute to our collective understanding of global insect biodiversity!</p>
         </IonText>
