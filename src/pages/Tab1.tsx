@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { GoogleMap } from "@capacitor/google-maps";
 import {
   IonInput,
   IonLabel,
@@ -15,6 +16,7 @@ import {
   useIonToast,
   useIonRouter,
 } from "@ionic/react";
+import { useRef } from "react";
 import {
   getCurrentUserUID,
   savePictureToStorage,
@@ -22,12 +24,82 @@ import {
 } from "../firebaseConfig";
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { useState } from "react";
+import { Geolocation } from "@capacitor/geolocation";
 
 const Tab1: React.FC = () => {
   const { register, handleSubmit, setValue, reset } = useForm();
   const [image, setImage] = useState(null);
   const [showToast] = useIonToast();
   const router = useIonRouter();
+  const apiKey = import.meta.env.VITE_APP_GOOGLE_MAPS_KEY;
+  const mapRef = useRef<HTMLElement>();
+  const [map, setMap] = useState<GoogleMap | null>(null);
+
+  const handleMapClick = async (event) => {
+    const coordinates = event.latLng;
+
+    // Use the lat() and lng() methods to get latitude and longitude
+    const lat = coordinates.lat();
+    const lng = coordinates.lng();
+
+    // These will set the latitude and longitude values in the form
+    setValue("latitude", lat);
+    setValue("longitude", lng);
+
+    // Add marker to the map at clicked location
+    await map?.addMarker({
+      coordinate: { lat: lat, lng: lng },
+      title: "My Location",
+    });
+
+    // Set listener to get latitude and longitude of marker when clicked
+    map?.setOnMarkerClickListener(() => {
+      setValue("latitude", lat);
+      setValue("longitude", lng);
+    });
+  };
+
+  async function createMap() {
+    if (!mapRef.current) {
+      console.log("mapRef.current is null"); // Add this log
+      return;
+    }
+
+    let latitude, longitude;
+
+    try {
+      const position = await Geolocation.getCurrentPosition();
+      latitude = position.coords.latitude;
+      longitude = position.coords.longitude;
+    } catch (error) {
+      latitude = 55.3781; // Default latitude for UK
+      longitude = -3.436; // Default longitude for UK
+      console.log("Could not fetch location, defaulting to UK", error);
+    }
+
+    try {
+      const newMap = await GoogleMap.create({
+        id: "my-cool-map",
+        element: mapRef.current,
+        apiKey: apiKey,
+        config: {
+          center: {
+            lat: latitude,
+            lng: longitude,
+          },
+          zoom: 8,
+        },
+      });
+
+      newMap.setOnMapClickListener(handleMapClick);
+      setMap(newMap); // store map reference in state
+
+      // Enable the location after creating the map
+      newMap.enableCurrentLocation(true);
+    } catch (error) {
+      console.log("Failed to create map", error); // Add this log
+    }
+  }
 
   const takePicture = async () => {
     const image = await Camera.getPhoto({
@@ -102,22 +174,29 @@ const Tab1: React.FC = () => {
               }}
             ></IonDatetime>
           </IonItem>
+          <capacitor-google-map
+            ref={mapRef}
+            style={{
+              display: "inline-block",
+              width: 275,
+              height: 400,
+            }}
+          ></capacitor-google-map>
+          <IonButton onClick={createMap}>Pinpoint the location</IonButton>
 
           <IonItem>
             <IonLabel>Latitude</IonLabel>
             <IonInput
-              type="number"
               {...register("latitude")}
-              required
+              placeholder="Latitude"
             ></IonInput>
           </IonItem>
 
           <IonItem>
             <IonLabel>Longitude</IonLabel>
             <IonInput
-              type="number"
               {...register("longitude")}
-              required
+              placeholder="Longitude"
             ></IonInput>
           </IonItem>
 
