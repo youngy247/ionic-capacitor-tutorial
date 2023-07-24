@@ -27,7 +27,7 @@ import { useState } from "react";
 import { Geolocation } from "@capacitor/geolocation";
 // import { v4 as uuidv4 } from 'uuid';
 
-const Tab1: React.FC = () => {
+const UploadObservation: React.FC = () => {
   const { register, handleSubmit, setValue, reset } = useForm();
   const [image, setImage] = useState(null);
   const [showToast] = useIonToast();
@@ -218,4 +218,4 @@ const Tab1: React.FC = () => {
   );
 };
 
-export default Tab1;
+export default UploadObservation;

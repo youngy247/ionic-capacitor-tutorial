@@ -39,7 +39,7 @@ import {
 } from "ionicons/icons";
 import "./Tab3.css";
 
-const Tab3: React.FC = () => {
+const Collection: React.FC = () => {
   const [observations, setObservations] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedObservations, setSelectedObservations] = useState<any[]>([]);
@@ -295,4 +295,4 @@ const Tab3: React.FC = () => {
   );
 };
 
-export default Tab3;
+export default Collection;

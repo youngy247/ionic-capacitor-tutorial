@@ -15,7 +15,7 @@ import {
 } from "@ionic/react";
 import React from "react";
 // import List from "./List";
-import Settings from "./Settings";
+import Profile from "./Profile";
 import { Redirect, Route, } from "react-router";
 import {
   homeOutline,
@@ -32,7 +32,7 @@ const Menu: React.FC = () => {
   const paths = [
     { name: "Home", url: "/app/home", icon: homeOutline },
     // { name: "News", url: "/app/news", icon: newspaperOutline },
-    { name: "My profile", url: "/app/settings", icon: personOutline },
+    { name: "My profile", url: "/app/profile", icon: personOutline },
   ];
 
   const router = useIonRouter();
@@ -86,7 +86,7 @@ const Menu: React.FC = () => {
         <IonRouterOutlet id="main">
           <Route path="/app/home" component={Home} />
           {/* <Route exact path="/app/news" component={News} /> */}
-          <Route path="/app/settings" component={Settings} />
+          <Route path="/app/profile" component={Profile} />
           <Route exact path="/app">
             <Redirect to="/app/home" />
           </Route>
