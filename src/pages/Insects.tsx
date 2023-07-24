@@ -190,6 +190,20 @@ const Insects: React.FC = () => {
     setSelectedBug(null);
   };
 
+  const getQualityGradeDescription = (grade) => {
+    switch (grade) {
+      case "needs_id":
+        return "Needs identification";
+      case "research":
+        return "Research grade";
+      case "casual":
+        return "Casual observation";
+      default:
+        return "Unknown grade";
+    }
+  };
+  
+
   return (
     <IonPage ref={page}>
       <IonHeader>
@@ -261,7 +275,7 @@ const Insects: React.FC = () => {
                             <div className="more-details">
                               More Details:
                               <ul>
-                                <li>Quality Grade: {bug.qualityGrade}</li>
+                              <li>Quality Grade: {getQualityGradeDescription(bug.qualityGrade)}</li>
                                 <li>Time Observed: {bug.timeObservedAt}</li>
                                 <li>
                                   Positional Accuracy: {bug.positionalAccuracy}
@@ -361,7 +375,7 @@ const Insects: React.FC = () => {
                   <div className="more-details">
                     More Details:
                     <ul>
-                      <li>Quality Grade: {selectedBug?.qualityGrade}</li>
+                    <li>Quality Grade: {getQualityGradeDescription(selectedBug?.qualityGrade)}</li>
                       <li>Time Observed: {selectedBug?.timeObservedAt}</li>
                       <li>
                         Positional Accuracy: {selectedBug?.positionalAccuracy}
