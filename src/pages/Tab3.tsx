@@ -211,6 +211,7 @@ const Tab3: React.FC = () => {
 
                 <IonCardTitle>
                   {editing === observation.id ? (
+                    <div className="input-container">
                     <input
                       type="text"
                       value={editingValues?.species}
@@ -221,6 +222,7 @@ const Tab3: React.FC = () => {
                         })
                       }
                     />
+                    </div>
                   ) : (
                     observation.species || "Species not available"
                   )}
