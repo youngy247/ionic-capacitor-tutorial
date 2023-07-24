@@ -3,7 +3,7 @@ import React from 'react';
 import { Redirect, Route } from 'react-router';
 import Tab1 from './Tab1';
 import Tab2 from './Tab2';
-import { cloudUploadOutline, ellipse, eyeOutline, helpCircleOutline, listOutline, triangle } from 'ionicons/icons';
+import { cloudUploadOutline, eyeOutline } from 'ionicons/icons';
 import Tab3 from './Tab3';
 
 const Settings: React.FC = () => {
