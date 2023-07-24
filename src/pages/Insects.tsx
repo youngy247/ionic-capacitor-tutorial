@@ -225,7 +225,7 @@ const Insects: React.FC = () => {
           )}
           {isMobileDevice && (
             <p className="centered-text">
-              Click on an insect for more information.
+              Click on a card for more information.
             </p>
           )}
           {loading && searchQuery ? (
@@ -263,22 +263,22 @@ const Insects: React.FC = () => {
                       </div>
                       <div className="insect-details">
                         <div className="common-name">
-                          <strong>{bug.commonName}</strong>
+                          <strong>{bug.commonName || 'Unknown'}</strong>
                         </div>
                         {!isMobileDevice && (
                           <div className="additional-info">
                             <div>
-                              <i>{bug.scientificName}</i>
+                              <i>{bug.scientificName || 'Unknown'}</i>
                             </div>
-                            <div>Observed on: {bug.observedAt}</div>
-                            <div>Place: {bug.place}</div>
+                            <div>Observed on: {bug.observedAt || 'Unknown'}</div>
+                            <div>Place: {bug.place || 'Unknown'}</div>
                             <div className="more-details">
                               More Details:
                               <ul>
-                              <li>Quality Grade: {getQualityGradeDescription(bug.qualityGrade)}</li>
-                                <li>Time Observed: {bug.timeObservedAt}</li>
+                              <li>Quality Grade: {getQualityGradeDescription(bug.qualityGrade) || 'Unknown'}</li>
+                                <li>Time Observed: {bug.timeObservedAt || 'Unknown'}</li>
                                 <li>
-                                  Positional Accuracy: {bug.positionalAccuracy}
+                                  Positional Accuracy: {bug.positionalAccuracy || 'Unknown'}
                                 </li>
                                 {/* Add more details as needed */}
                               </ul>
@@ -325,7 +325,7 @@ const Insects: React.FC = () => {
                 fill="clear"
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={
-                  currentPage === 5 /* Replace 5 with your last page number */
+                  currentPage === 5 
                 }
               >
                 Next
@@ -340,7 +340,7 @@ const Insects: React.FC = () => {
           >
             <IonHeader>
               <IonToolbar>
-                <IonTitle>{selectedBug?.commonName}</IonTitle>
+                <IonTitle>{selectedBug?.commonName || 'Unknown'}</IonTitle>
                 <IonButton slot="end" onClick={handleCloseModal}>
                   Close
                 </IonButton>
@@ -365,20 +365,20 @@ const Insects: React.FC = () => {
                 </div>
                 <div className="insect-details">
                   <div className="common-name">
-                    <strong>{selectedBug?.commonName}</strong>
+                    <strong>{selectedBug?.commonName || 'Unknown'}</strong>
                   </div>
                   <div>
-                    <i>{selectedBug?.scientificName}</i>
+                    <i>{selectedBug?.scientificName || 'Unknown'}</i>
                   </div>
-                  <div>Observed on: {selectedBug?.observedAt}</div>
-                  <div>Place: {selectedBug?.place}</div>
+                  <div>Observed on: {selectedBug?.observedAt || 'Unknown'}</div>
+                  <div>Place: {selectedBug?.place || 'Unknown'}</div>
                   <div className="more-details">
                     More Details:
                     <ul>
-                    <li>Quality Grade: {getQualityGradeDescription(selectedBug?.qualityGrade)}</li>
-                      <li>Time Observed: {selectedBug?.timeObservedAt}</li>
+                    <li>Quality Grade: {getQualityGradeDescription(selectedBug?.qualityGrade) || 'Unknown'}</li>
+                      <li>Time Observed: {selectedBug?.timeObservedAt || 'Unknown'}</li>
                       <li>
-                        Positional Accuracy: {selectedBug?.positionalAccuracy}
+                        Positional Accuracy: {selectedBug?.positionalAccuracy || 'Unknown'} 
                       </li>
                       {/* Add more details as needed */}
                     </ul>
