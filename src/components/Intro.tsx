@@ -25,7 +25,7 @@ const Intro: React.FC<ContainerProps> = ({ onFinish }) => {
         <img src={Intro1Svg} alt="intro1" />
         <IonText className="intro-text">
           <h2>Insect Identifier and Tracker</h2>
-          <p>Welcome to the Insect Identifier and Tracker. Become a citizen scientist and contribute to the understanding of insect biodiversity!</p>
+          <p>Welcome to the Insect Identifier and Tracker! Embrace your inner explorer and contribute to our collective understanding of global insect biodiversity!</p>
         </IonText>
         <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
@@ -33,8 +33,8 @@ const Intro: React.FC<ContainerProps> = ({ onFinish }) => {
       <SwiperSlide>
         <img src={Intro2Svg} alt="intro2" />
         <IonText className="intro-text">
-          <h2>Identify and Record Sightings</h2>
-          <p>Input descriptive details to identify insects. Record your sightings with date, location, and a photo. Every observation matters!</p>
+          <h2>Record and Map Your Sightings</h2>
+          <p>Not just record, but also map your sightings. Provide details, capture a photo, pinpoint your location on Google Maps and leave your mark on the global insect map!</p>
         </IonText>
         <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
@@ -42,24 +42,24 @@ const Intro: React.FC<ContainerProps> = ({ onFinish }) => {
       <SwiperSlide>
         <img src={Intro3Svg} alt="intro3" />
         <IonText className="intro-text">
-          <h2>Sharing Data and Challenges</h2>
-          <p>Your data is shared with conservation projects. Engage in fun challenges like spotting a certain number of species to contribute more!</p>
+          <h2>Your Personalised Observation Dashboard</h2>
+          <p>Create your own account to manage and revisit your observations. Search through your findings, monitor your impact, and keep adding to your personal collection!</p>
         </IonText>
         <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
       <SwiperSlide>
         <img src={Intro3Svg} alt="intro3" />
         <IonText className="intro-text">
-          <h2>Always Ready, Anywhere</h2>
-          <p>No internet? No problem. Save your sightings offline and upload when ready. Plus, we&apos;re available on iOS, Android, and web.</p>
+          <h2>Explore Global Observations</h2>
+          <p>Venture beyond your personal collection! Dive into observations made by others around the world. Browse, learn and discover unique sightings pinned on the global map!</p>
         </IonText>
         <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
       <SwiperSlide>
         <img src={Intro3Svg} alt="intro3" />
         <IonText className="intro-text">
-          <h2>Ready to Begin?</h2>
-          <p>You&apos;re all set to contribute to insect conservation. Let&apos;s start identifying and tracking!</p>
+          <h2>Ready to Begin Your Journey?</h2>
+          <p>Join us in our mission to better understand and conserve insect biodiversity. You&apos;re all set to start identifying, tracking, mapping, and exploring. Let&apos;s get started!</p>
         </IonText>
         <IonButton onClick={() => onFinish()}>Finish</IonButton>
       </SwiperSlide>
