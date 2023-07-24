@@ -91,7 +91,7 @@ const Tab1: React.FC = () => {
           </IonItem>
 
           <IonItem>
-            <IonLabel>Date/Time</IonLabel>
+            <IonLabel>Date/Time (UTC+1)</IonLabel>
             <IonDatetime
               onIonChange={(e) => {
                 // Convert the ISO 8601 string into a Date object

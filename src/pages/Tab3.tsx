@@ -135,6 +135,7 @@ const Tab3: React.FC = () => {
     }
   };
 
+
   console.log(observations);
 
   return (
@@ -182,7 +183,7 @@ const Tab3: React.FC = () => {
                       onChange={(e) => {
                         const date = new Date(e.target.value);
                         date.setMinutes(
-                          date.getMinutes() - date.getTimezoneOffset()
+                          date.getMinutes() + date.getTimezoneOffset() - 60
                         );
                         setEditingValues({
                           ...editingValues,
@@ -191,7 +192,7 @@ const Tab3: React.FC = () => {
                       }}
                     />
                   ) : observation.timestamp ? (
-                    observation.timestamp.toDate().toLocaleString()
+                    `${observation.timestamp.toDate().toLocaleString().slice(0, -3)} (UTC+1)`
                   ) : (
                     "DateTime not available"
                   )}

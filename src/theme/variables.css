@@ -9,7 +9,7 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-primary-contrast-rgb: 255,255,255;
 	--ion-color-primary-shade: #4f0193;
 	--ion-color-primary-tint: #6b1ab0;
-
+  
 	--ion-color-secondary: #002ead;
 	--ion-color-secondary-rgb: 0,46,173;
 	--ion-color-secondary-contrast: #ffffff;
@@ -59,6 +59,7 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-light-shade: #d7d8da;
 	--ion-color-light-tint: #f5f6f9;
 
+  --ion-backdrop-opacity: 0.1;
 }
 
 @media (prefers-color-scheme: dark) {
