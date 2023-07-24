@@ -189,7 +189,7 @@ const Insects: React.FC = () => {
   return (
     <IonPage ref={page}>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar color={"success"}>
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
