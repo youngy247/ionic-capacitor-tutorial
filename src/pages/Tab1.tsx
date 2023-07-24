@@ -36,11 +36,11 @@ const Tab1: React.FC = () => {
   const [map, setMap] = useState<GoogleMap | null>(null);
 
   const handleMapClick = async (event) => {
-    const coordinates = event.latLng;
+    console.log(event);
 
-    // Use the lat() and lng() methods to get latitude and longitude
-    const lat = coordinates.lat();
-    const lng = coordinates.lng();
+
+    const lat = event.latitude;
+    const lng = event.longitude;
 
     // These will set the latitude and longitude values in the form
     setValue("latitude", lat);
