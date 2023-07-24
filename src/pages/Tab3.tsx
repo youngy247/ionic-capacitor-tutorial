@@ -155,8 +155,8 @@ const Tab3: React.FC = () => {
           </IonButtons>
           <IonTitle>
             {searchTerm
-              ? `Your Observations of ${searchTerm}`
-              : "Your Most Recent Observations"}
+              ? `Observations of ${searchTerm}`
+              : "Most Recent Observations"}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={handleDeleteClick}>
