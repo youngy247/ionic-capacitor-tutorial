@@ -14,16 +14,17 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import React from "react";
-import List from "./List";
+// import List from "./List";
 import Settings from "./Settings";
-import { Redirect, Route, Router } from "react-router";
+import { Redirect, Route, } from "react-router";
 import {
+  home,
   homeOutline,
   logOutOutline,
-  newspaperOutline,
-  settingsOutline,
+  personOutline,
+  // newspaperOutline,
 } from "ionicons/icons";
-import News from "./News";
+// import News from "./News";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { Preferences } from "@capacitor/preferences";
 import Home from "./Home";
@@ -31,8 +32,8 @@ import Home from "./Home";
 const Menu: React.FC = () => {
   const paths = [
     { name: "Home", url: "/app/home", icon: homeOutline },
-    { name: "News", url: "/app/news", icon: newspaperOutline },
-    { name: "My profile", url: "/app/settings", icon: settingsOutline },
+    // { name: "News", url: "/app/news", icon: newspaperOutline },
+    { name: "My profile", url: "/app/settings", icon: personOutline },
   ];
 
   const router = useIonRouter();
@@ -58,7 +59,7 @@ const Menu: React.FC = () => {
         <IonMenu contentId="main">
           <IonHeader>
             <IonToolbar color={"secondary"}>
-              <IonTitle>Page Title</IonTitle>
+              <IonTitle>Menu</IonTitle>
             </IonToolbar>
           </IonHeader>
           <IonContent>
@@ -85,7 +86,7 @@ const Menu: React.FC = () => {
 
         <IonRouterOutlet id="main">
           <Route path="/app/home" component={Home} />
-          <Route exact path="/app/news" component={News} />
+          {/* <Route exact path="/app/news" component={News} /> */}
           <Route path="/app/settings" component={Settings} />
           <Route exact path="/app">
             <Redirect to="/app/home" />
