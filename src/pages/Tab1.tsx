@@ -16,7 +16,7 @@ import {
   useIonToast,
   useIonRouter,
 } from "@ionic/react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   getCurrentUserUID,
   savePictureToStorage,
@@ -25,6 +25,7 @@ import {
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { useState } from "react";
 import { Geolocation } from "@capacitor/geolocation";
+// import { v4 as uuidv4 } from 'uuid';
 
 const Tab1: React.FC = () => {
   const { register, handleSubmit, setValue, reset } = useForm();
@@ -34,34 +35,37 @@ const Tab1: React.FC = () => {
   const apiKey = import.meta.env.VITE_APP_GOOGLE_MAPS_KEY;
   const mapRef = useRef<HTMLElement>();
   const [map, setMap] = useState<GoogleMap | null>(null);
+  const [markerCoords, setMarkerCoords] = useState<{ lat: number, lng: number } | null>(null);
+
 
   const handleMapClick = async (event) => {
-    console.log(event);
-
-
     const lat = event.latitude;
     const lng = event.longitude;
 
-    // These will set the latitude and longitude values in the form
     setValue("latitude", lat);
     setValue("longitude", lng);
 
-    // Add marker to the map at clicked location
-    await map?.addMarker({
-      coordinate: { lat: lat, lng: lng },
-      title: "My Location",
-    });
+    setMarkerCoords({ lat, lng });
 
-    // Set listener to get latitude and longitude of marker when clicked
     map?.setOnMarkerClickListener(() => {
       setValue("latitude", lat);
       setValue("longitude", lng);
     });
   };
 
+  useEffect(() => {
+    if (markerCoords && map) { 
+      // map.removeMarker(id).catch(error => console.error("Failed to remove marker", error));
+      map.addMarker({
+        coordinate: { lat: markerCoords.lat, lng: markerCoords.lng },
+        // title: "My Location",
+      }).catch(error => console.error("Failed to add marker", error));
+    }
+  }, [markerCoords, map]);
+  
   async function createMap() {
     if (!mapRef.current) {
-      console.log("mapRef.current is null"); // Add this log
+      console.log("mapRef.current is null"); 
       return;
     }
 

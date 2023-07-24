@@ -40,7 +40,8 @@
     "react-responsive": "^9.0.2",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
-    "swiper": "^10.0.4"
+    "swiper": "^10.0.4",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@capacitor/assets": "^2.0.4",
