@@ -14,7 +14,7 @@ const Tab2: React.FC = () => {
       threshold: 0,
       gestureName: 'my-gesture',
       onMove: (ev) => onMoveHandler(ev),
-      onEnd: (ev) => onMoveEnd(ev),
+      onEnd: () => onMoveEnd(),
     })
     gesture.enable();
   })
@@ -26,7 +26,7 @@ const Tab2: React.FC = () => {
     elementRef.current!.style.transform = `translate(${x}px, ${y}px)`;
   }
 
-  const onMoveEnd = (detail: GestureDetail) => {
+  const onMoveEnd = () => {
     elementRef.current!.style.transition = '0.5s ease-out';
     elementRef.current!.style.transform = `translate(0px, 0px)`;
 
