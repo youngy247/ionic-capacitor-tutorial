@@ -11,6 +11,20 @@
   object-fit: cover;
 }
 
+.image-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%; 
+}
+
+
+.share-button {
+  margin-top: auto;
+  padding: 10px 0;
+}
+
 .component-wrapper{
   min-height: calc(100vh - 56px); 
 }

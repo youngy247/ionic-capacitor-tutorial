@@ -16,13 +16,16 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
+  useIonToast,
 } from "@ionic/react";
 import React, { useEffect, useRef, useState } from "react";
 import "./Insects.css";
 import { useMediaQuery } from "react-responsive";
+import { Clipboard } from "@capacitor/clipboard";
 import StockInsectImage from "../assets/StockInsectImage.jpg";
 import { GoogleMap } from "@capacitor/google-maps";
-import { addOutline } from "ionicons/icons";
+import { Share } from "@capacitor/share";
+import { addOutline, shareSocialOutline } from "ionicons/icons";
 
 const Insects: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -36,6 +39,7 @@ const Insects: React.FC = () => {
   const modal = useRef<HTMLIonModalElement>(null);
   const isMobileDevice = useMediaQuery({ maxWidth: 768 });
   const apiKey = import.meta.env.VITE_APP_GOOGLE_MAPS_KEY;
+  const [showToast, dismissToast] = useIonToast();
   const [currentPage, setCurrentPage] = useState(1);
   const cardModal = useRef<HTMLIonModalElement>(null);
 
@@ -153,6 +157,7 @@ const Insects: React.FC = () => {
               .slice(0, 2)
               .join(":")
           : null,
+        uri: result.uri,
         positionalAccuracy: result.positional_accuracy,
         lat: result.geojson ? result.geojson.coordinates[1] : null, // Get the latitude
         lng: result.geojson ? result.geojson.coordinates[0] : null, // Get the longitude
@@ -208,6 +213,45 @@ const Insects: React.FC = () => {
     }
   };
 
+  const handleShareClick = async (bug) => {
+    try {
+      await Share.share({
+        title: bug.commonName,
+        text: `Check out this observation of a ${bug.commonName}`,
+        url: bug.uri,
+      });
+      console.log("Content shared successfully");
+    } catch (error) {
+      console.error("Error sharing", error);
+
+      // If the share action was cancelled, do not copy to clipboard
+      if (error.message !== "Share canceled") {
+        // Fallback for devices that do not support sharing
+        // Here we will copy the URL to the clipboard
+        try {
+          await Clipboard.write({
+            string: bug.uri,
+          });
+          await dismissToast();
+          showToast({
+            message: "Link copied to clipboard",
+            duration: 2000,
+            color: "success",
+          });
+          console.log("Link copied to clipboard");
+        } catch (err) {
+          await dismissToast();
+          showToast({
+            message: "Failed to share",
+            duration: 3000,
+            color: "danger",
+          });
+          console.error("Failed to copy", err);
+        }
+      }
+    }
+  };
+
   return (
     <IonPage ref={page}>
       <IonHeader>
@@ -253,6 +297,11 @@ const Insects: React.FC = () => {
                       }
                     >
                       <div className="image-container">
+                      {isMobileDevice && (
+                      <div className="common-name">
+                          <strong>{bug.commonName || "Unknown"}</strong>
+                        </div>
+                      )}
                         <IonImg
                           src={bug.image ? bug.image : StockInsectImage}
                         />
@@ -264,12 +313,27 @@ const Insects: React.FC = () => {
                             on Freepik
                           </p>
                         )}
+                        <IonButton
+                        color="secondary"
+                        fill="outline"
+                        shape="round"
+                        slot="end"
+                        className="share-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShareClick(bug);
+                        }}
+                      >
+                        <IonIcon slot="start" icon={shareSocialOutline} />
+                        Share
+                      </IonButton>
                       </div>
                       <div className="insect-details">
+                      {!isMobileDevice && (
+                        <>
                         <div className="common-name">
                           <strong>{bug.commonName || "Unknown"}</strong>
                         </div>
-                        {!isMobileDevice && (
                           <div className="additional-info">
                             <div>
                               <i>{bug.scientificName || "Unknown"}</i>
@@ -299,6 +363,7 @@ const Insects: React.FC = () => {
                               </ul>
                             </div>
                           </div>
+                          </>
                         )}
                         {!isMobileDevice && bug.lat && bug.lng && (
                           <div
@@ -331,7 +396,6 @@ const Insects: React.FC = () => {
               </IonToolbar>
             </IonHeader>
             <IonContent className="card-modal-content">
-
               <ul>
                 <li>
                   <strong>Searching:</strong> When you&apos;re searching for a
@@ -340,9 +404,9 @@ const Insects: React.FC = () => {
                 </li>
                 <li>
                   <strong>Images:</strong> The images you see are from the
-                  observer&apos;s submissions. If an observer didn&apos;t provide an
-                  image, we use a generic image from iNaturalist. If that&apos;s not
-                  available, a stock image is used.
+                  observer&apos;s submissions. If an observer didn&apos;t
+                  provide an image, we use a generic image from iNaturalist. If
+                  that&apos;s not available, a stock image is used.
                 </li>
                 <li>
                   <strong>Map:</strong> The pin on the Google map represents the
@@ -350,13 +414,14 @@ const Insects: React.FC = () => {
                 </li>
                 <li>
                   <strong>Quality Grades:</strong> Observations from iNaturalist
-                  have different quality grades. These can be &quot;casual&quot;, &quot;needs
-                  ID&quot;, or &quot;research&quot;. &quot;Research&quot; grade observations are the most
-                  reliable and have been confirmed by multiple identifiers.
-                  &quot;Needs ID&quot; observations are awaiting more identifiers for
-                  verification. &quot;Casual&quot; observations don&apos;t meet the criteria
-                  for either of the other grades, but are still valuable
-                  records.
+                  have different quality grades. These can be
+                  &quot;casual&quot;, &quot;needs ID&quot;, or
+                  &quot;research&quot;. &quot;Research&quot; grade observations
+                  are the most reliable and have been confirmed by multiple
+                  identifiers. &quot;Needs ID&quot; observations are awaiting
+                  more identifiers for verification. &quot;Casual&quot;
+                  observations don&apos;t meet the criteria for either of the
+                  other grades, but are still valuable records.
                 </li>
                 <li>
                   <strong>Positional Accuracy:</strong> This represents the
