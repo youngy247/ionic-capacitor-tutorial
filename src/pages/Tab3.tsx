@@ -185,20 +185,28 @@ const Collection: React.FC = () => {
   };
 
   const doRefresh = async (event) => {
-    const userUID = await getCurrentUserUID();
-    let newObservations;
+    try {
+      const userUID = await getCurrentUserUID();
+      let newObservations;
     
-    if (userUID) {
-      if (searchTerm) {
-        newObservations = await fetchUserObservationsBySpecies(userUID, searchTerm);
-      } else {
-        newObservations = await fetchUserObservations(userUID);
+      if (userUID) {
+        if (searchTerm) {
+          newObservations = await fetchUserObservationsBySpecies(userUID, searchTerm);
+        } else {
+          newObservations = await fetchUserObservations(userUID);
+        }
+        setObservations(newObservations);
       }
-  
-      setObservations(newObservations);
+    } catch (error) {
+      console.error(error);
+      presentToast({
+        message: "Could not load your observations",
+        duration: 2000,
+        color: "danger",
+      });
+    } finally {
+      event.detail.complete();
     }
-  
-    event.detail.complete();
   };
   
 
