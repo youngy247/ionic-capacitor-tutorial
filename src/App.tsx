@@ -24,6 +24,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Menu from './pages/Menu';
 import ForgotPassword from './pages/ForgotPassword';
+import ProtectedRoute from './ProtectedRoute';
 
 setupIonicReact();
 
@@ -36,7 +37,7 @@ const App: React.FC = () => (
         </Route>
         <Route component={ForgotPassword} path="/forgotpassword" exact />
         <Route component={Register} path="/register" exact />
-        <Route component={Menu} path="/app" />
+        <ProtectedRoute component={Menu} path="/app" />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
