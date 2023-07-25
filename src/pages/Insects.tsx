@@ -13,12 +13,16 @@ import {
   IonTitle,
   IonToolbar,
   IonFooter,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from "@ionic/react";
 import React, { useEffect, useRef, useState } from "react";
 import "./Insects.css";
 import { useMediaQuery } from "react-responsive";
 import StockInsectImage from "../assets/StockInsectImage.jpg";
 import { GoogleMap } from "@capacitor/google-maps";
+import { addOutline } from "ionicons/icons";
 
 const Insects: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -33,6 +37,7 @@ const Insects: React.FC = () => {
   const isMobileDevice = useMediaQuery({ maxWidth: 768 });
   const apiKey = import.meta.env.VITE_APP_GOOGLE_MAPS_KEY;
   const [currentPage, setCurrentPage] = useState(1);
+  const cardModal = useRef<HTMLIonModalElement>(null);
 
   const mapRefs = useRef(new Map());
 
@@ -202,7 +207,6 @@ const Insects: React.FC = () => {
         return "Unknown grade";
     }
   };
-  
 
   return (
     <IonPage ref={page}>
@@ -263,22 +267,33 @@ const Insects: React.FC = () => {
                       </div>
                       <div className="insect-details">
                         <div className="common-name">
-                          <strong>{bug.commonName || 'Unknown'}</strong>
+                          <strong>{bug.commonName || "Unknown"}</strong>
                         </div>
                         {!isMobileDevice && (
                           <div className="additional-info">
                             <div>
-                              <i>{bug.scientificName || 'Unknown'}</i>
+                              <i>{bug.scientificName || "Unknown"}</i>
                             </div>
-                            <div>Observed on: {bug.observedAt || 'Unknown'}</div>
-                            <div>Place: {bug.place || 'Unknown'}</div>
+                            <div>
+                              Observed on: {bug.observedAt || "Unknown"}
+                            </div>
+                            <div>Place: {bug.place || "Unknown"}</div>
                             <div className="more-details">
                               More Details:
                               <ul>
-                              <li>Quality Grade: {getQualityGradeDescription(bug.qualityGrade) || 'Unknown'}</li>
-                                <li>Time Observed: {bug.timeObservedAt || 'Unknown'}</li>
                                 <li>
-                                  Positional Accuracy: {bug.positionalAccuracy || 'Unknown'}
+                                  Quality Grade:{" "}
+                                  {getQualityGradeDescription(
+                                    bug.qualityGrade
+                                  ) || "Unknown"}
+                                </li>
+                                <li>
+                                  Time Observed:{" "}
+                                  {bug.timeObservedAt || "Unknown"}
+                                </li>
+                                <li>
+                                  Positional Accuracy:{" "}
+                                  {bug.positionalAccuracy || "Unknown"}
                                 </li>
                                 {/* Add more details as needed */}
                               </ul>
@@ -299,6 +314,72 @@ const Insects: React.FC = () => {
               )}
             </>
           )}
+          <IonModal
+            ref={cardModal}
+            trigger="card-modal"
+            presentingElement={presentingElement!}
+            className="my-card-modal"
+          >
+            <IonHeader>
+              <IonToolbar color={"success"}>
+                <IonButtons slot="start">
+                  <IonButton onClick={() => cardModal.current?.dismiss()}>
+                    Close
+                  </IonButton>
+                </IonButtons>
+                <IonTitle>Guide</IonTitle>
+              </IonToolbar>
+            </IonHeader>
+            <IonContent className="card-modal-content">
+
+              <ul>
+                <li>
+                  <strong>Searching:</strong> When you&apos;re searching for a
+                  species, using the scientific name can yield better results
+                  than the common name.
+                </li>
+                <li>
+                  <strong>Images:</strong> The images you see are from the
+                  observer&apos;s submissions. If an observer didn&apos;t provide an
+                  image, we use a generic image from iNaturalist. If that&apos;s not
+                  available, a stock image is used.
+                </li>
+                <li>
+                  <strong>Map:</strong> The pin on the Google map represents the
+                  location where the observation was made.
+                </li>
+                <li>
+                  <strong>Quality Grades:</strong> Observations from iNaturalist
+                  have different quality grades. These can be &quot;casual&quot;, &quot;needs
+                  ID&quot;, or &quot;research&quot;. &quot;Research&quot; grade observations are the most
+                  reliable and have been confirmed by multiple identifiers.
+                  &quot;Needs ID&quot; observations are awaiting more identifiers for
+                  verification. &quot;Casual&quot; observations don&apos;t meet the criteria
+                  for either of the other grades, but are still valuable
+                  records.
+                </li>
+                <li>
+                  <strong>Positional Accuracy:</strong> This represents the
+                  accuracy of the location data for an observation. A lower
+                  value indicates higher accuracy. Note that the accuracy might
+                  be affected by various factors, including the observer&apos;s
+                  device, their settings, and their actual physical location.
+                </li>
+              </ul>
+            </IonContent>
+          </IonModal>
+
+          <IonFab
+            className="fab-container"
+            vertical="bottom"
+            horizontal="end"
+            slot="fixed"
+          >
+            <IonFabButton onClick={() => cardModal.current?.present()}>
+              <IonIcon icon={addOutline} />
+            </IonFabButton>
+          </IonFab>
+
           <IonFooter>
             <div className="page-buttons">
               <IonButton
@@ -324,82 +405,87 @@ const Insects: React.FC = () => {
               <IonButton
                 fill="clear"
                 onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={
-                  currentPage === 5 
-                }
+                disabled={currentPage === 5}
               >
                 Next
               </IonButton>
             </div>
           </IonFooter>
-          <IonModal
-            ref={modal}
-            presentingElement={presentingElement!}
-            onIonModalDidDismiss={handleCloseModal}
-            onIonModalDidPresent={loadSelectedBugMap}
-          >
-            <IonHeader>
-              <IonToolbar>
-                <IonTitle>{selectedBug?.commonName || 'Unknown'}</IonTitle>
-                <IonButton slot="end" onClick={handleCloseModal}>
-                  Close
-                </IonButton>
-              </IonToolbar>
-            </IonHeader>
-            <IonContent className="ion-padding">
-              <div className="modal-content-container">
-                <div className="image-container">
-                  <IonImg
-                    src={
-                      selectedBug?.image ? selectedBug.image : StockInsectImage
-                    }
-                  />
-                  {selectedBug?.image ? null : (
-                    <p className="image-credit">
-                      <a href="https://www.freepik.com/free-photo/mosquito-3d-illustration_13880913.htm#query=bug%20with%20question%20mark&position=0&from_view=search&track=ais">
-                        Image by julos
-                      </a>{" "}
-                      on Freepik
-                    </p>
-                  )}
-                </div>
-                <div className="insect-details">
-                  <div className="common-name">
-                    <strong>{selectedBug?.commonName || 'Unknown'}</strong>
-                  </div>
-                  <div>
-                    <i>{selectedBug?.scientificName || 'Unknown'}</i>
-                  </div>
-                  <div>Observed on: {selectedBug?.observedAt || 'Unknown'}</div>
-                  <div>Place: {selectedBug?.place || 'Unknown'}</div>
-                  <div className="more-details">
-                    More Details:
-                    <ul>
-                    <li>Quality Grade: {getQualityGradeDescription(selectedBug?.qualityGrade) || 'Unknown'}</li>
-                      <li>Time Observed: {selectedBug?.timeObservedAt || 'Unknown'}</li>
-                      <li>
-                        Positional Accuracy: {selectedBug?.positionalAccuracy || 'Unknown'} 
-                      </li>
-                      {/* Add more details as needed */}
-                    </ul>
-                  </div>
-                </div>
-                {selectedBug?.lat && selectedBug?.lng && (
-                  <div
-                    id="map-selected"
-                    style={{ width: "100%", height: "200px" }}
-                    ref={(el) => {
-                      if (el) {
-                        console.log("Setting map element for selected bug", el);
-                        mapRefs.current.set("selected", el);
-                      }
-                    }}
-                  ></div>
+        </div>
+        <IonModal
+          ref={modal}
+          presentingElement={presentingElement!}
+          onIonModalDidDismiss={handleCloseModal}
+          onIonModalDidPresent={loadSelectedBugMap}
+        >
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>{selectedBug?.commonName || "Unknown"}</IonTitle>
+              <IonButton slot="end" onClick={handleCloseModal}>
+                Close
+              </IonButton>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent className="ion-padding">
+            <div className="modal-content-container">
+              <div className="image-container">
+                <IonImg
+                  src={
+                    selectedBug?.image ? selectedBug.image : StockInsectImage
+                  }
+                />
+                {selectedBug?.image ? null : (
+                  <p className="image-credit">
+                    <a href="https://www.freepik.com/free-photo/mosquito-3d-illustration_13880913.htm#query=bug%20with%20question%20mark&position=0&from_view=search&track=ais">
+                      Image by julos
+                    </a>{" "}
+                    on Freepik
+                  </p>
                 )}
               </div>
-            </IonContent>
-          </IonModal>
-        </div>
+              <div className="insect-details">
+                <div className="common-name">
+                  <strong>{selectedBug?.commonName || "Unknown"}</strong>
+                </div>
+                <div>
+                  <i>{selectedBug?.scientificName || "Unknown"}</i>
+                </div>
+                <div>Observed on: {selectedBug?.observedAt || "Unknown"}</div>
+                <div>Place: {selectedBug?.place || "Unknown"}</div>
+                <div className="more-details">
+                  More Details:
+                  <ul>
+                    <li>
+                      Quality Grade:{" "}
+                      {getQualityGradeDescription(selectedBug?.qualityGrade) ||
+                        "Unknown"}
+                    </li>
+                    <li>
+                      Time Observed: {selectedBug?.timeObservedAt || "Unknown"}
+                    </li>
+                    <li>
+                      Positional Accuracy:{" "}
+                      {selectedBug?.positionalAccuracy || "Unknown"}
+                    </li>
+                    {/* Add more details as needed */}
+                  </ul>
+                </div>
+              </div>
+              {selectedBug?.lat && selectedBug?.lng && (
+                <div
+                  id="map-selected"
+                  style={{ width: "100%", height: "200px" }}
+                  ref={(el) => {
+                    if (el) {
+                      console.log("Setting map element for selected bug", el);
+                      mapRefs.current.set("selected", el);
+                    }
+                  }}
+                ></div>
+              )}
+            </div>
+          </IonContent>
+        </IonModal>
       </IonContent>
     </IonPage>
   );
