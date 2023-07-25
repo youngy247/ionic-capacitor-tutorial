@@ -21,6 +21,8 @@ import {
   useIonAlert,
   useIonToast,
   IonActionSheet,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/react";
 import {
   fetchUserObservations,
@@ -182,6 +184,24 @@ const Collection: React.FC = () => {
     }
   };
 
+  const doRefresh = async (event) => {
+    const userUID = await getCurrentUserUID();
+    let newObservations;
+    
+    if (userUID) {
+      if (searchTerm) {
+        newObservations = await fetchUserObservationsBySpecies(userUID, searchTerm);
+      } else {
+        newObservations = await fetchUserObservations(userUID);
+      }
+  
+      setObservations(newObservations);
+    }
+  
+    event.detail.complete();
+  };
+  
+
   console.log(observations);
 
   return (
@@ -214,6 +234,9 @@ const Collection: React.FC = () => {
           onIonChange={(e) => setSearchTerm(e.detail.value)}
           debounce={500}
         />
+        <IonRefresher slot="fixed" onIonRefresh={(ev) => doRefresh(ev)}>
+          <IonRefresherContent />
+        </IonRefresher>
         <div className="cardContainer">
           {observations.map((observation, index) => (
             <IonCard key={index}>
