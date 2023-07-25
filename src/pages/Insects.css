@@ -30,16 +30,6 @@ ul {
   list-style: none;
 }
 
-#map {
-  width: 200px
-}
-
-#map-selected {
-  height: 200px; 
-  width: 200px;
-  display: inline-block;
-}
-
 .card-container {
   max-width: 50rem; 
   margin: 0 auto;
