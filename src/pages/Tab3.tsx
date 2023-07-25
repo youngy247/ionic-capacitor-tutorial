@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   IonButtons,
   IonCard,
@@ -38,6 +38,7 @@ import {
   checkmarkOutline,
 } from "ionicons/icons";
 import "./Tab3.css";
+import { GoogleMap } from "@capacitor/google-maps";
 
 const Collection: React.FC = () => {
   const [observations, setObservations] = useState<any[]>([]);
@@ -45,7 +46,7 @@ const Collection: React.FC = () => {
   const [selectedObservations, setSelectedObservations] = useState<any[]>([]);
   const [presentAlert] = useIonAlert();
   const [presentToast] = useIonToast();
-
+  const apiKey = import.meta.env.VITE_APP_GOOGLE_MAPS_KEY;
   const [editing, setEditing] = useState<string | null>(null);
   const [editingValues, setEditingValues] = useState<IObservationUpdate | null>(
     null
@@ -53,12 +54,15 @@ const Collection: React.FC = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
   const [actionSheetObservationId, setActionSheetObservationId] =
     useState(null);
+    const mapRefs = useRef(new Map());
+    
 
   useEffect(() => {
     const fetchObservations = async () => {
       const userUID = await getCurrentUserUID();
       if (userUID) {
         const userObservations = await fetchUserObservations(userUID);
+        console.log("Fetched Observations:", userObservations);
         setObservations(userObservations);
       }
     };
@@ -87,6 +91,40 @@ const Collection: React.FC = () => {
     };
     fetchObservations();
   }, [searchTerm]);
+
+  useEffect(() => {
+    // Initialize the maps after the observations are fetched
+    if (observations.length > 0) {
+      observations.forEach(async (observation, index) => {
+        const mapElement = mapRefs.current.get(index);
+        console.log("Map Element:", mapElement);
+        if (mapElement && observation.latitude && observation.longitude) {
+          console.log("Observation has Lat and Lng:", observation);
+          const observationsMap = await GoogleMap.create({
+            id: `map-${index}`,
+            element: mapElement,
+            forceCreate: true,
+            apiKey: apiKey,
+            config: {
+              center: {
+                lat: observation.latitude,
+                lng: observation.longitude,
+              },
+              zoom: 8,
+            },
+          });
+          console.log("Observations Map: ", observationsMap);
+          // Add marker at the bug's location
+          observationsMap.addMarker({
+            coordinate: {
+              lat: observation.latitude,
+              lng: observation.longitude,
+            },
+          })
+          }
+        })
+    }
+  }, [observations]);
 
   const handleCheckboxChange = (observation) => {
     // New function to handle checkbox changes
@@ -238,6 +276,13 @@ const Collection: React.FC = () => {
                   className="observationImage"
                   src={observation.img || "Image URL not available"}
                 />
+                {observation.latitude && observation.longitude && (
+                          <div
+                            id={`map-${index}`}
+                            style={{ width: "100%", height: "200px" }}
+                            ref={(el) => mapRefs.current.set(index, el)}
+                          ></div>
+                        )}
                 <p>
                   Lat: {observation.latitude || "Latitude not available"}, Long:{" "}
                   {observation.longitude || "Longitude not available"}
