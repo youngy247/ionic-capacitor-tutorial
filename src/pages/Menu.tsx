@@ -16,7 +16,7 @@ import {
 import React from "react";
 // import List from "./List";
 import Profile from "./Profile";
-import { Redirect, Route, } from "react-router";
+import { Redirect, Route } from "react-router";
 import {
   homeOutline,
   logOutOutline,
@@ -26,6 +26,7 @@ import {
 // import News from "./News";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { Preferences } from "@capacitor/preferences";
+import { getAuth, signOut as firebaseSignOut } from "firebase/auth";
 import Home from "./Home";
 
 const Menu: React.FC = () => {
@@ -49,6 +50,15 @@ const Menu: React.FC = () => {
     }
     // Handle other logout methods here
     Preferences.remove({ key: "login-method" });
+
+    // Firebase Auth sign out
+    const auth = getAuth();
+    try {
+      await firebaseSignOut(auth);
+    } catch (error) {
+      console.error("Error signing out from Firebase: ", error);
+    }
+
     router.push("/"); // navigate to login page after successful logout
   };
 
