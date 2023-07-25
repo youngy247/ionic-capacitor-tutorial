@@ -118,6 +118,14 @@ const UploadObservation: React.FC = () => {
   };
 
   const onSubmit = async (data) => {
+    if (!data.timestamp) {
+      showToast({
+        message: "Date/Time is required. Please fill it to continue.",
+        duration: 3000,
+        color: "danger",
+      });
+      return;
+    }
     if (data.img) {
       const imageURL = await savePictureToStorage(data.img);
       data.img = imageURL;
