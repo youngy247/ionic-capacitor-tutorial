@@ -265,30 +265,7 @@ const Collection: React.FC = () => {
                     observation.species || "Species not available"
                   )}
                 </IonCardTitle>
-                <IonCheckbox
-                  className="checkbox"
-                  value={observation.id}
-                  onIonChange={() => handleCheckboxChange(observation)}
-                />
-              </IonCardHeader>
-              <IonCardContent>
-                <IonImg
-                  className="observationImage"
-                  src={observation.img || "Image URL not available"}
-                />
-                {observation.latitude && observation.longitude && (
-                          <div
-                            id={`map-${index}`}
-                            style={{ width: "100%", height: "200px" }}
-                            ref={(el) => mapRefs.current.set(index, el)}
-                          ></div>
-                        )}
-                <p>
-                  Lat: {observation.latitude || "Latitude not available"}, Long:{" "}
-                  {observation.longitude || "Longitude not available"}
-                </p>
-              </IonCardContent>
-              {editing === observation.id ? (
+                {editing === observation.id ? (
                 <IonButton
                   className="square-button"
                   onClick={() => handleSaveClick(observation.id)}
@@ -306,6 +283,30 @@ const Collection: React.FC = () => {
                   <IonIcon slot="icon-only" icon={ellipsisVertical} />
                 </IonButton>
               )}
+              </IonCardHeader>
+              <IonCardContent>
+                <IonImg
+                  className="observationImage"
+                  src={observation.img || "Image URL not available"}
+                />
+                {observation.latitude && observation.longitude && (
+                          <div
+                            id={`map-${index}`}
+                            style={{ width: "95%", height: "200px" }}
+                            ref={(el) => mapRefs.current.set(index, el)}
+                          ></div>
+                        )}
+                <p>
+                  Lat: {observation.latitude || "Latitude not available"}, Long:{" "}
+                  {observation.longitude || "Longitude not available"}
+                </p>
+              </IonCardContent>
+              
+              <IonCheckbox
+                  className="checkbox"
+                  value={observation.id}
+                  onIonChange={() => handleCheckboxChange(observation)}
+                />
               <IonActionSheet
                 isOpen={showActionSheet}
                 onDidDismiss={() => setShowActionSheet(false)}
