@@ -5,7 +5,7 @@ import { Redirect, Route } from 'react-router';
 
 import { search } from 'ionicons/icons';
 
-import List from './List';
+// import List from './List';
 import Insects from './Insects';
 
 const Home: React.FC = () => {
@@ -25,7 +25,7 @@ const Home: React.FC = () => {
 
      <IonRouterOutlet>
         <Route path="/app/home/insects" component={Insects} />
-        <Route path="/app/home/list" component={List} />
+        {/* <Route path="/app/home/list" component={List} /> */}
 
         <Route exact path="/app/home">
           <Redirect to="/app/home/insects" />
