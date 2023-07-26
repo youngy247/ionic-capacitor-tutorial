@@ -35,8 +35,11 @@ const UploadObservation: React.FC = () => {
   const apiKey = import.meta.env.VITE_APP_GOOGLE_MAPS_KEY;
   const mapRef = useRef<HTMLElement>();
   const [map, setMap] = useState<GoogleMap | null>(null);
-  const [markerCoords, setMarkerCoords] = useState<{ lat: number, lng: number } | null>(null);
-
+  const [markerCoords, setMarkerCoords] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [markerId, setMarkerId] = useState<string | null>(null);
 
   const handleMapClick = async (event) => {
     const lat = event.latitude;
@@ -53,19 +56,31 @@ const UploadObservation: React.FC = () => {
     });
   };
 
+  // Remove Marker useEffect
   useEffect(() => {
-    if (markerCoords && map) { 
-      // map.removeMarker(id).catch(error => console.error("Failed to remove marker", error));
-      map.addMarker({
-        coordinate: { lat: markerCoords.lat, lng: markerCoords.lng },
-        // title: "My Location",
-      }).catch(error => console.error("Failed to add marker", error));
+    if (markerId && map) {
+      map
+        .removeMarker(markerId)
+        .catch((error) => console.error("Failed to remove marker", error));
+      setMarkerId(null);
     }
   }, [markerCoords, map]);
-  
+
+  // Add Marker useEffect
+  useEffect(() => {
+    if (markerCoords && map && !markerId) {
+      map
+        .addMarker({
+          coordinate: { lat: markerCoords.lat, lng: markerCoords.lng },
+        })
+        .then((id) => setMarkerId(id))
+        .catch((error) => console.error("Failed to add marker", error));
+    }
+  }, [markerCoords, map, markerId]);
+
   async function createMap() {
     if (!mapRef.current) {
-      console.log("mapRef.current is null"); 
+      console.log("mapRef.current is null");
       return;
     }
 
