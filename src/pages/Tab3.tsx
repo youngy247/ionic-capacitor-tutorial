@@ -24,6 +24,7 @@ import {
   IonRefresher,
   IonRefresherContent,
 } from "@ionic/react";
+import { Camera, CameraResultType } from "@capacitor/camera";
 import {
   fetchUserObservations,
   fetchUserObservationsBySpecies,
@@ -31,6 +32,7 @@ import {
   deleteObservations,
   updateObservation,
   IObservationUpdate,
+  savePictureToStorage,
 } from "../firebaseConfig";
 import { Timestamp } from "firebase/firestore";
 import {
@@ -38,6 +40,7 @@ import {
   ellipsisVertical,
   createOutline,
   checkmarkOutline,
+  closeOutline,
 } from "ionicons/icons";
 import "./Tab3.css";
 import { GoogleMap } from "@capacitor/google-maps";
@@ -56,8 +59,7 @@ const Collection: React.FC = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
   const [actionSheetObservationId, setActionSheetObservationId] =
     useState(null);
-    const mapRefs = useRef(new Map());
-    
+  const mapRefs = useRef(new Map());
 
   useEffect(() => {
     const fetchObservations = async () => {
@@ -122,9 +124,9 @@ const Collection: React.FC = () => {
               lat: observation.latitude,
               lng: observation.longitude,
             },
-          })
-          }
-        })
+          });
+        }
+      });
     }
   }, [observations]);
 
@@ -188,10 +190,13 @@ const Collection: React.FC = () => {
     try {
       const userUID = await getCurrentUserUID();
       let newObservations;
-    
+
       if (userUID) {
         if (searchTerm) {
-          newObservations = await fetchUserObservationsBySpecies(userUID, searchTerm);
+          newObservations = await fetchUserObservationsBySpecies(
+            userUID,
+            searchTerm
+          );
         } else {
           newObservations = await fetchUserObservations(userUID);
         }
@@ -208,7 +213,44 @@ const Collection: React.FC = () => {
       event.detail.complete();
     }
   };
-  
+
+  const takePicture = async () => {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+      });
+
+      const img = `data:image/jpeg;base64,${image.base64String}`;
+
+      // Use your savePictureToStorage function to upload the image to Firebase
+      const imageURL = await savePictureToStorage(img);
+
+      // Update editingValues state with the new image URL
+      setEditingValues({
+        ...editingValues,
+        img: imageURL,
+      });
+
+      presentToast({
+        message: "Photo uploaded successfully",
+        duration: 3000,
+        color: "success",
+      });
+    } catch (error) {
+      presentToast({
+        message: "Failed to upload photo. Please try again.",
+        duration: 3000,
+        color: "danger",
+      });
+    }
+  };
+
+  const handleCancelClick = () => {
+    setEditing(null);
+    setEditingValues(null);
+  };
 
   console.log(observations);
 
@@ -248,7 +290,7 @@ const Collection: React.FC = () => {
         <div className="cardContainer">
           {observations.map((observation, index) => (
             <IonCard key={index}>
-              <IonCardHeader>
+              <IonCardHeader className={editing === observation.id ? 'editing' : ''}>
                 <IonCardSubtitle>
                   {editing === observation.id ? (
                     <input
@@ -281,63 +323,84 @@ const Collection: React.FC = () => {
                 <IonCardTitle>
                   {editing === observation.id ? (
                     <div className="input-container">
-                    <input
-                      type="text"
-                      value={editingValues?.species}
-                      onChange={(e) =>
-                        setEditingValues({
-                          ...editingValues,
-                          species: e.target.value,
-                        })
-                      }
-                    />
+                      <input
+                        type="text"
+                        value={editingValues?.species}
+                        onChange={(e) =>
+                          setEditingValues({
+                            ...editingValues,
+                            species: e.target.value,
+                          })
+                        }
+                      />
                     </div>
                   ) : (
                     observation.species || "Species not available"
                   )}
                 </IonCardTitle>
                 {editing === observation.id ? (
-                <IonButton
-                  className="square-button"
-                  onClick={() => handleSaveClick(observation.id)}
-                >
-                  <IonIcon slot="icon-only" icon={checkmarkOutline} />
-                </IonButton>
-              ) : (
-                <IonButton
-                  className="square-button"
-                  onClick={() => {
-                    setShowActionSheet(true);
-                    setActionSheetObservationId(observation.id);
-                  }}
-                >
-                  <IonIcon slot="icon-only" icon={ellipsisVertical} />
-                </IonButton>
-              )}
+                  <div className="action-buttons">
+                    <IonButton
+                      className="save-button"
+                      onClick={() => handleSaveClick(observation.id)}
+                    >
+                      <IonIcon slot="icon-only" icon={checkmarkOutline} />
+                    </IonButton>
+                    <IonButton
+                      className="cancel-button"
+                      onClick={handleCancelClick}
+                    >
+                      <IonIcon slot="icon-only" icon={closeOutline} />
+                    </IonButton>
+                  </div>
+                ) : (
+                  <IonButton
+                    className="square-button"
+                    onClick={() => {
+                      setShowActionSheet(true);
+                      setActionSheetObservationId(observation.id);
+                    }}
+                  >
+                    <IonIcon slot="icon-only" icon={ellipsisVertical} />
+                  </IonButton>
+                )}
               </IonCardHeader>
               <IonCardContent>
-                {observation.img && (
+                {editing === observation.id ? (
                   <IonImg
-                    alt = {`Your observation of ${observation.species}`}
+                    alt={`Your new observation`}
                     className="observationImage"
-                    src={observation.img}
+                    src={editingValues?.img}
                   />
-                )
-                }
+                ) : (
+                  observation.img && (
+                    <IonImg
+                      alt={`Your observation of ${observation.species}`}
+                      className="observationImage"
+                      src={observation.img}
+                    />
+                  )
+                )}
+                {editing === observation.id && (
+                  <IonButton className="upload-picture" expand="full" onClick={takePicture}>
+                    Change Image
+                  </IonButton>
+                )}
+
                 {observation.latitude && observation.longitude && (
-                          <div
-                            id={`map-${index}`}
-                            style={{ width: "95%", height: "200px" }}
-                            ref={(el) => mapRefs.current.set(index, el)}
-                          ></div>
-                        )}
+                  <div
+                    id={`map-${index}`}
+                    style={{ width: "95%", height: "200px" }}
+                    ref={(el) => mapRefs.current.set(index, el)}
+                  ></div>
+                )}
               </IonCardContent>
-              
+
               <IonCheckbox
-                  className="checkbox"
-                  value={observation.id}
-                  onIonChange={() => handleCheckboxChange(observation)}
-                />
+                className="checkbox"
+                value={observation.id}
+                onIonChange={() => handleCheckboxChange(observation)}
+              />
               <IonActionSheet
                 isOpen={showActionSheet}
                 onDidDismiss={() => setShowActionSheet(false)}
@@ -354,6 +417,7 @@ const Collection: React.FC = () => {
                         setEditingValues({
                           species: observation.species,
                           timestamp: observation.timestamp,
+                          img: observation.img,
                         });
                       }
                     },
