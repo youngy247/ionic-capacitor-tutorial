@@ -24,6 +24,7 @@ import {
   // newspaperOutline,
 } from "ionicons/icons";
 // import News from "./News";
+import './Menu.css'
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { Preferences } from "@capacitor/preferences";
 import { getAuth, signOut as firebaseSignOut } from "firebase/auth";
@@ -85,7 +86,7 @@ const Menu: React.FC = () => {
               </IonMenuToggle>
             ))}
             <IonMenuToggle autoHide={false}>
-              <IonButton expand="full" onClick={signOut}>
+              <IonButton className="center-button" onClick={signOut}>
                 <IonIcon slot="start" icon={logOutOutline} />
                 Logout
               </IonButton>
