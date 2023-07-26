@@ -327,10 +327,6 @@ const Collection: React.FC = () => {
                             ref={(el) => mapRefs.current.set(index, el)}
                           ></div>
                         )}
-                <p>
-                  Lat: {observation.latitude || "Latitude not available"}, Long:{" "}
-                  {observation.longitude || "Longitude not available"}
-                </p>
               </IonCardContent>
               
               <IonCheckbox
