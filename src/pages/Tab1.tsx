@@ -15,6 +15,7 @@ import {
   IonToolbar,
   useIonToast,
   useIonRouter,
+  useIonLoading,
 } from "@ionic/react";
 import { useEffect, useRef } from "react";
 import {
@@ -25,7 +26,7 @@ import {
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { useState } from "react";
 import { Geolocation } from "@capacitor/geolocation";
-import './Tab1.css';
+import "./Tab1.css";
 // import { v4 as uuidv4 } from 'uuid';
 
 const UploadObservation: React.FC = () => {
@@ -42,6 +43,7 @@ const UploadObservation: React.FC = () => {
   } | null>(null);
   const [markerId, setMarkerId] = useState<string | null>(null);
   const [showMap, setShowMap] = useState(false);
+  const [present, dismiss] = useIonLoading();
 
   const handleMapClick = async (event) => {
     const lat = event.latitude;
@@ -129,7 +131,7 @@ const UploadObservation: React.FC = () => {
         allowEditing: false,
         resultType: CameraResultType.Base64,
       });
-  
+
       const img = `data:image/jpeg;base64,${image.base64String}`;
       setImage(img);
       setValue("img", img); // Set value of img in form
@@ -143,8 +145,10 @@ const UploadObservation: React.FC = () => {
   };
 
   const onSubmit = async (data) => {
+    await present("Saving Observation...");
     data.species = data.species.trim();
     if (!data.species) {
+      await dismiss();
       showToast({
         message: "Species is required. Please fill it to continue.",
         duration: 3000,
@@ -153,6 +157,7 @@ const UploadObservation: React.FC = () => {
       return;
     }
     if (!data.timestamp) {
+      await dismiss();
       showToast({
         message: "Date/Time is required. Please fill it to continue.",
         duration: 3000,
@@ -160,15 +165,28 @@ const UploadObservation: React.FC = () => {
       });
       return;
     }
-    if (data.img) {
-      const imageURL = await savePictureToStorage(data.img);
-      data.img = imageURL;
+    try {
+      if (data.img) {
+        const imageURL = await savePictureToStorage(data.img);
+        data.img = imageURL;
+      }
+    } catch (error) {
+      showToast({
+        message: "Failed to save picture to storage",
+        duration: 3000,
+        color: "danger",
+      });
+      console.error("Failed to save picture to storage: ", error);
+      return;
+    } finally {
+      await dismiss();
     }
 
     const userUID = getCurrentUserUID();
     if (userUID) {
       data.userUID = userUID;
     } else {
+      await dismiss();
       showToast({
         message: "You're not logged in. Please log in to continue.",
         duration: 3000,
@@ -178,11 +196,23 @@ const UploadObservation: React.FC = () => {
       return;
     }
 
-    saveObservation(data);
+    try {
+      await saveObservation(data);
+    } catch (error) {
+      await dismiss();
+      showToast({
+        message: "Failed to save observation",
+        duration: 3000,
+        color: "danger",
+      });
+      console.error("Failed to save observation: ", error);
+      return;
+    }
 
     // Reset form and image
     reset();
     setImage(null);
+    await dismiss();
 
     showToast({
       message: "Successfully saved observation",
@@ -224,15 +254,18 @@ const UploadObservation: React.FC = () => {
             Upload Picture
           </IonButton>
           {image && <img className="upload-picture" src={image} alt="image" />}
-          <IonButton onClick={() => {
-            setShowMap(true)
-            createMap()
-            }}>
-              Pinpoint the location
-              </IonButton>
-              {!showMap && (<IonButton type="submit" expand="full">
-            Submit
+          <IonButton
+            onClick={() => {
+              setShowMap(true);
+              createMap();
+            }}
+          >
+            Pinpoint the location
           </IonButton>
+          {!showMap && (
+            <IonButton type="submit" expand="full">
+              Submit
+            </IonButton>
           )}
           <capacitor-google-map
             ref={mapRef}
@@ -263,9 +296,10 @@ const UploadObservation: React.FC = () => {
             ></IonInput>
           </IonItem>
 
-          {showMap && (<IonButton type="submit" expand="full">
-            Submit
-          </IonButton>
+          {showMap && (
+            <IonButton type="submit" expand="full">
+              Submit
+            </IonButton>
           )}
         </form>
       </IonContent>
