@@ -26,7 +26,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     } else {
       dismiss();
     }
-  }, [loading, present, dismiss]);
+  }, [loading, present, dismiss, isAuthenticated]);
 
   return (
     <Route
