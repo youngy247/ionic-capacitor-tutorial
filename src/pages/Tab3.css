@@ -4,10 +4,22 @@
   bottom: 10px;
 }
 
-.square-button {
+.editing {
+  position: relative;
+  padding-top: 4rem;
+  padding-left: 2rem;
+}
+
+.save-button, .square-button {
   position: absolute;
   top: 5px;
   right: 5px;
+}
+
+.cancel-button {
+  position: absolute;
+  top: 5px;
+  left: 5px;
 }
 
 .input-container {
@@ -16,7 +28,7 @@
 }
 
 .input-container input {
-  width: 90%;
+  width: 80%;
   box-sizing: border-box; 
 }
 
@@ -32,9 +44,14 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-content: flex-start;
+  align-items: start;
   margin: 1rem 0;
   row-gap: 1rem;
+}
+
+.upload-picture {
+  max-width: 50%;
+  margin: 1rem auto;
 }
 
 .cardContainer > * {
@@ -45,5 +62,12 @@
   .cardContainer > * {
     flex: 1 0 100%;
     margin: 0 auto;
+  }
+  .editing {
+    padding-top: 5rem;
+    padding-left: 4rem;
+  }
+  .input-container input {
+    margin-bottom: 0.5rem;
   }
 }
