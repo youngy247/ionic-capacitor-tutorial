@@ -25,6 +25,7 @@ import {
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { useState } from "react";
 import { Geolocation } from "@capacitor/geolocation";
+import './Tab1.css';
 // import { v4 as uuidv4 } from 'uuid';
 
 const UploadObservation: React.FC = () => {
@@ -211,17 +212,19 @@ const UploadObservation: React.FC = () => {
           ></capacitor-google-map>
           <IonButton onClick={createMap}>Pinpoint the location</IonButton>
 
-          <IonItem>
+          <IonItem className="hidden-input">
             <IonLabel>Latitude</IonLabel>
             <IonInput
+              readonly
               {...register("latitude")}
               placeholder="Latitude"
             ></IonInput>
           </IonItem>
 
-          <IonItem>
+          <IonItem className="hidden-input">
             <IonLabel>Longitude</IonLabel>
             <IonInput
+              readonly
               {...register("longitude")}
               placeholder="Longitude"
             ></IonInput>
