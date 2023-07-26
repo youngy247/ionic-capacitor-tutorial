@@ -392,7 +392,7 @@ const Insects: React.FC = () => {
                     Close
                   </IonButton>
                 </IonButtons>
-                <IonTitle>Guide</IonTitle>
+                <IonTitle className="ion-text-center">Guide</IonTitle>
               </IonToolbar>
             </IonHeader>
             <IonContent className="card-modal-content">
