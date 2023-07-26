@@ -128,7 +128,7 @@ export async function sendVerificationEmail(user) {
   }
 }
 
-export async function savePictureToStorage(base64Image) {
+export async function savePictureToStorage(base64Image: string): Promise<string> {
   try {
     // Create a storage reference
     const imageRef = ref(storage, "observations/" + Date.now() + ".jpg");
