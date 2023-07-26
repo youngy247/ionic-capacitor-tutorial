@@ -41,6 +41,7 @@ const UploadObservation: React.FC = () => {
     lng: number;
   } | null>(null);
   const [markerId, setMarkerId] = useState<string | null>(null);
+  const [showMap, setShowMap] = useState(false);
 
   const handleMapClick = async (event) => {
     const lat = event.latitude;
@@ -184,7 +185,7 @@ const UploadObservation: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form className="upload-form" onSubmit={handleSubmit(onSubmit)}>
           <IonItem>
             <IonLabel>Species</IonLabel>
             <IonInput {...register("species")} required></IonInput>
@@ -202,15 +203,30 @@ const UploadObservation: React.FC = () => {
               }}
             ></IonDatetime>
           </IonItem>
+          <IonButton expand="full" onClick={takePicture}>
+            Upload Picture
+          </IonButton>
+          {image && <img className="upload-picture" src={image} alt="image" />}
+          <IonButton onClick={() => {
+            setShowMap(true)
+            createMap()
+            }}>
+              Pinpoint the location
+              </IonButton>
+              {!showMap && (<IonButton type="submit" expand="full">
+            Submit
+          </IonButton>
+          )}
           <capacitor-google-map
             ref={mapRef}
             style={{
               display: "inline-block",
-              width: 275,
+              width: "85%",
+              maxWidth: "48rem",
               height: 400,
+              margin: "0 auto",
             }}
           ></capacitor-google-map>
-          <IonButton onClick={createMap}>Pinpoint the location</IonButton>
 
           <IonItem className="hidden-input">
             <IonLabel>Latitude</IonLabel>
@@ -230,14 +246,10 @@ const UploadObservation: React.FC = () => {
             ></IonInput>
           </IonItem>
 
-          <IonButton expand="full" onClick={takePicture}>
-            Upload Picture
-          </IonButton>
-          {image && <img src={image} alt="image" />}
-
-          <IonButton type="submit" expand="full">
+          {showMap && (<IonButton type="submit" expand="full">
             Submit
           </IonButton>
+          )}
         </form>
       </IonContent>
     </IonPage>
