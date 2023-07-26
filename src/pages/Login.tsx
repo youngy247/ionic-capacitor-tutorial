@@ -265,6 +265,7 @@ const Login: React.FC = () => {
                   <IonCol size="12" sizeMd="8" sizeLg="6" sizeXl="4">
                     <div className="ion-text-center ion-padding">
                       <img
+                        className="insect-inspect-logo"
                         src={InsectInspectLogo}
                         alt="InsectInspect Logo"
                         width={"50%"}

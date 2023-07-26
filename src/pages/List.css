@@ -1,4 +1,4 @@
-ion-item:hover {
+/* ion-item:hover {
   --background: rgb(21, 255, 0);
   --color: var(--ion-color-primary);
   cursor: pointer;
@@ -11,4 +11,4 @@ ion-item {
 ion-item::part(detail-icon) {
   color: #ff00ff;
   opacity: 1;
-}
+} */
