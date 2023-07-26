@@ -120,7 +120,12 @@ const UploadObservation: React.FC = () => {
       // Enable the location after creating the map
       newMap.enableCurrentLocation(true);
     } catch (error) {
-      console.log("Failed to create map", error); // Add this log
+      console.log("Failed to create map", error); 
+      showToast({
+        message: "Failed to load map. Please check your internet connection and try again.",
+        duration: 3000,
+        color: "danger",
+      });
     }
   }
 
