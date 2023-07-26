@@ -123,18 +123,35 @@ const UploadObservation: React.FC = () => {
   }
 
   const takePicture = async () => {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.Base64,
-    });
-
-    const img = `data:image/jpeg;base64,${image.base64String}`;
-    setImage(img);
-    setValue("img", img); // Set value of img in form
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+      });
+  
+      const img = `data:image/jpeg;base64,${image.base64String}`;
+      setImage(img);
+      setValue("img", img); // Set value of img in form
+    } catch (error) {
+      showToast({
+        message: "Failed to upload photo. Please try again.",
+        duration: 3000,
+        color: "danger",
+      });
+    }
   };
 
   const onSubmit = async (data) => {
+    data.species = data.species.trim();
+    if (!data.species) {
+      showToast({
+        message: "Species is required. Please fill it to continue.",
+        duration: 3000,
+        color: "danger",
+      });
+      return;
+    }
     if (!data.timestamp) {
       showToast({
         message: "Date/Time is required. Please fill it to continue.",
