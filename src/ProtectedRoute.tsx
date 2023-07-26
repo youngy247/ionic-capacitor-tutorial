@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Route,
   Redirect,
@@ -6,6 +6,7 @@ import {
   RouteComponentProps,
 } from "react-router-dom";
 import { useAuthentication } from "./authUtils";
+import { useIonLoading } from '@ionic/react';
 
 
 interface ProtectedRouteProps extends RouteProps {
@@ -17,14 +18,21 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   ...rest
 }) => {
   const { isAuthenticated, loading } = useAuthentication();
+  const [present, dismiss] = useIonLoading();
+
+  useEffect(() => {
+    if (loading) {
+      present("Loading...");
+    } else {
+      dismiss();
+    }
+  }, [loading, present, dismiss]);
 
   return (
     <Route
       {...rest}
       render={(props) =>
-        loading ? (
-          <div>Loading...</div>
-        ) : isAuthenticated ? (
+        loading ? null : isAuthenticated ? (
           <Component {...props} />
         ) : (
           <Redirect to="/" />
