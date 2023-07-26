@@ -316,10 +316,14 @@ const Collection: React.FC = () => {
               )}
               </IonCardHeader>
               <IonCardContent>
-                <IonImg
-                  className="observationImage"
-                  src={observation.img || "Image URL not available"}
-                />
+                {observation.img && (
+                  <IonImg
+                    alt = {`Your observation of ${observation.species}`}
+                    className="observationImage"
+                    src={observation.img}
+                  />
+                )
+                }
                 {observation.latitude && observation.longitude && (
                           <div
                             id={`map-${index}`}
