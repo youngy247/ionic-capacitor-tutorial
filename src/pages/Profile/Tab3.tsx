@@ -34,7 +34,7 @@ import {
   updateObservation,
   IObservationUpdate,
   savePictureToStorage,
-} from "../firebaseConfig";
+} from "../../firebaseConfig";
 import { Timestamp } from "firebase/firestore";
 import {
   trashBinOutline,

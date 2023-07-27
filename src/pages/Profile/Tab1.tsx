@@ -22,7 +22,7 @@ import {
   getCurrentUserUID,
   savePictureToStorage,
   saveObservation,
-} from "../firebaseConfig";
+} from "../../firebaseConfig";
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { useState } from "react";
 import { Geolocation } from "@capacitor/geolocation";

@@ -14,7 +14,7 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import React from "react";
-import Profile from "../Profile";
+import Profile from "../Profile/Profile";
 import { Redirect, Route } from "react-router";
 import {
   homeOutline,
