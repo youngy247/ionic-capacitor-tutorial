@@ -19,7 +19,7 @@ import {
   useIonToast,
 } from "@ionic/react";
 import React, { useEffect, useRef, useState } from "react";
-import "./Insects.css";
+import "./GlobalObservations.css";
 import { useMediaQuery } from "react-responsive";
 import { Clipboard } from "@capacitor/clipboard";
 import StockInsectImage from "../assets/StockInsectImage.jpg";
@@ -27,7 +27,7 @@ import { GoogleMap } from "@capacitor/google-maps";
 import { Share } from "@capacitor/share";
 import { addOutline, shareSocialOutline } from "ionicons/icons";
 
-const Insects: React.FC = () => {
+const GlobalObservations: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [bugs, setBugs] = useState<any[]>([]);
@@ -556,4 +556,4 @@ const Insects: React.FC = () => {
   );
 };
 
-export default Insects;
+export default GlobalObservations;

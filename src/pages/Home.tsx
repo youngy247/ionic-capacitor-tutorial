@@ -6,14 +6,14 @@ import { Redirect, Route } from 'react-router';
 import { search } from 'ionicons/icons';
 
 // import List from './List';
-import Insects from './Insects';
+import GlobalObservations from './GlobalObservations';
 
 const Home: React.FC = () => {
 
   return (
     <IonTabs>
       <IonTabBar slot="bottom">
-        <IonTabButton tab="tab1" href="/app/home/insects">
+        <IonTabButton tab="tab1" href="/app/home/globalobservations">
           <IonIcon icon={search} />
           <IonLabel>Global Observations</IonLabel>
         </IonTabButton>
@@ -24,11 +24,11 @@ const Home: React.FC = () => {
       </IonTabBar>
 
      <IonRouterOutlet>
-        <Route path="/app/home/insects" component={Insects} />
+        <Route path="/app/home/globalobservations" component={GlobalObservations} />
         {/* <Route path="/app/home/list" component={List} /> */}
 
         <Route exact path="/app/home">
-          <Redirect to="/app/home/insects" />
+          <Redirect to="/app/home/globalobservations" />
         </Route>
      </IonRouterOutlet>
 
