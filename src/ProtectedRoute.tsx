@@ -22,7 +22,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   useEffect(() => {
     if (loading) {
-      // present("Loading...");
+      // present("Loading...");  //currently causes issues for logging in 
     } else {
       dismiss();
     }
