@@ -14,16 +14,14 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import React from "react";
-// import List from "./List";
 import Profile from "./Profile";
 import { Redirect, Route } from "react-router";
 import {
   homeOutline,
   logOutOutline,
   personOutline,
-  // newspaperOutline,
 } from "ionicons/icons";
-// import News from "./News";
+
 import './Menu.css'
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { Preferences } from "@capacitor/preferences";
@@ -33,7 +31,6 @@ import Home from "./Home";
 const Menu: React.FC = () => {
   const paths = [
     { name: "Home", url: "/app/home", icon: homeOutline },
-    // { name: "News", url: "/app/news", icon: newspaperOutline },
     { name: "My profile", url: "/app/profile", icon: personOutline },
   ];
 
@@ -96,7 +93,6 @@ const Menu: React.FC = () => {
 
         <IonRouterOutlet id="main">
           <Route path="/app/home" component={Home} />
-          {/* <Route exact path="/app/news" component={News} /> */}
           <Route path="/app/profile" component={Profile} />
           <Route exact path="/app">
             <Redirect to="/app/home" />
