@@ -117,7 +117,7 @@ const Login: React.FC = () => {
           duration: 2000,
           color: "success",
         });
-        // Other successful login code...
+
       } else {
         setShowCaptcha(true);
         await dismiss();
@@ -157,8 +157,7 @@ const Login: React.FC = () => {
       if (data.success) {
         setShowCaptcha(false);
         
-        // I'm assuming you need to pass a Firebase user object to sendVerificationEmail.
-        // You should retrieve this user object after logging in.
+        // Retrieve the user object after logging in.
         const user = await loginUser(email, password);
         if (user) {
           await sendVerificationEmail(user);
@@ -187,6 +186,9 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       console.error("Failed to verify CAPTCHA:", error);
+    } finally {
+      await dismiss();
+      await dismissToast();
     }
   };
   

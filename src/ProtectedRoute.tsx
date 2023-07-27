@@ -22,7 +22,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   useEffect(() => {
     if (loading) {
-      present("Loading...");
+      // present("Loading...");
     } else {
       dismiss();
     }
