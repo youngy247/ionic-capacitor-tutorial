@@ -23,6 +23,7 @@ import {
   IonActionSheet,
   IonRefresher,
   IonRefresherContent,
+  IonInput,
 } from "@ionic/react";
 import { Camera, CameraResultType } from "@capacitor/camera";
 import {
@@ -323,13 +324,13 @@ const Collection: React.FC = () => {
                 <IonCardTitle>
                   {editing === observation.id ? (
                     <div className="input-container">
-                      <input
+                      <IonInput
                         type="text"
                         value={editingValues?.species}
-                        onChange={(e) =>
+                        onIonChange={(e: CustomEvent) =>
                           setEditingValues({
                             ...editingValues,
-                            species: e.target.value,
+                            species: e.detail.value,
                           })
                         }
                       />
