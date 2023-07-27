@@ -141,7 +141,7 @@ const GlobalObservations: React.FC = () => {
       const results = data.results.map((result) => ({
         image:
           result.photos && result.photos.length > 0
-            ? result.photos[0].url // First try to use observer's photo
+          ? (result.photos[0].medium_url ? result.photos[0].medium_url : result.photos[0].url)  // First try to use observer's photo
             : result.taxon && result.taxon.default_photo
             ? result.taxon.default_photo.medium_url // If not available, try to use iNaturalist's default photo
             : null,
@@ -163,6 +163,7 @@ const GlobalObservations: React.FC = () => {
         lng: result.geojson ? result.geojson.coordinates[0] : null, // Get the longitude
         // Add more details as needed
       }));
+      console.log(results)
       setBugs(results);
     } catch (error) {
       console.error("Error fetching bugs:", error);
