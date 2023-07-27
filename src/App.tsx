@@ -20,10 +20,10 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Login from './pages/Forms/Login';
+import Register from './pages/Forms/Register';
 import Menu from './pages/Menu';
-import ForgotPassword from './pages/ForgotPassword';
+import ForgotPassword from './pages/Forms/ForgotPassword';
 import ProtectedRoute from './ProtectedRoute';
 
 setupIonicReact();

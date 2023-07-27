@@ -19,10 +19,10 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { eye, eyeOff, logInOutline, personCircleOutline } from "ionicons/icons";
-import InsectInspectLogo from "../assets/InsectInspectLogo.png";
-import Intro from "../components/Intro";
+import InsectInspectLogo from "../../assets/InsectInspectLogo.png";
+import Intro from "../../components/Intro";
 import { Preferences } from "@capacitor/preferences";
-import AuthSocialButton from "./AuthSocialButton";
+import AuthSocialButton from "../AuthSocialButtons/AuthSocialButton";
 import { BsGoogle } from "react-icons/bs";
 import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
@@ -31,7 +31,7 @@ import {
   loginUser,
   loginWithGoogle,
   sendVerificationEmail,
-} from "../firebaseConfig";
+} from "../../firebaseConfig";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const INTRO_KEY = "intro-seen";

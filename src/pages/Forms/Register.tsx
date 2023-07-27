@@ -20,11 +20,11 @@ import {
 } from "@ionic/react";
 import { checkmarkDoneOutline, eye, eyeOff } from "ionicons/icons";
 import React, { useState } from "react";
-import AuthSocialButton from "./AuthSocialButton";
+import AuthSocialButton from "../AuthSocialButtons/AuthSocialButton";
 import "./Form.css";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { BsGoogle } from "react-icons/bs";
-import { registerUser, registerWithGoogle } from "../firebaseConfig";
+import { registerUser, registerWithGoogle } from "../../firebaseConfig";
 import { validate as validateEmail } from "email-validator";
 
 const Register: React.FC = () => {

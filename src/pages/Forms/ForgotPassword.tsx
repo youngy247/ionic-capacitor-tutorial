@@ -16,7 +16,7 @@ import {
   useIonToast,
 } from "@ionic/react";
 import React, { useState } from "react";
-import { sendPasswordReset } from "../firebaseConfig";
+import { sendPasswordReset } from "../../firebaseConfig";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
