@@ -22,7 +22,7 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import Login from './pages/Forms/Login';
 import Register from './pages/Forms/Register';
-import Menu from './pages/Menu';
+import Menu from './pages/Menu/Menu';
 import ForgotPassword from './pages/Forms/ForgotPassword';
 import ProtectedRoute from './ProtectedRoute';
 

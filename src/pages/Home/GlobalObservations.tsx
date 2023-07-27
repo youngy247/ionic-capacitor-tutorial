@@ -22,7 +22,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./GlobalObservations.css";
 import { useMediaQuery } from "react-responsive";
 import { Clipboard } from "@capacitor/clipboard";
-import StockInsectImage from "../assets/StockInsectImage.jpg";
+import StockInsectImage from "../../assets/StockInsectImage.jpg";
 import { GoogleMap } from "@capacitor/google-maps";
 import { Share } from "@capacitor/share";
 import { addOutline, shareSocialOutline } from "ionicons/icons";

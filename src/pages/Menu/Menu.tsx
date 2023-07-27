@@ -14,7 +14,7 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import React from "react";
-import Profile from "./Profile";
+import Profile from "../Profile";
 import { Redirect, Route } from "react-router";
 import {
   homeOutline,
@@ -26,7 +26,7 @@ import './Menu.css'
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { Preferences } from "@capacitor/preferences";
 import { getAuth, signOut as firebaseSignOut } from "firebase/auth";
-import Home from "./Home";
+import Home from "../Home/Home";
 
 const Menu: React.FC = () => {
   const paths = [
