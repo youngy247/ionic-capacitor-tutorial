@@ -367,6 +367,7 @@ const Collection: React.FC = () => {
                 )}
               </IonCardHeader>
               <IonCardContent>
+                <div className="mapImageContainer">
                 {editing === observation.id ? (
                   <IonImg
                     alt={`Your new observation`}
@@ -391,10 +392,11 @@ const Collection: React.FC = () => {
                 {observation.latitude && observation.longitude && (
                   <div
                     id={`map-${index}`}
-                    style={{ width: "95%", height: "200px" }}
+                    style={{ width: "85%", height: "200px" }}
                     ref={(el) => mapRefs.current.set(index, el)}
                   ></div>
                 )}
+                </div>
               </IonCardContent>
 
               <IonCheckbox
