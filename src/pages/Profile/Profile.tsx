@@ -2,8 +2,8 @@ import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, }
 import React from 'react';
 import { Redirect, Route } from 'react-router';
 import { cloudUploadOutline, eyeOutline } from 'ionicons/icons';
-import UploadObservation from './Tab1';
-import Collection from './Tab3';
+import UploadObservation from './UploadObservation';
+import Collection from './Collection';
 
 const Profile: React.FC = () => {
 

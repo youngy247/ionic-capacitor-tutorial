@@ -26,7 +26,7 @@ import {
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { useState } from "react";
 import { Geolocation } from "@capacitor/geolocation";
-import "./Tab1.css";
+import "./UploadObservation.css";
 // import { v4 as uuidv4 } from 'uuid';
 
 const UploadObservation: React.FC = () => {
