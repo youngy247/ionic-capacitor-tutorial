@@ -43,7 +43,7 @@ import {
   checkmarkOutline,
   closeOutline,
 } from "ionicons/icons";
-import "./Tab3.css";
+import "./Collection.css";
 import { GoogleMap } from "@capacitor/google-maps";
 
 const Collection: React.FC = () => {
