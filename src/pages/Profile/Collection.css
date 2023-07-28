@@ -40,6 +40,8 @@
 
 .observationImage {
   width: 85%;
+  max-width: 500px; 
+  max-height: 500px;
   height: auto;  
 }
 
