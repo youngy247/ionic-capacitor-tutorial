@@ -32,7 +32,7 @@ const UploadGuide: React.FC<UploadGuideProps> = ({ isOpen, handleDismiss }) => (
             <strong>Location:</strong> Optionally, click &apos;Pinpoint the location&apos;. The map that appears will attempt to center over your location or default to the UK.
           </li>
           <li>
-            <strong>After Submission:</strong> Visit &apos;My Observations&apos; to see your upload. If it&apos;s not there instantly, swipe down to refresh on mobile/tablet or click and drag down to refresh on a desktop. Addtionaly, you will also have the option of searching by species in the search bar.
+            <strong>After Submission:</strong> Visit &apos;My Observations&apos; to see your upload. If it&apos;s not there instantly, swipe down to refresh on mobile/tablet or click and drag down to refresh on a desktop. Additionally, you will also have the option of searching by species in the search bar however keep in mind the search is currently case sensitive.
           </li>
         </ul>
       </IonContent>
