@@ -63,3 +63,8 @@
   align-items: center; /* center the CAPTCHA box */
 }
 
+@media screen and (max-width: 769px) {
+  .insect-inspect-logo {
+    margin: -35px 0 -50px 0;
+  }
+}
