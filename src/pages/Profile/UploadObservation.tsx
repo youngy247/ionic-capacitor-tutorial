@@ -16,6 +16,9 @@ import {
   useIonToast,
   useIonRouter,
   useIonLoading,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from "@ionic/react";
 import { useEffect, useRef } from "react";
 import {
@@ -27,6 +30,8 @@ import { Camera, CameraResultType } from "@capacitor/camera";
 import { useState } from "react";
 import { Geolocation } from "@capacitor/geolocation";
 import "./UploadObservation.css";
+import UploadGuide from "./UploadGuide";
+import { addOutline } from "ionicons/icons";
 // import { v4 as uuidv4 } from 'uuid';
 
 const UploadObservation: React.FC = () => {
@@ -44,6 +49,7 @@ const UploadObservation: React.FC = () => {
   const [markerId, setMarkerId] = useState<string | null>(null);
   const [showMap, setShowMap] = useState(false);
   const [present, dismiss] = useIonLoading();
+  const [showGuideModal, setShowGuideModal] = useState(false)
 
   const handleMapClick = async (event) => {
     const lat = event.latitude;
@@ -120,9 +126,10 @@ const UploadObservation: React.FC = () => {
       // Enable the location after creating the map
       newMap.enableCurrentLocation(true);
     } catch (error) {
-      console.log("Failed to create map", error); 
+      console.log("Failed to create map", error);
       showToast({
-        message: "Failed to load map. Please check your internet connection and try again.",
+        message:
+          "Failed to load map. Please check your internet connection and try again.",
         duration: 3000,
         color: "danger",
       });
@@ -138,6 +145,36 @@ const UploadObservation: React.FC = () => {
       });
 
       const img = `data:image/jpeg;base64,${image.base64String}`;
+
+      // Send the base64 image data to your backend
+      const response = await fetch("https://portfolio-backend-3jb1.onrender.com/vision", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imageURL: img }),
+      });
+
+      // Parse the labels from the response
+      const labels = await response.json();
+
+      if (labels.length > 0) {
+        setValue("species", labels[0].description);
+        // Show a toast message with the detected label
+        showToast({
+          message: `${labels[0].description} detected!`,
+          duration: 3000,
+          color: "success",
+        });
+      } else {
+        // Show a toast message if no species could be detected
+        showToast({
+          message: `No species could be detected from the image.`,
+          duration: 3000,
+          color: "warning",
+        });
+      }
+
       setImage(img);
       setValue("img", img); // Set value of img in form
     } catch (error) {
@@ -226,6 +263,10 @@ const UploadObservation: React.FC = () => {
     });
   };
 
+  const handleGuideModalDismiss = () => {
+    setShowGuideModal(false);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -307,6 +348,17 @@ const UploadObservation: React.FC = () => {
             </IonButton>
           )}
         </form>
+        <UploadGuide isOpen={showGuideModal} handleDismiss={handleGuideModalDismiss} />
+          <IonFab
+            className="fab-container"
+            vertical="bottom"
+            horizontal="end"
+            slot="fixed"
+          >
+            <IonFabButton onClick={() => setShowGuideModal(true)}>
+              <IonIcon icon={addOutline} />
+            </IonFabButton>
+          </IonFab>
       </IonContent>
     </IonPage>
   );
