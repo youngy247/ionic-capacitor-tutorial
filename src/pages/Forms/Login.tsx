@@ -91,6 +91,9 @@ const Login: React.FC = () => {
         return "We're experiencing server issues. Please try again later.";
       case "temporarily_unavailable":
         return "Our sign-in service is temporarily unavailable. We appreciate your patience!";
+      case "403: disallowed_useragent":
+      case "gapi.auth2.getAuthInstance":
+        return "Login with Google failed. Please try another browser.";
       case "popup_closed_by_user":
       case "-5":
         return "It looks like you closed the sign-in window. Please try signing in again.";
@@ -117,13 +120,13 @@ const Login: React.FC = () => {
           duration: 2000,
           color: "success",
         });
-
       } else {
         setShowCaptcha(true);
         await dismiss();
         await dismissToast();
         showToast({
-          message: "Please complete the CAPTCHA to resend the verification email.",
+          message:
+            "Please complete the CAPTCHA to resend the verification email.",
           duration: 6000,
           color: "danger",
         });
@@ -144,19 +147,22 @@ const Login: React.FC = () => {
   const verifyCaptcha = async (token: string) => {
     console.log("Captcha Token: ", token);
     try {
-      const response = await fetch("https://portfolio-backend-3jb1.onrender.com/captcha/verify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token: token }),
-      });
-  
+      const response = await fetch(
+        "https://portfolio-backend-3jb1.onrender.com/captcha/verify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token: token }),
+        }
+      );
+
       const data = await response.json();
-  
+
       if (data.success) {
         setShowCaptcha(false);
-        
+
         // Retrieve the user object after logging in.
         const user = await loginUser(email, password);
         if (user) {
@@ -191,7 +197,6 @@ const Login: React.FC = () => {
       await dismissToast();
     }
   };
-  
 
   const finishIntro = async () => {
     setIntroSeen(true);
@@ -217,7 +222,7 @@ const Login: React.FC = () => {
           Preferences.set({ key: "login-method", value: "google" });
 
           // Check if user exists, if yes then show "welcome back" toast
-          if (user) {   
+          if (user) {
             await dismissToast();
             showToast({
               message: `Welcome ${result.name}!`,
@@ -260,7 +265,11 @@ const Login: React.FC = () => {
             </IonHeader>
             <IonContent scrollY={false} className="ion-padding">
               {showCaptcha ? (
-                <ReCAPTCHA className="captcha-overlay" sitekey={siteKey} onChange={verifyCaptcha} />
+                <ReCAPTCHA
+                  className="captcha-overlay"
+                  sitekey={siteKey}
+                  onChange={verifyCaptcha}
+                />
               ) : null}
               <IonGrid fixed>
                 <IonRow className="ion-justify-content-center">
