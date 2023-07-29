@@ -19,3 +19,13 @@
   margin: 15px;
   padding: 10px;
 }
+
+@media screen and (max-width: 769px) {
+  .intro-text h2, .intro-text p {
+    margin: 9px;
+    padding: 5px;
+  }
+  .swiper-slide img {
+    margin-bottom: 30px;
+  }
+}
