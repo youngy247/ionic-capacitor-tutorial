@@ -36,7 +36,7 @@ const Intro: React.FC<ContainerProps> = ({ onFinish }) => {
         <img src={Slide2Jpg} alt="Pinpointing sightings" />
         <IonText className="intro-text">
           <h2>Record, Identify and Map Your Sightings</h2>
-          <p>With just an image, you can now record, identify, and map your insect sightings. Upon uploading an image of your encounter, our integrated image detection technology will identify the species for you. Just add details, pinpoint your location on Google Maps, and contribute to our global insect map!</p>
+          <p>Upload an insect image and let our image detection technology identify the species. Add details, mark your location on Google Maps, and enhance our global insect data!</p>
         </IonText>
         <SwiperButtonNext>Next</SwiperButtonNext>
       </SwiperSlide>
