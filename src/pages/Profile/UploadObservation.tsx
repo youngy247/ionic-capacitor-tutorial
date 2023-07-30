@@ -58,7 +58,6 @@ const UploadObservation: React.FC = () => {
   const [showLabelContainer, setShowLabelContainer] = useState(true);
   const species = watch("species");
 
-
   const handleMapClick = async (event) => {
     const lat = event.latitude;
     const lng = event.longitude;
@@ -161,6 +160,19 @@ const UploadObservation: React.FC = () => {
         allowEditing: false,
         resultType: CameraResultType.Base64,
       });
+      console.log(image)
+
+      // Check if the image type is supported
+      const imageType = image.format; 
+      if (imageType === "svg+xml") {
+        showToast({
+          message:
+            "SVG file type is not supported. Please upload a different file type.",
+          duration: 3000,
+          color: "danger",
+        });
+        return; 
+      }
 
       const img = `data:image/jpeg;base64,${image.base64String}`;
 
@@ -193,8 +205,7 @@ const UploadObservation: React.FC = () => {
           duration: 3000,
           color: "success",
         });
-      }
-      else {
+      } else {
         // Show a toast message if no species could be detected
         showToast({
           message: `No species could be detected from the image.`,
