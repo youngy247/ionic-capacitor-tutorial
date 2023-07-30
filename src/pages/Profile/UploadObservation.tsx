@@ -55,6 +55,7 @@ const UploadObservation: React.FC = () => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const sortedObjects = [...detectedObjects].sort((a, b) => b.score - a.score);
+  const [showLabelContainer, setShowLabelContainer] = useState(true);
 
   const handleMapClick = async (event) => {
     const lat = event.latitude;
@@ -152,13 +153,16 @@ const UploadObservation: React.FC = () => {
       const img = `data:image/jpeg;base64,${image.base64String}`;
 
       // Send the base64 image data to your backend
-      const response = await fetch("https://portfolio-backend-3jb1.onrender.com/vision", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ imageURL: img }),
-      });
+      const response = await fetch(
+        "https://portfolio-backend-3jb1.onrender.com/vision",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ imageURL: img }),
+        }
+      );
 
       // Parse the objects from the response
       const objects = await response.json();
@@ -182,6 +186,7 @@ const UploadObservation: React.FC = () => {
 
       setImage(img);
       setValue("img", img); // Set value of img in form
+      setShowLabelContainer(true);
 
       const imgElement = new Image();
       imgElement.src = img;
@@ -269,6 +274,7 @@ const UploadObservation: React.FC = () => {
     // Reset form and image
     reset();
     setImage(null);
+    setShowLabelContainer(false);
     await dismiss();
 
     showToast({
@@ -315,7 +321,7 @@ const UploadObservation: React.FC = () => {
             Upload Picture
           </IonButton>
           <div className="image-label-container">
-            {image && (
+            {showLabelContainer && image && (
               <div style={{ position: "relative" }}>
                 <img
                   className="upload-picture"
@@ -365,60 +371,62 @@ const UploadObservation: React.FC = () => {
                 })}
               </div>
             )}
-            <div
-              style={{
-                marginLeft: 20,
-                alignSelf: "center",
-                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
-              }}
-            >
-              {sortedObjects.map((object, index) => {
-                const handleMouseOver = () => setHoveredIndex(index);
-                const handleMouseOut = () => setHoveredIndex(null);
-                const handleClick = () => setValue("species", object.name);
+            {showLabelContainer && (
+              <div
+                style={{
+                  marginLeft: 20,
+                  alignSelf: "center",
+                  boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
+                }}
+              >
+                {sortedObjects.map((object, index) => {
+                  const handleMouseOver = () => setHoveredIndex(index);
+                  const handleMouseOut = () => setHoveredIndex(null);
+                  const handleClick = () => setValue("species", object.name);
 
-                return (
-                  <div
-                    key={index}
-                    onMouseOver={handleMouseOver}
-                    onMouseOut={handleMouseOut}
-                    onClick={handleClick}
-                    style={{
-                      margin: 8,
-                      border: "none",
-                      padding: 12,
-                      cursor: "pointer",
-                    }}
-                  >
+                  return (
                     <div
+                      key={index}
+                      onMouseOver={handleMouseOver}
+                      onMouseOut={handleMouseOut}
+                      onClick={handleClick}
                       style={{
-                        width: "13rem",
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <span style={{marginBottom: 5}}>{object.name}</span>
-                      <span>{Math.round(object.score * 100)}%</span>
-                    </div>
-                    <div
-                      style={{
-                        width: "100%",
-                        height: 8,
-                        backgroundColor: "#CCCCCC",
+                        margin: 8,
+                        border: "none",
+                        padding: 12,
+                        cursor: "pointer",
                       }}
                     >
                       <div
                         style={{
-                          width: `${object.score * 100}%`,
-                          height: "100%",
-                          backgroundColor: "green",
+                          width: "13rem",
+                          display: "flex",
+                          justifyContent: "space-between",
                         }}
-                      />
+                      >
+                        <span style={{ marginBottom: 5 }}>{object.name}</span>
+                        <span>{Math.round(object.score * 100)}%</span>
+                      </div>
+                      <div
+                        style={{
+                          width: "100%",
+                          height: 8,
+                          backgroundColor: "#CCCCCC",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: `${object.score * 100}%`,
+                            height: "100%",
+                            backgroundColor: "green",
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <IonButton
