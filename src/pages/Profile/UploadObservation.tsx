@@ -180,14 +180,21 @@ const UploadObservation: React.FC = () => {
       const objects = await response.json();
       setDetectedObjects(objects);
 
-      if (objects.length > 0) {
+      if (objects.length === 1) {
         // Show a toast message with the detected object
         showToast({
           message: `${objects[0].name} detected!`,
           duration: 3000,
           color: "success",
         });
-      } else {
+      } else if (objects.length > 1) {
+        showToast({
+          message: `Detection successful!`,
+          duration: 3000,
+          color: "success",
+        });
+      }
+      else {
         // Show a toast message if no species could be detected
         showToast({
           message: `No species could be detected from the image.`,
