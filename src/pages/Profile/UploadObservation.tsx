@@ -94,6 +94,16 @@ const UploadObservation: React.FC = () => {
     }
   }, [markerCoords, map, markerId]);
 
+  // Destroy Map useEffect
+  useEffect(() => {
+    if (!showMap && map) {
+      map
+        .destroy()
+        .catch((error) => console.error("Failed to destroy map", error));
+      setMap(null);
+    }
+  }, [showMap, map]);
+
   async function createMap() {
     if (!mapRef.current) {
       console.log("mapRef.current is null");
@@ -275,6 +285,7 @@ const UploadObservation: React.FC = () => {
     reset();
     setImage(null);
     setShowLabelContainer(false);
+    setShowMap(false);
     await dismiss();
 
     showToast({
