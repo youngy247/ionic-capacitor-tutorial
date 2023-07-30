@@ -55,6 +55,11 @@
   row-gap: 1rem;
 }
 
+.edit-picture {
+  max-width: 50%;
+  margin: 1rem auto;
+}
+
 .cardContainer > * {
   flex: 0 0 calc(50% - 20px);
 }

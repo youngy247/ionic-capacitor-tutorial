@@ -384,7 +384,7 @@ const Collection: React.FC = () => {
                   )
                 )}
                 {editing === observation.id && (
-                  <IonButton className="upload-picture" expand="full" onClick={takePicture}>
+                  <IonButton className="edit-picture" expand="full" onClick={takePicture}>
                     Change Image
                   </IonButton>
                 )}
