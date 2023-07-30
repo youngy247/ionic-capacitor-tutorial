@@ -32,6 +32,7 @@ import { Geolocation } from "@capacitor/geolocation";
 import "./UploadObservation.css";
 import UploadGuide from "./UploadGuide";
 import { addOutline } from "ionicons/icons";
+import React from "react";
 // import { v4 as uuidv4 } from 'uuid';
 
 const UploadObservation: React.FC = () => {
@@ -49,7 +50,11 @@ const UploadObservation: React.FC = () => {
   const [markerId, setMarkerId] = useState<string | null>(null);
   const [showMap, setShowMap] = useState(false);
   const [present, dismiss] = useIonLoading();
-  const [showGuideModal, setShowGuideModal] = useState(false)
+  const [showGuideModal, setShowGuideModal] = useState(false);
+  const [detectedObjects, setDetectedObjects] = useState([]);
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const sortedObjects = [...detectedObjects].sort((a, b) => b.score - a.score);
 
   const handleMapClick = async (event) => {
     const lat = event.latitude;
@@ -155,14 +160,14 @@ const UploadObservation: React.FC = () => {
         body: JSON.stringify({ imageURL: img }),
       });
 
-      // Parse the labels from the response
-      const labels = await response.json();
+      // Parse the objects from the response
+      const objects = await response.json();
+      setDetectedObjects(objects);
 
-      if (labels.length > 0) {
-        setValue("species", labels[0].description);
-        // Show a toast message with the detected label
+      if (objects.length > 0) {
+        // Show a toast message with the detected object
         showToast({
-          message: `${labels[0].description} detected!`,
+          message: `${objects[0].name} detected!`,
           duration: 3000,
           color: "success",
         });
@@ -177,6 +182,16 @@ const UploadObservation: React.FC = () => {
 
       setImage(img);
       setValue("img", img); // Set value of img in form
+
+      const imgElement = new Image();
+      imgElement.src = img;
+      imgElement.onload = (event) => {
+        const target = event.target as HTMLImageElement;
+        setImageSize({
+          width: target.naturalWidth,
+          height: target.naturalHeight,
+        });
+      };
     } catch (error) {
       showToast({
         message: "Failed to upload photo. Please try again.",
@@ -299,7 +314,113 @@ const UploadObservation: React.FC = () => {
           <IonButton expand="full" onClick={takePicture}>
             Upload Picture
           </IonButton>
-          {image && <img className="upload-picture" src={image} alt="image" />}
+          <div className="image-label-container">
+            {image && (
+              <div style={{ position: "relative" }}>
+                <img
+                  className="upload-picture"
+                  src={image}
+                  alt="image"
+                  onLoad={(event) => {
+                    const imgElement = event.target as HTMLImageElement;
+                    const { width, height } = imgElement;
+                    setImageSize({ width, height });
+                  }}
+                />
+                {sortedObjects.map((object, index) => {
+                  const vertices = object.boundingPoly.normalizedVertices;
+                  const boxWidth =
+                    Math.abs(vertices[2].x - vertices[0].x) * imageSize.width;
+                  const boxHeight =
+                    Math.abs(vertices[2].y - vertices[0].y) * imageSize.height;
+                  const boxLeft = vertices[0].x * imageSize.width;
+                  const boxTop = vertices[0].y * imageSize.height;
+
+                  const hovered = hoveredIndex === index;
+                  const handleMouseOver = () => setHoveredIndex(index);
+                  const handleMouseOut = () => setHoveredIndex(null);
+                  const handleClick = () => setValue("species", object.name);
+
+                  const commonStyles = hovered
+                    ? { borderColor: "green", cursor: "pointer" }
+                    : {};
+
+                  return (
+                    <div
+                      key={index}
+                      onMouseOver={handleMouseOver}
+                      onMouseOut={handleMouseOut}
+                      onClick={handleClick}
+                      style={{
+                        position: "absolute",
+                        left: boxLeft,
+                        top: boxTop,
+                        width: boxWidth,
+                        height: boxHeight,
+                        border: "2px solid",
+                        ...commonStyles,
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            )}
+            <div
+              style={{
+                marginLeft: 20,
+                alignSelf: "center",
+                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
+              }}
+            >
+              {sortedObjects.map((object, index) => {
+                const handleMouseOver = () => setHoveredIndex(index);
+                const handleMouseOut = () => setHoveredIndex(null);
+                const handleClick = () => setValue("species", object.name);
+
+                return (
+                  <div
+                    key={index}
+                    onMouseOver={handleMouseOver}
+                    onMouseOut={handleMouseOut}
+                    onClick={handleClick}
+                    style={{
+                      margin: 8,
+                      border: "none",
+                      padding: 12,
+                      cursor: "pointer",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "13rem",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{marginBottom: 5}}>{object.name}</span>
+                      <span>{Math.round(object.score * 100)}%</span>
+                    </div>
+                    <div
+                      style={{
+                        width: "100%",
+                        height: 8,
+                        backgroundColor: "#CCCCCC",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: `${object.score * 100}%`,
+                          height: "100%",
+                          backgroundColor: "green",
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <IonButton
             onClick={() => {
               setShowMap(true);
@@ -348,17 +469,20 @@ const UploadObservation: React.FC = () => {
             </IonButton>
           )}
         </form>
-        <UploadGuide isOpen={showGuideModal} handleDismiss={handleGuideModalDismiss} />
-          <IonFab
-            className="fab-container"
-            vertical="bottom"
-            horizontal="end"
-            slot="fixed"
-          >
-            <IonFabButton onClick={() => setShowGuideModal(true)}>
-              <IonIcon icon={addOutline} />
-            </IonFabButton>
-          </IonFab>
+        <UploadGuide
+          isOpen={showGuideModal}
+          handleDismiss={handleGuideModalDismiss}
+        />
+        <IonFab
+          className="fab-container"
+          vertical="bottom"
+          horizontal="end"
+          slot="fixed"
+        >
+          <IonFabButton onClick={() => setShowGuideModal(true)}>
+            <IonIcon icon={addOutline} />
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   );
