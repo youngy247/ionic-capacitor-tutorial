@@ -36,7 +36,7 @@ import React from "react";
 // import { v4 as uuidv4 } from 'uuid';
 
 const UploadObservation: React.FC = () => {
-  const { register, handleSubmit, setValue, reset } = useForm();
+  const { register, handleSubmit, setValue, reset, watch } = useForm();
   const [image, setImage] = useState(null);
   const [showToast] = useIonToast();
   const router = useIonRouter();
@@ -56,6 +56,8 @@ const UploadObservation: React.FC = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const sortedObjects = [...detectedObjects].sort((a, b) => b.score - a.score);
   const [showLabelContainer, setShowLabelContainer] = useState(true);
+  const species = watch("species");
+
 
   const handleMapClick = async (event) => {
     const lat = event.latitude;
@@ -358,9 +360,12 @@ const UploadObservation: React.FC = () => {
                   const handleMouseOut = () => setHoveredIndex(null);
                   const handleClick = () => setValue("species", object.name);
 
-                  const commonStyles = hovered
-                    ? { borderColor: "green", cursor: "pointer" }
-                    : {};
+                  const commonStyles =
+                    species === object.name
+                      ? { borderColor: "green", cursor: "pointer" }
+                      : hovered
+                      ? { borderColor: "yellow", cursor: "pointer" }
+                      : { borderColor: "transparent", cursor: "default" };
 
                   return (
                     <div
