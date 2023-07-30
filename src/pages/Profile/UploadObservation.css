@@ -46,7 +46,7 @@
 
 /* Mobile styles */
 @media (max-width: 768px) {
-  .upload-picture {
-    max-width: 80%;
+  .image-label-container {
+    flex-direction: column
   }
 }
