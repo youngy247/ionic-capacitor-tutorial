@@ -26,6 +26,9 @@ const UploadGuide: React.FC<UploadGuideProps> = ({ isOpen, handleDismiss }) => (
             <strong>Image Upload:</strong> Upload an image first to try image detection. The quality of the image affects the accuracy of species detection. Use clear, well-lit photos for the best results. If detection fails, use manual input.
           </li>
           <li>
+            <strong>Object Detection:</strong> After uploading an image, a list will generate displaying the detected objects with their confidence scores. Clicking on an item in the list will outline the corresponding object in the image with a green box and automatically fill the species field.
+          </li>
+          <li>
             <strong>Date and Time:</strong> These are required to sort your observations in the &apos;My Observations&apos; tab. If you&apos;re unsure, make an estimate. Times are currently uploaded, stored and displayed in UTC +1 timezone.
           </li>
           <li>
