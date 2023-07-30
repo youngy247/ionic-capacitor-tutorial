@@ -14,8 +14,15 @@
 }
 
 .upload-picture {
-  max-width: 50%;
+  width: 500px; 
+  height: auto;
   margin: 0 auto;
+}
+
+.image-label-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .upload-form ion-item {
