@@ -117,7 +117,11 @@ const Register: React.FC = () => {
     try {
       await registerUser(email, password);
       await dismiss();
-      router.goBack();
+      if (router.canGoBack()) {
+        router.goBack();
+      } else {
+        router.push('/');
+      }
       await dismissToast();
       showToast({
         message: `A verification email has been sent to ${email}. Please check your inbox and follow the instructions to complete your registration.`,
