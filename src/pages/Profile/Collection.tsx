@@ -67,7 +67,6 @@ const Collection: React.FC = () => {
       const userUID = await getCurrentUserUID();
       if (userUID) {
         const userObservations = await fetchUserObservations(userUID);
-        console.log("Fetched Observations:", userObservations);
         setObservations(userObservations);
       }
     };
@@ -102,9 +101,7 @@ const Collection: React.FC = () => {
     if (observations.length > 0) {
       observations.forEach(async (observation, index) => {
         const mapElement = mapRefs.current.get(index);
-        console.log("Map Element:", mapElement);
         if (mapElement && observation.latitude && observation.longitude) {
-          console.log("Observation has Lat and Lng:", observation);
           const observationsMap = await GoogleMap.create({
             id: `map-${index}`,
             element: mapElement,
@@ -118,7 +115,6 @@ const Collection: React.FC = () => {
               zoom: 8,
             },
           });
-          console.log("Observations Map: ", observationsMap);
           // Add marker at the bug's location
           observationsMap.addMarker({
             coordinate: {
@@ -253,7 +249,6 @@ const Collection: React.FC = () => {
     setEditingValues(null);
   };
 
-  console.log(observations);
 
   return (
     <IonPage>

@@ -115,8 +115,7 @@ const Register: React.FC = () => {
     await present("Registering...");
 
     try {
-      const res = await registerUser(email, password);
-      console.log(`${res ? "Registration successful" : "Registration failed"}`);
+      await registerUser(email, password);
       await dismiss();
       router.goBack();
       await dismissToast();
@@ -126,7 +125,6 @@ const Register: React.FC = () => {
         color: "success",
       });
     } catch (error) {
-      console.log("Registration failed: ", error);
       await dismiss();
       const friendlyErrorMessage = getFriendlyErrorMessage(error.code);
       await dismissToast();
@@ -143,15 +141,12 @@ const Register: React.FC = () => {
     try {
       if (action === "google") {
         const result = await GoogleAuth.signIn();
-        console.log("Google Auth result: ", result);
         const idToken = result.authentication.idToken;
-        console.log("Google Auth idToken: ", idToken);
         if (!idToken) {
           console.error("Google Auth failed");
           return;
         }
         const user = await registerWithGoogle(idToken);
-        console.log("Firebase user: ", user);
         if (user) {
           await dismissToast();
           showToast({

@@ -54,7 +54,6 @@ const Login: React.FC = () => {
   useEffect(() => {
     const checkStorage = async () => {
       const seen = await Preferences.get({ key: INTRO_KEY });
-      console.log("🚀 ~ file: Login.tsx:29 ~ checkStorage ~ seen:", seen);
       setIntroSeen(seen.value === "true");
     };
     checkStorage();
@@ -107,7 +106,6 @@ const Login: React.FC = () => {
     await present("Logging in...");
     try {
       const res = await loginUser(email, password);
-      console.log(`${res ? "Login successful" : "Login failed"}`);
 
       // Check if email is verified
       if (await isUserEmailVerified(res)) {
@@ -145,7 +143,6 @@ const Login: React.FC = () => {
   };
 
   const verifyCaptcha = async (token: string) => {
-    console.log("Captcha Token: ", token);
     try {
       const response = await fetch(
         "https://portfolio-backend-3jb1.onrender.com/captcha/verify",
@@ -215,10 +212,8 @@ const Login: React.FC = () => {
       if (action === "google") {
         const result = await GoogleAuth.signIn();
         const idToken = result.authentication.idToken;
-        console.log("Google user: ", result);
         if (result && idToken) {
           const user = await loginWithGoogle(idToken);
-          console.log("Firebase user: ", user);
           Preferences.set({ key: "login-method", value: "google" });
 
           // Check if user exists, if yes then show "welcome back" toast
