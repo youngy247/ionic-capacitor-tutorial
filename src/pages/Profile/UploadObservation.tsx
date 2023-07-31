@@ -163,16 +163,15 @@ const UploadObservation: React.FC = () => {
       console.log(image)
 
       // Check if the image type is supported
-      const imageType = image.format; 
-      if (imageType === "svg+xml") {
+      const imageType = image.format.toLowerCase(); 
+      if (imageType !== "jpeg" && imageType !== "png") {
         showToast({
-          message:
-            "SVG file type is not supported. Please upload a different file type.",
+          message: "Only JPEG and PNG files are supported. Please upload a different file type.",
           duration: 3000,
-          color: "danger",
         });
-        return; 
+        return;
       }
+      
 
       const img = `data:image/jpeg;base64,${image.base64String}`;
 
