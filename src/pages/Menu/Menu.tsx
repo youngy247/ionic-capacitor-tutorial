@@ -11,6 +11,7 @@ import {
   IonSplitPane,
   IonTitle,
   IonToolbar,
+  isPlatform,
   useIonRouter,
 } from "@ionic/react";
 import React from "react";
@@ -35,6 +36,10 @@ const Menu: React.FC = () => {
   ];
 
   const router = useIonRouter();
+
+  if (!isPlatform("capacitor")) {
+    GoogleAuth.initialize();
+  }
 
   const signOut = async () => {
     const loginMethod = await Preferences.get({ key: "login-method" });
