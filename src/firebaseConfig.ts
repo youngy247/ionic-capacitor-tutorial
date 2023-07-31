@@ -58,8 +58,7 @@ export interface IObservationUpdate {
 
 export async function loginUser(username: string, password: string) {
   try {
-    const res = await signInWithEmailAndPassword(auth, username, password);
-    console.log(res);
+    const res = await signInWithEmailAndPassword(auth, username, password); 
     return res.user;
   } catch (error) {
     console.log(error);
@@ -80,7 +79,7 @@ export async function isUserEmailVerified(user) {
 export async function registerUser(username: string, password: string) {
   try {
     const res = await createUserWithEmailAndPassword(auth, username, password);
-    console.log(res);
+
 
     // Send verification email
     if (res.user) {
@@ -98,7 +97,6 @@ export async function loginWithGoogle(idToken: string) {
   try {
     const credential = GoogleAuthProvider.credential(idToken);
     const res = await signInWithCredential(auth, credential);
-    console.log(res);
     return res.user;
   } catch (error) {
     console.log(error);
@@ -151,13 +149,11 @@ export async function savePictureToStorage(base64Image: string): Promise<string>
         },
         (error) => {
           // Error function
-          console.log("Failed to upload image: ", error);
           reject(error);
         },
         async () => {
           // Complete function
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          console.log("File available at", downloadURL);
           resolve(downloadURL);
         }
       );
@@ -196,7 +192,6 @@ export async function fetchUserObservations(userUID: string) {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log(observations); // Log the fetched observations here for debugging
     return observations;
   } catch (error) {
     console.error("Failed to fetch user observations: ", error);
@@ -231,7 +226,6 @@ export async function fetchAllObservations() {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log(observations); // Log the fetched observations here for debugging
     return observations;
   } catch (error) {
     console.error("Failed to fetch all observations: ", error);
@@ -250,7 +244,6 @@ export async function deleteObservations(observationIDs: string[]) {
 
     await batch.commit();
 
-    console.log("Deleted observations: ", observationIDs);
   } catch (error) {
     console.error("Failed to delete observations: ", error);
     throw error;
@@ -261,7 +254,6 @@ export async function updateObservation(id: string, newData: IObservationUpdate)
   try {
     const docRef = doc(db, "observations", id);
     await updateDoc(docRef, { ...newData });
-    console.log(`Observation with ID: ${id} has been updated.`);
   } catch (error) {
     console.error("Error updating document: ", error);
   }

@@ -107,7 +107,6 @@ const UploadObservation: React.FC = () => {
 
   async function createMap() {
     if (!mapRef.current) {
-      console.log("mapRef.current is null");
       return;
     }
 
@@ -120,7 +119,6 @@ const UploadObservation: React.FC = () => {
     } catch (error) {
       latitude = 55.3781; // Default latitude for UK
       longitude = -3.436; // Default longitude for UK
-      console.log("Could not fetch location, defaulting to UK", error);
     }
 
     try {
@@ -143,7 +141,6 @@ const UploadObservation: React.FC = () => {
       // Enable the location after creating the map
       newMap.enableCurrentLocation(true);
     } catch (error) {
-      console.log("Failed to create map", error);
       showToast({
         message:
           "Failed to load map. Please check your internet connection and try again.",
@@ -160,7 +157,6 @@ const UploadObservation: React.FC = () => {
         allowEditing: false,
         resultType: CameraResultType.Base64,
       });
-      console.log(image)
 
       // Check if the image type is supported
       const imageType = image.format.toLowerCase(); 
