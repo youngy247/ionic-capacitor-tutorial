@@ -132,12 +132,12 @@ const GlobalObservations: React.FC = () => {
           )}&page=${page}&per_page=10`
         : `https://api.inaturalist.org/v1/observations?order_by=created_at&order=desc&page=${page}&per_page=10`;
 
-      console.log(`Fetching data from ${endpoint}`);
+
 
       const response = await fetch(endpoint);
       const data = await response.json();
 
-      console.log("Received data", data);
+
 
       const results = data.results.map((result) => ({
         image:
@@ -164,7 +164,6 @@ const GlobalObservations: React.FC = () => {
         lng: result.geojson ? result.geojson.coordinates[0] : null, // Get the longitude
         // Add more details as needed
       }));
-      console.log(results)
       setBugs(results);
     } catch (error) {
       console.error("Error fetching bugs:", error);
@@ -222,7 +221,7 @@ const GlobalObservations: React.FC = () => {
         text: `Check out this observation of a ${bug.commonName}`,
         url: bug.uri,
       });
-      console.log("Content shared successfully");
+
     } catch (error) {
       console.error("Error sharing", error);
 
@@ -240,7 +239,7 @@ const GlobalObservations: React.FC = () => {
             duration: 2000,
             color: "success",
           });
-          console.log("Link copied to clipboard");
+
         } catch (err) {
           await dismissToast();
           showToast({
@@ -496,7 +495,7 @@ const GlobalObservations: React.FC = () => {
                   style={{ width: "100%", height: "200px" }}
                   ref={(el) => {
                     if (el) {
-                      console.log("Setting map element for selected bug", el);
+
                       mapRefs.current.set("selected", el);
                     }
                   }}
