@@ -255,7 +255,7 @@ const Login: React.FC = () => {
           <IonPage>
             <IonHeader>
               <IonToolbar color={"primary"}>
-                <IonTitle>InsectInsight</IonTitle>
+                <IonTitle>InsectInspect</IonTitle>
               </IonToolbar>
             </IonHeader>
             <IonContent scrollY={false} className="ion-padding">
